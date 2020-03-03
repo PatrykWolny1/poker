@@ -1,19 +1,15 @@
-*****************
-UPDATE A, B, MAP
-SET A.dimension_2=MAP.correct_dimension_2, B.dimension_2=MAP.correct_dimension_2
-WHERE MAP.dimension_1=A.dimension_1 AND MAP.dimension_1=B.dimension_1;
+CREATE TABLE result (
+dimension_1 CHAR(1) DEFAULT '' NOT NULL,
+dimension_2 CHAR(1) DEFAULT '' NOT NULL,
+measure_1 INT DEFAULT 0 NOT NULL,
+measure_2 INT DEFAULT 0 NOT NULL );
 
-lub
+INSERT INTO result (dimension_1, dimension_2, measure_1)
+SELECT dimension_1, dimension_2, measure_1 FROM A;
 
-UPDATE MAP
-JOIN A ON MAP.dimension_1=A.dimension_1
-JOIN B ON MAP.dimension_1=B.dimension_1
-SET A.dimension_2=MAP.correct_dimension_2, B.dimension_2=MAP.correct_dimension_2;
+INSERT INTO result (dimension_1, dimension_2, measure_2)
+SELECT dimension_1, dimension_2, measure_2 FROM B;
 
-lub
-
-UPDATE MAP
-INNER JOIN A ON MAP.dimension_1=A.dimension_1
-INNER JOIN B ON MAP.dimension_1=B.dimension_1
-SET A.dimension_2=MAP.correct_dimension_2, B.dimension_2=MAP.correct_dimension_2;
-******************
+UPDATE result, MAP
+SET result.dimension_2=MAP.correct_dimension_2
+WHERE result.dimension_1=MAP.dimension_1;
