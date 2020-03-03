@@ -1,8 +1,13 @@
+
+****************************************************************
+Snowflake - niepewny co do składni, bo używam MySQL
+****************************************************************
+
 CREATE TABLE result (
-dimension_1 CHAR(1) DEFAULT '' NOT NULL,
-dimension_2 CHAR(1) DEFAULT '' NOT NULL,
-measure_1 INT DEFAULT 0 NOT NULL,
-measure_2 INT DEFAULT 0 NOT NULL );
+dimension_1 CHAR DEFAULT '' NOT NULL,
+dimension_2 CHAR DEFAULT '' NOT NULL,
+measure_1 NUMBER DEFAULT 0 NOT NULL,
+measure_2 NUMBER DEFAULT 0 NOT NULL );
 
 INSERT INTO result (dimension_1, dimension_2, measure_1)
 SELECT dimension_1, dimension_2, measure_1 FROM A;
@@ -10,6 +15,30 @@ SELECT dimension_1, dimension_2, measure_1 FROM A;
 INSERT INTO result (dimension_1, dimension_2, measure_2)
 SELECT dimension_1, dimension_2, measure_2 FROM B;
 
+UPDATE result SET result.dimension_2=MAP.correct_dimension_2
+FROM MAP
+WHERE result.dimension_1=MAP.dimension_1;
+
+****************************************************************
+MySQL
+****************************************************************
+
+Krok 1)
+CREATE TABLE result (
+dimension_1 CHAR(1) DEFAULT '' NOT NULL,
+dimension_2 CHAR(1) DEFAULT '' NOT NULL,
+measure_1 INT DEFAULT 0 NOT NULL,
+measure_2 INT DEFAULT 0 NOT NULL );
+
+Krok 2)
+INSERT INTO result (dimension_1, dimension_2, measure_1)
+SELECT dimension_1, dimension_2, measure_1 FROM A;
+
+Krok 3)
+INSERT INTO result (dimension_1, dimension_2, measure_2)
+SELECT dimension_1, dimension_2, measure_2 FROM B;
+
+Krok 4)
 UPDATE result, MAP
 SET result.dimension_2=MAP.correct_dimension_2
 WHERE result.dimension_1=MAP.dimension_1;
