@@ -1,0 +1,19 @@
+*****************
+UPDATE A, B, MAP
+SET A.dimension_2=MAP.correct_dimension_2, B.dimension_2=MAP.correct_dimension_2
+WHERE MAP.dimension_1=A.dimension_1 AND MAP.dimension_1=B.dimension_1;
+
+lub
+
+UPDATE MAP
+JOIN A ON MAP.dimension_1=A.dimension_1
+JOIN B ON MAP.dimension_1=B.dimension_1
+SET A.dimension_2=MAP.correct_dimension_2, B.dimension_2=MAP.correct_dimension_2;
+
+lub
+
+UPDATE MAP
+INNER JOIN A ON MAP.dimension_1=A.dimension_1
+INNER JOIN B ON MAP.dimension_1=B.dimension_1
+SET A.dimension_2=MAP.correct_dimension_2, B.dimension_2=MAP.correct_dimension_2;
+******************
