@@ -154,6 +154,7 @@ class HighCard(object):
                 return
 
         self.get_indices_name(self.perm[self.c_idx1])
+        self.get_indices_color(self.perm[self.c_idx1])
 
         for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
             # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
