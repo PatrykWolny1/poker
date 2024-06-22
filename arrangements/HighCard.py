@@ -79,11 +79,11 @@ class HighCard(object):
                 indices.append(idx1)
             idx1 += 1
 
-        for idx in range(0, len(indices)):
-            for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
-                print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
-            print()
-            print(indices[idx])
+        # for idx in range(0, len(indices)):
+        #     for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
+        #         print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
+        #     print()
+        #     print("IDX: ", indices[idx])
 
     def random_arrangement(self):
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
@@ -162,6 +162,7 @@ class HighCard(object):
             if len(self.indices_2d_color[idx3]) == 5:
                 return
             if len(self.indices_2d_name[idx4]) > 1:
+                return
 =======
         for idx in range(0, len(self.indices_2d_name)):
             if len(self.indices_2d_name[idx]) > 1:
@@ -180,7 +181,8 @@ class HighCard(object):
 
         self.weight_gen.append(self.weight_arrangement)
 
-        self.print_arrengement()
+        if self.random == False:
+            self.print_arrengement()
 
     def high_card_generating(self, random):
         self.random = random
@@ -265,7 +267,7 @@ class HighCard(object):
                     self.c_idx1 = idx1
                     self.high_card()
 
-                    print(int(time.time() - start_time))
+                    #print(int(time.time() - start_time))
 
                     self.cards_all_permutations.append(self.perm[idx1])
 
@@ -276,12 +278,11 @@ class HighCard(object):
                     self.iter_pair += 1
 
                     if int(time.time() - start_time) == 160:
-                        self.check_if_weights_larger()
-                        return self.random_arrangement()
-                        exit()
+                        pass
 
                     if self.iter_pair == self.n_bar:
-                        exit()
+                        self.check_if_weights_larger()
+                        return self.random_arrangement()
 
             print(len(self.cards_all_permutations))
 

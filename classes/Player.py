@@ -34,7 +34,7 @@ class Player(object):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
 
         #if_all_perm = input()
-        if_all_perm = "1"
+        if_all_perm = "2"
 
         if if_all_perm == "1":
             self.random = False
