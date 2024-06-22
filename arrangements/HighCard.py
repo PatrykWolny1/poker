@@ -172,7 +172,7 @@ class HighCard(object):
         cards_to_comb_rest = []
         cards_comb_rest_sorted = []
         count = 0
-
+        
         for arrangement in self.cardmarkings.arrangements:
             for color in self.cardmarkings.colors:
                 cards_2d.append(Card(arrangement, color))
