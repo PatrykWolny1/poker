@@ -1,11 +1,11 @@
 from classes.Arrangements import Arrangements
 class Player(object):
     nick = None
-    cards = []
-    deck = None
+    cards = None
     random = False
 
     def __init__(self, nick, deck, if_deck):
+        self.cards = []
         self.nick = nick
         deck.shuffling()
         self.arrangements = Arrangements()
@@ -24,7 +24,10 @@ class Player(object):
                 break
             self.cards.pop(which - 1)
         print()
-        self.cards = cards
+
+        if amount == 0:
+            self.cards = cards
+
         self.arrangements.set_cards(self.cards)
 
     def cards_permutations(self):
@@ -80,5 +83,7 @@ class Player(object):
         self.arrangements.check_arrangement()
 
     def print(self):
+        print(self.nick)
         for idx in self.cards:
             idx.print()
+        print()
