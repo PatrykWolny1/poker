@@ -156,11 +156,20 @@ class HighCard(object):
         self.get_indices_name(self.perm[self.c_idx1])
         self.get_indices_color(self.perm[self.c_idx1])
 
+<<<<<<< Updated upstream
         for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
             # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
             if len(self.indices_2d_color[idx3]) == 5:
                 return
             if len(self.indices_2d_name[idx4]) > 1:
+=======
+        for idx in range(0, len(self.indices_2d_name)):
+            if len(self.indices_2d_name[idx]) > 1:
+                return
+
+        for idx in range(0, len(self.indices_2d_name)):
+            if len(self.indices_2d_color[idx]) == 5:
+>>>>>>> Stashed changes
                 return
 
         self.high_card_1 = max(self.perm[self.c_idx1].copy())
