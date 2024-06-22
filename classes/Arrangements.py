@@ -38,20 +38,6 @@ class Arrangements(object):
         self.one_pair.set_cards(self.cards)
         self.high_card.set_cards(self.cards)
 
-    def if_the_same(self):
-        #self.carriage_generating()
-        #self.full_generating()
-        #self.straight_generating()
-
-        #self.cards = []
-        #self.cards.append(Card("A"))
-        #self.cards.append(Card("J"))
-        #self.cards.append(Card("J"))
-        #self.cards.append(Card("J"))
-        #self.cards.append(Card("J"))
-
-        #self.get_indicies()
-        pass
     def check_arrangement(self):
         self.straight_royal_flush.straight_royal_flush()
         self.carriage.carriage()

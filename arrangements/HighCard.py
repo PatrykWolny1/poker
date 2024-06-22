@@ -154,25 +154,40 @@ class HighCard(object):
                 return
 
         self.get_indices_name(self.perm[self.c_idx1])
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
         self.get_indices_color(self.perm[self.c_idx1])
 
+=======
+        self.get_indices_color(self.perm[self.c_idx1])
+
+<<<<<<< Updated upstream
+>>>>>>> hotfix
         for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
             # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
             if len(self.indices_2d_color[idx3]) == 5:
                 return
             if len(self.indices_2d_name[idx4]) > 1:
                 return
+<<<<<<< HEAD
 
+=======
+=======
+>>>>>>> hotfix
         for idx in range(0, len(self.indices_2d_name)):
             if len(self.indices_2d_name[idx]) > 1:
                 return
 
         for idx in range(0, len(self.indices_2d_name)):
             if len(self.indices_2d_color[idx]) == 5:
+<<<<<<< HEAD
                 return
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+                return
+>>>>>>> hotfix
 
         self.high_card_1 = max(self.perm[self.c_idx1].copy())
 
@@ -192,7 +207,7 @@ class HighCard(object):
         cards_to_comb_rest = []
         cards_comb_rest_sorted = []
         count = 0
-        
+
         for arrangement in self.cardmarkings.arrangements:
             for color in self.cardmarkings.colors:
                 cards_2d.append(Card(arrangement, color))
