@@ -7,10 +7,10 @@ class Croupier(object):
     player1 = None
     def __init__(self):
         self.deck = Deck()
-        self.cards = [Card("9", "Ka"),
-                      Card("J", "Pi"),
-                      Card("Q", "Tr"),
-                      Card("A", "Ka"),
+        self.cards = [Card("4", "Ka"),
+                      Card("2", "Pi"),
+                      Card("K", "Tr"),
+                      Card("K", "Ka"),
                       Card("K", "Ki")]
         self.player1 = Player('Nick', self.deck, False)
         self.player2 = Player('Tom', self.deck, False)
