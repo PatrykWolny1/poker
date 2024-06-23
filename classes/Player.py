@@ -97,7 +97,10 @@ class Player(object):
         self.arrangements.set_cards(self.cards)
 
     def print_arrangement(self):
+        print(self.nick)
         self.arrangements.print()
+
+    def check_arrengement(self):
         self.arrangements.check_arrangement()
 
     def print(self):

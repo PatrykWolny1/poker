@@ -6,6 +6,8 @@ class Croupier(object):
     cards = []
     player1 = None
     player2 = None
+    player = None
+    players = []
     amount = 0
 
     def __init__(self):
@@ -22,50 +24,51 @@ class Croupier(object):
     ###############################################ZROBIC KOMENTARZE DO HIGH_CARD I ONE_PAIR I THREE_OF_A_KIND
 
     def play(self):
-        loop = True
-                
-        while (True):
-            #self.player1.give_cards(0, self.cards)
-            #print("Deck: ", len(self.deck.cards))
-            #self.deck.print()
+        print()
+
+        idx_players = int(input("Ilu graczy: "))
+
+        for idx in range(idx_players):
+            nick = str(input("Pseudonim gracza: "))
+            self.players.append(Player(nick, self.deck, True))
+
+        #self.player1.give_cards(0, self.cards)
+        #print("Deck: ", len(self.deck.cards))
+        #self.deck.print()
+
+        print()
+
+        for self.player in self.players:
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+            print()
             exchange = str(input("Wymiana kart [T/N]: "))
 
             if exchange.lower() == 't':
-                loop = True
+                self.cards_exchange()
             if exchange.lower() == 'n':
                 break
 
-            print()
-            while (loop):
-                self.player1.print_arrangement()
-                print()
-
-                self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-                print()
-
-                if self.amount == -1:
-                    break
-
-                self.amount = self.player1.return_to_croupier(self.amount)
-                print(self.amount)
-
-                if self.amount == -1:
-                    continue
-
-                self.deal_cards()
-                self.player1.print_arrangement()
-
-                #print()
-                #self.deck.print()
-
-                # self.player2.print()
-                # self.player2.give_cards(1)
-
-                #self.player1.cards_permutations()
-
-                #self.player2.check_arrangement()
-                #self.player2.print_arrangement()
-
     def deal_cards(self):
         for idx in range(self.amount):
-            self.player1.take_cards(self.deck)
+            self.player.take_cards(self.deck)
+
+    def cards_exchange(self, loop = True):
+        while (loop):
+            self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
+            print()
+
+            if self.amount == -1:
+                continue
+
+            self.amount = self.player.return_to_croupier(self.amount)
+            print(self.amount)
+
+            if self.amount == -1:
+                continue
+
+            self.deal_cards()
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+
+            break
