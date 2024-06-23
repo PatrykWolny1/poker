@@ -3,6 +3,7 @@ class Player(object):
     nick = None
     cards = None
     random = False
+    amount = 0
 
     def __init__(self, nick, deck, if_deck):
         self.cards = []
@@ -14,21 +15,34 @@ class Player(object):
                 self.cards.append(deck.deal())
             self.arrangements.set_cards(self.cards)
 
-    def give_cards(self, amount = 0, cards = []):
-        for idx in range(amount):
-            self.print()
-            print()
-            which_card = input("Ktora karta[1-5][-1 WYJSCIE]: ")
-            which = int(which_card)
-            if which == -1:
-                break
-            self.cards.pop(which - 1)
-        print()
+    def return_to_croupier(self, amount = 0, cards = []):
+        self.amount = amount
+        temp = self.cards
+        for idx in range(self.amount):
+            if idx == 0:
+                self.print()
 
-        if amount == 0:
-            self.cards = cards
+            if self.amount is not 5:
+                which_card = input("Ktora karta[1-5][-1 WYJSCIE]: ")
+                print()
+                which = int(which_card)
+                if which == -1:
+                    self.amount = 0
+                    self.arrangements.set_cards(self.cards)
+                    return self.amount
+                temp.pop(which - 1)
+            else:
+                temp.pop()
+
+            self.cards = temp
+            self.print()
 
         self.arrangements.set_cards(self.cards)
+
+        print()
+
+    def take_cards(self, deck):
+        self.cards.append(deck.deal())
 
     def cards_permutations(self):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")

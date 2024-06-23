@@ -5,7 +5,7 @@ start_time = time.time()
 
 croupier = Croupier()
 
-croupier.print()
+croupier.play()
 
 print()
 print(((time.time() - start_time)), " sec")

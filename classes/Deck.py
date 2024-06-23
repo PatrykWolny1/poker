@@ -13,7 +13,8 @@ class Deck(object):
                 self.cards.append(Card(marking, color))
     def print(self):
         for i in range(len(self.cards)):
-            self.cards[i].print()
+            print(i + 1, self.cards[i].print_str())
+        print()
 
     def shuffling(self):
         random.shuffle(self.cards)
@@ -22,5 +23,5 @@ class Deck(object):
         card = self.cards[self.counter]
         self.cards.pop(self.counter)
         self.counter = self.counter + 1
-        print(self.counter)
+        #print(self.counter)
         return card
