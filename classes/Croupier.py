@@ -22,31 +22,49 @@ class Croupier(object):
     ###############################################ZROBIC KOMENTARZE DO HIGH_CARD I ONE_PAIR I THREE_OF_A_KIND
 
     def play(self):
+        loop = True
+                
         while (True):
-            print()
             #self.player1.give_cards(0, self.cards)
             #print("Deck: ", len(self.deck.cards))
             #self.deck.print()
-            self.player1.print_arrangement()
+            exchange = str(input("Wymiana kart [T/N]: "))
+
+            if exchange.lower() == 't':
+                loop = True
+            if exchange.lower() == 'n':
+                break
+
             print()
-            self.amount = int(input("Ile kart do wymiany [0-5]: "))
-            print()
-            self.amount = self.player1.return_to_croupier(self.amount)
-            self.deal_cards()
-            self.player1.print_arrangement()
+            while (loop):
+                self.player1.print_arrangement()
+                print()
 
-            #print()
-            #self.deck.print()
+                self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
+                print()
 
-            # self.player2.print()
-            # self.player2.give_cards(1)
+                if self.amount == -1:
+                    break
 
-            #self.player1.cards_permutations()
+                self.amount = self.player1.return_to_croupier(self.amount)
+                print(self.amount)
 
-            #self.player2.check_arrangement()
-            #self.player2.print_arrangement()
+                if self.amount == -1:
+                    continue
 
-            break
+                self.deal_cards()
+                self.player1.print_arrangement()
+
+                #print()
+                #self.deck.print()
+
+                # self.player2.print()
+                # self.player2.give_cards(1)
+
+                #self.player1.cards_permutations()
+
+                #self.player2.check_arrangement()
+                #self.player2.print_arrangement()
 
     def deal_cards(self):
         for idx in range(self.amount):

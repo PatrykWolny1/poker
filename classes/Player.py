@@ -18,18 +18,20 @@ class Player(object):
     def return_to_croupier(self, amount = 0, cards = []):
         self.amount = amount
         temp = self.cards
+
         for idx in range(self.amount):
             if idx == 0:
                 self.print()
 
             if self.amount is not 5:
-                which_card = input("Ktora karta[1-5][-1 WYJSCIE]: ")
+                which_card = input("Ktora karta[1-5][-1 COFNIJ]: ")
                 print()
                 which = int(which_card)
                 if which == -1:
-                    self.amount = 0
+                    self.amount = which
                     self.arrangements.set_cards(self.cards)
                     return self.amount
+
                 temp.pop(which - 1)
             else:
                 temp.pop()
@@ -40,6 +42,8 @@ class Player(object):
         self.arrangements.set_cards(self.cards)
 
         print()
+
+        return self.amount
 
     def take_cards(self, deck):
         self.cards.append(deck.deal())
