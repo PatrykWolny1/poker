@@ -29,6 +29,9 @@ class StraightRoyalFlush(object):
         self.example = True
         self.random = True
 
+    def get_weight(self):
+        return self.weight_arrangement
+
     def print_arrengement(self):
         if self.num_arr == len(self.cards_all_permutations):
             self.random = True

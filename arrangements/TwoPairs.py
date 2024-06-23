@@ -44,6 +44,9 @@ class TwoPairs(object):
         self.perm = cards
         self.example = True
 
+    def get_weight(self):
+        return self.weight_arrangement
+
     def loading_bar(self):
         # Pasek postepu
 

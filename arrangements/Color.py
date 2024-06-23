@@ -39,6 +39,9 @@ class Color(object):
         self.example = True
         self.random = True
 
+    def get_weight(self):
+        return self.weight_arrangement
+
     def loading_bar(self):
         #Pasek postepu
         #Jesli random = True to wybierana jest wartosc pierwsza

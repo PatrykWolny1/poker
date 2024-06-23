@@ -33,6 +33,10 @@ class HighCard(object):
         self.example = True
         self.random = False
 
+    def get_weight(self):
+        if self.weight_arrangement > 0:
+            return self.weight_arrangement
+
     def loading_bar(self):
         if self.step_p:
             for i in range(0, self.n_bar, self.step_bar):

@@ -23,7 +23,7 @@ class Player(object):
             if idx == 0:
                 self.print()
 
-            if self.amount is not 5:
+            if self.amount != 5:
                 which_card = input("Ktora karta[1-5][-1 COFNIJ]: ")
                 print()
                 which = int(which_card)
@@ -102,6 +102,9 @@ class Player(object):
 
     def check_arrengement(self):
         self.arrangements.check_arrangement()
+
+    def get_weight(self):
+        return self.arrangements.get_weight()
 
     def print(self):
         print(self.nick)

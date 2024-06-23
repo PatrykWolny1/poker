@@ -8,6 +8,7 @@ class Croupier(object):
     player2 = None
     player = None
     players = []
+    weight = []
     amount = 0
 
     def __init__(self):
@@ -41,6 +42,7 @@ class Croupier(object):
         for self.player in self.players:
             self.player.print_arrangement()
             self.player.check_arrengement()
+            self.weight.append(self.player.get_weight())
             print()
             exchange = str(input("Wymiana kart [T/N]: "))
 
@@ -48,6 +50,8 @@ class Croupier(object):
                 self.cards_exchange()
             if exchange.lower() == 'n':
                 break
+
+        print(self.weight)
 
     def deal_cards(self):
         for idx in range(self.amount):
@@ -72,3 +76,7 @@ class Croupier(object):
             self.player.check_arrengement()
 
             break
+
+    def compare_players_cards(self):
+        pass
+

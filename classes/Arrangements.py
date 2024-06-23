@@ -11,9 +11,7 @@ from arrangements.HighCard import HighCard
 import itertools
 class Arrangements(object):
     cards = []
-    wgt = 0
-    carriage = None
-
+    weights = []
     def __init__(self, cards = []):
         self.cards = cards
         self.straight_royal_flush = StraightRoyalFlush()
@@ -37,6 +35,15 @@ class Arrangements(object):
         self.two_pairs.set_cards(self.cards)
         self.one_pair.set_cards(self.cards)
         self.high_card.set_cards(self.cards)
+
+    def get_weight(self):
+        self.weights = []
+        self.weights.append(self.high_card.get_weight())
+        self.weights.append(self.one_pair.get_weight())
+
+        for idx in self.weights:
+            if idx is not None:
+                return idx
 
     def check_arrangement(self):
         self.straight_royal_flush.straight_royal_flush()

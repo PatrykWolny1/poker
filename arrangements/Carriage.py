@@ -34,6 +34,9 @@ class Carriage(object):
         self.if_perm_weights = False
         self.example = True
 
+    def get_weight(self):
+        return self.weight_arrangement
+
     def loading_bar(self):
         if self.step_p:
             for i in range(0, self.n_bar, self.step_bar):
