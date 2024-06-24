@@ -6,6 +6,7 @@ import random
 class Carriage(object):
     cardmarkings = CardMarkings()   #Oznaczenia kart
     weight_gen = []                 #Tablica na wagi kart
+    weight_arrangement = 0
     cards = []
     cards_2d = []
     indices_2d = []                 #Indeksy ukladow kart
@@ -35,7 +36,8 @@ class Carriage(object):
         self.example = True
 
     def get_weight(self):
-        return self.weight_arrangement
+        if self.weight_arrangement > 0:
+            return self.weight_arrangement
 
     def loading_bar(self):
         if self.step_p:

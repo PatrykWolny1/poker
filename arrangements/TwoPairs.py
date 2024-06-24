@@ -45,10 +45,8 @@ class TwoPairs(object):
         self.example = True
 
     def get_weight(self):
-        return self.weight_arrangement
-
-    def get_weight(self):
-        return self.two_pairs_sum
+        if self.two_pairs_sum > 0:
+            return self.two_pairs_sum
 
     def loading_bar(self):
         # Pasek postepu

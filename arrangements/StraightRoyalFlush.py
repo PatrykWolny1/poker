@@ -15,7 +15,7 @@ class StraightRoyalFlush(object):
     cards_all_permutations = []    #Tablica do wyswietlania losowego ukladu
     perm_sorted = []               #Tablica na posortowana tablice permutacji
     perm_sorted_print = []         #Tablica na posortowane tablice permuacji - wyswietlanie
-    weight_arrangement = []        #Tablica na wage ukladu
+    weight_arrangement = 0         #Tablica na wage ukladu
     print_permutations = True      #Wyswietlenie wszystkich permutacji
     print_random = True            #Jesli jest wyswietlanie losowego ukladu
     random = False                 #Jesli jest losowanie ukladu
@@ -30,7 +30,8 @@ class StraightRoyalFlush(object):
         self.random = True
 
     def get_weight(self):
-        return self.weight_arrangement
+        if self.weight_arrangement > 0:
+            return self.weight_arrangement
 
     def print_arrengement(self):
         if self.num_arr == len(self.cards_all_permutations):

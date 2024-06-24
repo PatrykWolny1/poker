@@ -36,10 +36,7 @@ class Arrangements(object):
         self.one_pair.set_cards(self.cards)
         self.high_card.set_cards(self.cards)
 
-    def get_weight(self):
-        self.weights = []
-
-    def get_weight(self):
+    def get_weights(self):
         self.weights = []
         self.weights.append(self.straight_royal_flush.get_weight())
         self.weights.append(self.carriage.get_weight())
@@ -48,9 +45,9 @@ class Arrangements(object):
         self.weights.append(self.straight.get_weight())
         self.weights.append(self.three_of_a_kind.get_weight())
         self.weights.append(self.two_pairs.get_weight())
-        self.weights.append(self.high_card.get_weight())
         self.weights.append(self.one_pair.get_weight())
-
+        self.weights.append(self.high_card.get_weight())
+        print(self.weights)
         for idx in self.weights:
             if idx is not None:
                 return idx

@@ -39,7 +39,8 @@ class Full(object):
         self.random = True
 
     def get_weight(self):
-        return self.weight_arrangement
+        if self.weight_arrangement > 0:
+            return self.weight_arrangement
 
     def loading_bar(self):
         if self.step_p:

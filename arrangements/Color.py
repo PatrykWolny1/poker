@@ -40,10 +40,8 @@ class Color(object):
         self.random = True
 
     def get_weight(self):
-        return self.weight_arrangement
-
-    def get_weight(self):
-        return self.color_sum
+        if self.color_sum > 0:
+            return self.color_sum
 
     def loading_bar(self):
         #Pasek postepu

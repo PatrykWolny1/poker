@@ -47,35 +47,15 @@ class Croupier(object):
         for self.player in self.players:
             self.player.print_arrangement()
             self.player.check_arrengement()
-            self.weight.append(self.player.get_weight())
             print()
-            exchange = str(input("Wymiana kart [T/N]: "))
 
-            if exchange.lower() == 't':
+            exchange = str(input("Wymiana kart [T/N]: ")).lower()
+            if exchange == 't':
                 self.cards_exchange()
-            if exchange.lower() == 'n':
+            if exchange == 'n':
                 break
 
-        print(self.weight)
-
-        #print()
-        #self.player1.print()
-        #self.player2.check_arrangement()
-        #self.player2.print_arrangement()
-
-        for self.player in self.players:
-            self.player.print_arrangement()
-            self.player.check_arrengement()
-            self.weights.append(self.player.get_weight())
-            print()
-
-            while exchange := str(input("Wymiana kart [T/N]: ")).lower():
-                if exchange == 't':
-                    self.cards_exchange()
-                if exchange == 'n':
-                    break
-
-            self.player.set_cards(self.player.get_cards())
+            self.weights.append(self.player.get_weights())
 
         print()
         print("------------------------------------------------------------")
@@ -91,21 +71,21 @@ class Croupier(object):
         for idx in range(self.amount):
             self.player.take_cards(self.deck)
 
-    def cards_exchange(self, loop = True):
-        while (loop):
+    def cards_exchange(self):
+        while (True):
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
+
             print()
 
             if self.amount == -1:
-                continue
+                break
 
             self.amount = self.player.return_to_croupier(self.amount)
             print(self.amount)
 
-            if self.amount == -1:
-                continue
-
             self.deal_cards()
+
+            self.player.set_cards(self.player.get_cards())
             self.player.print_arrangement()
             self.player.check_arrengement()
 
