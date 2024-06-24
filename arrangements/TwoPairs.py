@@ -44,18 +44,12 @@ class TwoPairs(object):
         self.perm = cards
         self.example = True
 
-<<<<<<< HEAD
     def get_weight(self):
         return self.weight_arrangement
 
-=======
-<<<<<<< Updated upstream
-=======
     def get_weight(self):
         return self.two_pairs_sum
 
->>>>>>> Stashed changes
->>>>>>> hotfix
     def loading_bar(self):
         # Pasek postepu
 
