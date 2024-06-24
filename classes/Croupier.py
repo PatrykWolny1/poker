@@ -50,7 +50,6 @@ class Croupier(object):
 
         print()
 
-<<<<<<< HEAD
         for self.player in self.players:
             self.player.print_arrangement()
             self.player.check_arrengement()
@@ -64,13 +63,12 @@ class Croupier(object):
                 break
 
         print(self.weight)
-=======
-<<<<<<< Updated upstream
+
         #print()
         #self.player1.print()
         #self.player2.check_arrangement()
         #self.player2.print_arrangement()
-=======
+
         for self.player in self.players:
             self.player.print_arrangement()
             self.player.check_arrengement()
@@ -94,7 +92,6 @@ class Croupier(object):
             self.player.check_arrengement()
 
         self.compare_players_weights()
->>>>>>> hotfix
 
     def deal_cards(self):
         for idx in range(self.amount):
@@ -120,13 +117,11 @@ class Croupier(object):
 
             break
 
-<<<<<<< HEAD
     def compare_players_cards(self):
         pass
 
     def comp(self):
         pass
-=======
         print("------------------------------------------------------------")
         print()
 
@@ -136,5 +131,4 @@ class Croupier(object):
 
     def comp(self):
         pass
->>>>>>> Stashed changes
->>>>>>> hotfix
+
