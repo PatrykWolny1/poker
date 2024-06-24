@@ -36,12 +36,9 @@ class Arrangements(object):
         self.one_pair.set_cards(self.cards)
         self.high_card.set_cards(self.cards)
 
-<<<<<<< HEAD
     def get_weight(self):
         self.weights = []
-=======
-<<<<<<< Updated upstream
-=======
+
     def get_weight(self):
         self.weights = []
         self.weights.append(self.straight_royal_flush.get_weight())
@@ -51,7 +48,6 @@ class Arrangements(object):
         self.weights.append(self.straight.get_weight())
         self.weights.append(self.three_of_a_kind.get_weight())
         self.weights.append(self.two_pairs.get_weight())
->>>>>>> hotfix
         self.weights.append(self.high_card.get_weight())
         self.weights.append(self.one_pair.get_weight())
 
@@ -59,10 +55,6 @@ class Arrangements(object):
             if idx is not None:
                 return idx
 
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
->>>>>>> hotfix
     def check_arrangement(self):
         self.straight_royal_flush.straight_royal_flush()
         self.carriage.carriage()
