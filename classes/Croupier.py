@@ -117,19 +117,8 @@ class Croupier(object):
 
             break
 
-    def compare_players_cards(self):
-        pass
-        pass
-
-    def comp(self):
-        pass
-        print("------------------------------------------------------------")
-        print()
-
     def compare_players_weights(self):
         for idx in self.weights:
             print(idx)
 
-    def comp(self):
-        pass
 
