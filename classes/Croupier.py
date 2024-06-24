@@ -6,22 +6,16 @@ class Croupier(object):
     cards = []
     player1 = None
     player2 = None
-<<<<<<< HEAD
     player = None
     players = []
     weight = []
     amount = 0
 
-=======
-<<<<<<< Updated upstream
-=======
     player = None
     players = []
     weights = []
     amount = 0
 
->>>>>>> Stashed changes
->>>>>>> hotfix
     def __init__(self):
         self.deck = Deck()
         self.cards = [Card("4", "Ka"),
