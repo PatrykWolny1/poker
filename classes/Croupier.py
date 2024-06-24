@@ -6,11 +6,22 @@ class Croupier(object):
     cards = []
     player1 = None
     player2 = None
+<<<<<<< HEAD
     player = None
     players = []
     weight = []
     amount = 0
 
+=======
+<<<<<<< Updated upstream
+=======
+    player = None
+    players = []
+    weights = []
+    amount = 0
+
+>>>>>>> Stashed changes
+>>>>>>> hotfix
     def __init__(self):
         self.deck = Deck()
         self.cards = [Card("4", "Ka"),
@@ -39,6 +50,7 @@ class Croupier(object):
 
         print()
 
+<<<<<<< HEAD
         for self.player in self.players:
             self.player.print_arrangement()
             self.player.check_arrengement()
@@ -52,6 +64,37 @@ class Croupier(object):
                 break
 
         print(self.weight)
+=======
+<<<<<<< Updated upstream
+        #print()
+        #self.player1.print()
+        #self.player2.check_arrangement()
+        #self.player2.print_arrangement()
+=======
+        for self.player in self.players:
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+            self.weights.append(self.player.get_weight())
+            print()
+
+            while exchange := str(input("Wymiana kart [T/N]: ")).lower():
+                if exchange == 't':
+                    self.cards_exchange()
+                if exchange == 'n':
+                    break
+
+            self.player.set_cards(self.player.get_cards())
+
+        print()
+        print("------------------------------------------------------------")
+        print("------------------------------------------------------------")
+
+        for self.player in self.players:
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+
+        self.compare_players_weights()
+>>>>>>> hotfix
 
     def deal_cards(self):
         for idx in range(self.amount):
@@ -77,8 +120,21 @@ class Croupier(object):
 
             break
 
+<<<<<<< HEAD
     def compare_players_cards(self):
         pass
 
     def comp(self):
         pass
+=======
+        print("------------------------------------------------------------")
+        print()
+
+    def compare_players_weights(self):
+        for idx in self.weights:
+            print(idx)
+
+    def comp(self):
+        pass
+>>>>>>> Stashed changes
+>>>>>>> hotfix
