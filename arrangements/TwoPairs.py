@@ -47,6 +47,9 @@ class TwoPairs(object):
     def get_weight(self):
         return self.weight_arrangement
 
+    def get_weight(self):
+        return self.two_pairs_sum
+
     def loading_bar(self):
         # Pasek postepu
 
