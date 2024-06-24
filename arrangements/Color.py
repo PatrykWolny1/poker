@@ -39,18 +39,12 @@ class Color(object):
         self.example = True
         self.random = True
 
-<<<<<<< HEAD
     def get_weight(self):
         return self.weight_arrangement
 
-=======
-<<<<<<< Updated upstream
-=======
     def get_weight(self):
         return self.color_sum
 
->>>>>>> Stashed changes
->>>>>>> hotfix
     def loading_bar(self):
         #Pasek postepu
         #Jesli random = True to wybierana jest wartosc pierwsza
