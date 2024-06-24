@@ -82,6 +82,18 @@ class Player(object):
         self.arrangements.print()
         self.arrangements.check_arrangement()
 
+<<<<<<< Updated upstream
+=======
+    def set_cards(self, cards):
+        self.arrangements.set_cards(cards)
+
+    def get_cards(self):
+        return self.cards
+
+    def get_weight(self):
+        return self.arrangements.get_weight()
+
+>>>>>>> Stashed changes
     def print(self):
         print(self.nick)
         for idx in self.cards:

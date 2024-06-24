@@ -6,6 +6,14 @@ class Croupier(object):
     cards = []
     player1 = None
     player2 = None
+<<<<<<< Updated upstream
+=======
+    player = None
+    players = []
+    weights = []
+    amount = 0
+
+>>>>>>> Stashed changes
     def __init__(self):
         self.deck = Deck()
 <<<<<<< Updated upstream
@@ -48,7 +56,67 @@ class Croupier(object):
         #self.player1.print_arrangement()
 >>>>>>> Stashed changes
 
+<<<<<<< Updated upstream
         #print()
         #self.player1.print()
         #self.player2.check_arrangement()
         #self.player2.print_arrangement()
+=======
+        for self.player in self.players:
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+            self.weights.append(self.player.get_weight())
+            print()
+
+            while exchange := str(input("Wymiana kart [T/N]: ")).lower():
+                if exchange == 't':
+                    self.cards_exchange()
+                if exchange == 'n':
+                    break
+
+            self.player.set_cards(self.player.get_cards())
+
+        print()
+        print("------------------------------------------------------------")
+        print("------------------------------------------------------------")
+
+        for self.player in self.players:
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+
+        self.compare_players_weights()
+
+    def deal_cards(self):
+        for idx in range(self.amount):
+            self.player.take_cards(self.deck)
+
+    def cards_exchange(self, loop = True):
+        while (loop):
+            self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
+            print()
+
+            if self.amount == -1:
+                continue
+
+            self.amount = self.player.return_to_croupier(self.amount)
+            print(self.amount)
+
+            if self.amount == -1:
+                continue
+
+            self.deal_cards()
+            self.player.print_arrangement()
+            self.player.check_arrengement()
+
+            break
+
+        print("------------------------------------------------------------")
+        print()
+
+    def compare_players_weights(self):
+        for idx in self.weights:
+            print(idx)
+
+    def comp(self):
+        pass
+>>>>>>> Stashed changes

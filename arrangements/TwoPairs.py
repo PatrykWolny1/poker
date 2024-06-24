@@ -44,6 +44,12 @@ class TwoPairs(object):
         self.perm = cards
         self.example = True
 
+<<<<<<< Updated upstream
+=======
+    def get_weight(self):
+        return self.two_pairs_sum
+
+>>>>>>> Stashed changes
     def loading_bar(self):
         # Pasek postepu
 
