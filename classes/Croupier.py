@@ -56,11 +56,10 @@ class Croupier(object):
             if exchange == 't':
                 self.cards_exchange()
             if exchange == 'n':
-                break
+                pass
 
-            self.player.get_weights_arrangement()
             self.weights.append(self.player.get_weight())
-            print(self.weight)
+            print(self.player.get_weight())
 
             print()
             print("------------------------------------------------------------")
@@ -71,9 +70,9 @@ class Croupier(object):
         print("------------------------------------------------------------")
 
         for self.player in self.players:
-            self.player.set_cards_arrangement(self.player.get_cards())
-            self.player.print_arrangement()
-            self.player.check_arrangement()
+            self.player.get_arrangements().set_cards(self.player.get_cards())
+            self.player.print()
+            self.player.get_arrangements().check_arrangement()
 
             print(self.player.weight)
 
@@ -98,20 +97,24 @@ class Croupier(object):
 
         self.deal_cards()
 
-        self.player.set_cards_arrangement(self.player.get_cards())
-        self.player.print_arrangement()
-        self.player.check_arrangement()
+        self.player.get_arrangements().set_cards(self.player.get_cards())
+        self.player.print()
+        self.player.get_arrangements().check_arrangement()
+
 
     def compare_players_weights(self):
         max_weight = list(max(enumerate(self.weights), key = itemgetter(1)))
         print(max_weight)
 
+        print("------------------------------------------------------------")
+        print("------------------------------------------------------------")
+
         for self.player in self.players:
             if self.player.index == max_weight[0]:
                 print("WYGRANA")
-                self.player.set_cards_arrangement(self.player.get_cards())
-                self.player.print_arrangement()
-                self.player.check_arrangement()
+                self.player.get_arrangements().set_cards(self.player.get_cards())
+                self.player.print()
+                self.player.get_arrangements().check_arrangement()
 
 
 

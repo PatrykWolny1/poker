@@ -22,6 +22,9 @@ class Player(object):
         self.amount = amount
         temp = self.cards.copy()
 
+        if self.amount == 0:
+            return self.amount
+
         for idx in range(self.amount):
             if idx == 0:
                 self.print()
@@ -109,10 +112,11 @@ class Player(object):
     def check_arrangement(self):
         self.arrangements.check_arrangement()
 
-    def get_weights_arrangement(self):
-        self.weight = self.arrangements.get_weights()
+    def get_arrangements(self):
+        return self.arrangements
 
     def get_weight(self):
+        self.weight = self.arrangements.set_get_weights()
         return self.weight
 
     def set_cards_arrangement(self, cards):

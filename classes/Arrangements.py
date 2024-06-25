@@ -36,7 +36,7 @@ class Arrangements(object):
         self.one_pair.set_cards(self.cards)
         self.high_card.set_cards(self.cards)
 
-    def get_weights(self):
+    def set_get_weights(self):
         self.weights = []
         self.weights.append(self.straight_royal_flush.get_weight())
         self.weights.append(self.carriage.get_weight())
