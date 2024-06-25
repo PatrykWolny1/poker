@@ -291,7 +291,7 @@ class Color(object):
                     self.color_weight = pow(self.high_card.weight, 5)
 
                     #Calkowita suma ukladu
-                    self.color_sum += self.color_weight
+                    self.color_sum += self.color_weight + 11264479
 
                     # print()
                     # for idx in range(0, len(self.perm_unsorted)):

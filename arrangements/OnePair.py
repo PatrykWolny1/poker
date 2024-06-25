@@ -222,7 +222,7 @@ class OnePair(object):
                             once_2 = True
 
         if one_count_1 == 3 and one_count_2 == 2:
-            self.weight_arrangement = one_weight
+            self.weight_arrangement = one_weight + 393468
             self.weight_gen.append(self.weight_arrangement)   # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
             if self.random == False:
                 self.print_arrengement()

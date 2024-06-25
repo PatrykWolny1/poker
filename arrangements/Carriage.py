@@ -186,7 +186,7 @@ class Carriage(object):
                 for j in range(0, len(self.indices_2d[i])):
                     weight_2 = self.cards_perm_weights[self.indices_2d[i][j]].weight * 1
             if (i == size - 1) and (if_carriage == 4):
-                self.weight_arrangement = (weight_1 + weight_2) + 2221
+                self.weight_arrangement = (weight_1 + weight_2) + 11664586
                 self.weight_gen.append(self.weight_arrangement)
                 if self.example == True:
                     self.print_arrengement()

@@ -222,7 +222,7 @@ class Straight(object):
 
                 # Jesli jest strit to weight_iter == 4. Liczono od 0
                 if weight_iter == 5:
-                    self.weight_arrangement = straight_weight
+                    self.weight_arrangement = straight_weight + 10871010
                     self.weight_gen.append(self.weight_arrangement)
                     calc_weights = False
 

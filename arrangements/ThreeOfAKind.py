@@ -183,7 +183,7 @@ class ThreeOfAKind(object):
                     once_2 = True
 
         if three_count_3 == 3 and three_count_1 == 2:
-            self.weight_arrangement = three_weight
+            self.weight_arrangement = three_weight + 10126496
             self.weight_gen.append(self.weight_arrangement)   # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
             if self.random == False:
                 self.print_arrengement()

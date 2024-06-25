@@ -286,6 +286,7 @@ class TwoPairs(object):
             if len(self.indices_2d_name[idx]) == 3:
                 return True
 
+        self.two_pairs_sum += 10069253
         perm_sorted.append([self.two_pairs_sum])
 
         if self.example == True and c_two_pairs == True:
