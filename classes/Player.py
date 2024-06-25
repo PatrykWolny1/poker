@@ -7,8 +7,8 @@ class Player(object):
     weight = 0
     index = 0
 
-    def __init__(self, nick, index, deck, if_deck):
-        self.cards = []
+    def __init__(self, deck, cards = [], nick = "Nick", index = 0, if_deck = False):
+        self.cards = cards
         self.nick = nick
         self.index = index
         deck.shuffling()
@@ -18,7 +18,7 @@ class Player(object):
                 self.cards.append(deck.deal())
             self.arrangements.set_cards(self.cards)
 
-    def return_to_croupier(self, amount = 0, cards = []):
+    def return_to_croupier(self, amount = 0):
         self.amount = amount
         temp = self.cards.copy()
 
@@ -34,11 +34,6 @@ class Player(object):
 
                 print()
                 which = int(which_card)
-                if which == -1:
-                    self.amount = which
-                    self.arrangements.set_cards(self.cards)
-                    print(self.cards)
-                    return self.amount
 
                 temp.pop(which - 1)
             else:
@@ -105,13 +100,6 @@ class Player(object):
 
         self.arrangements.set_cards(self.cards)
 
-    def print_arrangement(self):
-        print(self.nick)
-        self.arrangements.print()
-
-    def check_arrangement(self):
-        self.arrangements.check_arrangement()
-
     def get_arrangements(self):
         return self.arrangements
 
@@ -119,14 +107,11 @@ class Player(object):
         self.weight = self.arrangements.set_get_weights()
         return self.weight
 
-    def set_cards_arrangement(self, cards):
-        self.arrangements.set_cards(cards)
-
     def get_cards(self):
         return self.cards
 
-    def get_cards_arrangement(self):
-        return self.arrangements.get_cards()
+    def set_cards(self, cards):
+        self.cards = cards
 
     def print(self):
         print(self.nick)
