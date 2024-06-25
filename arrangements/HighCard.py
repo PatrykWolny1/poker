@@ -5,25 +5,27 @@ import random
 import time
 
 class HighCard(object):
-    cardmarkings = CardMarkings()  # Oznaczenia kart
-    cards_2d = []
-    indices_2d_name = []
-    perm = []
-    cards_all_permutations = []
-    weight_gen = []
+    cardmarkings = CardMarkings()   # Oznaczenia kart
+    indices_2d_name = []            # Lista na indeksy figur
+    indices_2d_color = []           # Lista na indeksy kolorow
+    perm = []                       # Lista na karty gracza
+    cards_all_permutations = []     # Lista na wszystkie permutacje
+    weight_gen = []                 # Lista na wszystkie wagi
 
-    weight_arrangement = 0
-    c_idx1 = 0
-    num_arr = 0
-    rand_int = 0
-    iter_pair = 0
+    high_card_1 = None
+
+    weight_arrangement = 0          # Waga ukladu
+    c_idx1 = 0                      # Zapisywanie aktualnego indeksu z petli for
+    num_arr = 0                     # Numer ukladu
+    rand_int = 0                    # Losowany numer
+    iter_high = 0                   # Ilosc wykonanych iteracji dla tworzenia permutacji ukladow
 
     random = False
     example = False
 
     step_p = True
     str_1 = ""
-    n_bar = 10137600 #1 098 240 - number of combinations (all) | 84480 (1 iter) | permutations - 131 788 800 | 10 137 600 (1 iter)
+    n_bar = 10137600                        #1 098 240 - number of combinations (all) | 84480 (1 iter) | permutations - 131 788 800 | 10 137 600 (1 iter)
     step_bar = int(n_bar / 40)              # Zwiekszanie dlugosci paska ladowania
     step_bar_finished = int(n_bar / 39)     # Jaka czesc stanowia kropki (zaladowane)
     idx_bar = 0
@@ -34,6 +36,7 @@ class HighCard(object):
         self.random = False
 
     def get_weight(self):
+        # Jesli to nie jest okreslony uklad to waga wynosi 0
         if self.weight_arrangement > 0:
             return self.weight_arrangement
 
@@ -131,15 +134,20 @@ class HighCard(object):
         # print(self.indices_2d_color)
 
     def card_max(self, perm_temp, pow_idx):
+        # Jesli lista jest pusta to wyjdz
         if not perm_temp:
             return 0
 
+        # Wybor maksymalnej wartosci z ukladu
         card_temp = max(perm_temp)
+
+        # Obliczenie wagi a nastepnie usuniecie kart z listy w celu pobrania nastepnej maksymalnej wartosci
         self.high_card_weight = pow(card_temp.weight, pow_idx)
         perm_temp.remove(card_temp)
 
         pow_idx -= 1
 
+        # Rekurencja (Dodanie poprzedniej wagi do nastepnej)
         return self.high_card_weight + self.card_max(perm_temp, pow_idx)
 
     def high_card(self):
@@ -149,6 +157,7 @@ class HighCard(object):
 
         straight_iter = 0
 
+        # Jesli uklad to strit to powrot z funkcji
         for idx2, idx1 in zip(range(1, len(self.perm[self.c_idx1])), range(0, len(self.perm[self.c_idx1]))):
             if ((self.perm[self.c_idx1][idx2].weight - self.perm[self.c_idx1][idx1].weight == 1) or
              (self.perm[self.c_idx1][4].weight == 13 and (self.perm[self.c_idx1][idx2].weight - self.perm[self.c_idx1][idx1].weight) == 9)):
@@ -160,6 +169,7 @@ class HighCard(object):
         self.get_indices_name(self.perm[self.c_idx1])
         self.get_indices_color(self.perm[self.c_idx1])
 
+        # Jesli uklad to kolor lub jest wiecej takich samych figure niz 1 to powrot z funkcji
         for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
             # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
             if len(self.indices_2d_color[idx3]) == 5:
@@ -167,6 +177,7 @@ class HighCard(object):
             if len(self.indices_2d_name[idx4]) > 1:
                 return
 
+        # Najwieksza karta dla jej wyswietlenia
         self.high_card_1 = max(self.perm[self.c_idx1].copy())
 
         perm_temp = self.perm[self.c_idx1].copy()
@@ -186,6 +197,7 @@ class HighCard(object):
         cards_comb_rest_sorted = []
         count = 0
 
+        # Dodawanie talii do listy cards_2d
         for arrangement in self.cardmarkings.arrangements:
             for color in self.cardmarkings.colors:
                 cards_2d.append(Card(arrangement, color))
@@ -199,6 +211,7 @@ class HighCard(object):
             #     cards_to_comb_rest[idx].print()
             # print()
 
+            # Utworzenie kombinacji ukladow z talii kart
             cards_comb_rest = list(combinations(cards_to_comb_rest, 5))
 
             cards_to_comb_rest.clear()
@@ -207,11 +220,13 @@ class HighCard(object):
 
                 cards_comb_rest[idx] = list(cards_comb_rest[idx])
 
+                # Sortowanie kombinacji ukladow na podstawie wagi
                 cards_comb_rest_sorted.append(sorted(cards_comb_rest[idx].copy(), key = lambda x: x.weight))
 
                 self.get_indices_name(cards_comb_rest_sorted[idx])
                 self.get_indices_color(cards_comb_rest_sorted[idx])
 
+                # Usuwanie ukladow ktore sa kolorem lub posiadaja wiecej takich samych figur niz 1
                 for idx1 in range(0, len(self.indices_2d_name)):
                     if len(self.indices_2d_name[idx1]) != 1:
                         cards_comb_rest[idx] = []
@@ -220,6 +235,7 @@ class HighCard(object):
 
                 #print(idx)
 
+                # Usuwanie ukladow ktore sa stritem
                 if cards_comb_rest_sorted[idx] != []:
                     for idx2, idx3 in zip(range(1, len(cards_comb_rest_sorted[idx])),
                                           range(0, len(cards_comb_rest_sorted[idx]) - 1)):
@@ -234,6 +250,7 @@ class HighCard(object):
 
                     count = 0
 
+            # Usuwanie pustych list
             cards_comb_rest = [x for x in cards_comb_rest if x != []]
 
             # for idx in range(0, len(cards_comb_rest)):
@@ -243,6 +260,7 @@ class HighCard(object):
 
             #print(len(cards_comb_rest))
 
+            # Tworzenie permutacji kart z kombinacji
             for idx in range(0, len(cards_comb_rest)):
                 self.perm = list(permutations(cards_comb_rest[idx], 5))
 
@@ -258,6 +276,7 @@ class HighCard(object):
                             self.perm[idx1][idx2].print()
                         print()
 
+                    # Zapisanie indeksu uzywanego w funkcji high_card()
                     self.c_idx1 = idx1
                     self.high_card()
 
@@ -269,12 +288,14 @@ class HighCard(object):
                         self.loading_bar()
                         self.idx_bar += 1
 
-                    self.iter_pair += 1
+                    self.iter_high += 1
 
+                    # Czas po jakim ma skonczyc sie generowanie permutacji
                     if int(time.time() - start_time) == 160:
                         pass
 
-                    if self.iter_pair == self.n_bar:
+                    # Iteracja po jakiej ma skonczyc sie generowanie permutacji
+                    if self.iter_high == self.n_bar:
                         self.check_if_weights_larger()
                         return self.random_arrangement()
 
