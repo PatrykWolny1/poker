@@ -5,10 +5,12 @@ class Player(object):
     random = False
     amount = 0
     weight = 0
+    index = 0
 
-    def __init__(self, nick, deck, if_deck):
+    def __init__(self, nick, index, deck, if_deck):
         self.cards = []
         self.nick = nick
+        self.index = index
         deck.shuffling()
         self.arrangements = Arrangements()
         if if_deck:
@@ -109,6 +111,9 @@ class Player(object):
 
     def get_weights_arrangement(self):
         self.weight = self.arrangements.get_weights()
+
+    def get_weight(self):
+        return self.weight
 
     def set_cards_arrangement(self, cards):
         self.arrangements.set_cards(cards)

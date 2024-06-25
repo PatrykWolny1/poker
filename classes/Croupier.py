@@ -2,14 +2,17 @@ from classes.Player import Player
 from classes.Deck import Deck
 from classes.Card import Card
 from classes.Arrangements import Arrangements
+from operator import itemgetter
+
 class Croupier(object):
     cards = []
     player1 = None
     player2 = None
     player = None
     players = []
-    weight = []
+    weights = []
     amount = 0
+    idx_players = 0
 
     player = None
     players = []
@@ -32,11 +35,11 @@ class Croupier(object):
     def play(self):
         print()
 
-        idx_players = int(input("Ilu graczy: "))
+        self.idx_players = int(input("Ilu graczy: "))
 
-        for idx in range(idx_players):
+        for idx in range(self.idx_players):
             nick = str(input("Pseudonim gracza: "))
-            self.players.append(Player(nick, self.deck, True))
+            self.players.append(Player(nick, idx, self.deck, True))
 
         #self.player1.give_cards(0, self.cards)
         #print("Deck: ", len(self.deck.cards))
@@ -56,6 +59,7 @@ class Croupier(object):
                 break
 
             self.player.get_weights_arrangement()
+            self.weights.append(self.player.get_weight())
             print(self.weight)
 
             print()
@@ -73,7 +77,9 @@ class Croupier(object):
 
             print(self.player.weight)
 
-        #self.compare_players_weights()
+        print(self.weights)
+
+        self.compare_players_weights()
 
     def deal_cards(self):
         for idx in range(self.amount):
@@ -96,8 +102,16 @@ class Croupier(object):
         self.player.print_arrangement()
         self.player.check_arrangement()
 
-    # def compare_players_weights(self):
-    #     for idx in self.weights:
-    #         print(idx)
+    def compare_players_weights(self):
+        max_weight = list(max(enumerate(self.weights), key = itemgetter(1)))
+        print(max_weight)
+
+        for self.player in self.players:
+            if self.player.index == max_weight[0]:
+                print("WYGRANA")
+                self.player.set_cards_arrangement(self.player.get_cards())
+                self.player.print_arrangement()
+                self.player.check_arrangement()
+
 
 
