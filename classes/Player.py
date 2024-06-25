@@ -4,6 +4,7 @@ class Player(object):
     cards = None
     random = False
     amount = 0
+    weight = 0
 
     def __init__(self, nick, deck, if_deck):
         self.cards = []
@@ -103,17 +104,20 @@ class Player(object):
         print(self.nick)
         self.arrangements.print()
 
-    def check_arrengement(self):
+    def check_arrangement(self):
         self.arrangements.check_arrangement()
 
-    def get_weights(self):
-        return self.arrangements.get_weights()
+    def get_weights_arrangement(self):
+        self.weight = self.arrangements.get_weights()
 
-    def set_cards(self, cards):
+    def set_cards_arrangement(self, cards):
         self.arrangements.set_cards(cards)
 
     def get_cards(self):
         return self.cards
+
+    def get_cards_arrangement(self):
+        return self.arrangements.get_cards()
 
     def print(self):
         print(self.nick)

@@ -298,6 +298,9 @@ class TwoPairs(object):
         #         print(self.high_card[0].print_str())
         #print(self.perm_unsort)
 
+        else:
+            self.two_pairs_sum = 0
+
         self.count = 0
         # Odsortowanie tablicy za pomoca indeksow
         self.perm_unsort.append(sorted(perm_sorted.copy(), key = self.temp_lambda))

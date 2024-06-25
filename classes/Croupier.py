@@ -13,7 +13,7 @@ class Croupier(object):
 
     player = None
     players = []
-    weights = []
+    weight = 0
     amount = 0
 
     def __init__(self):
@@ -24,8 +24,8 @@ class Croupier(object):
                       Card("K", "Ka"),
                       Card("K", "Ki")]
 
-        self.player1 = Player('Nick', self.deck, True)
-        self.player2 = Player('Tom', self.deck, True)
+        #self.player1 = Player('Nick', self.deck, True)
+        #self.player2 = Player('Tom', self.deck, True)
 
     ###############################################ZROBIC KOMENTARZE DO HIGH_CARD I ONE_PAIR I THREE_OF_A_KIND
 
@@ -46,7 +46,7 @@ class Croupier(object):
 
         for self.player in self.players:
             self.player.print_arrangement()
-            self.player.check_arrengement()
+            self.player.check_arrangement()
             print()
 
             exchange = str(input("Wymiana kart [T/N]: ")).lower()
@@ -55,44 +55,49 @@ class Croupier(object):
             if exchange == 'n':
                 break
 
-            self.weights.append(self.player.get_weights())
+            self.player.get_weights_arrangement()
+            print(self.weight)
+
+            print()
+            print("------------------------------------------------------------")
+            print()
 
         print()
         print("------------------------------------------------------------")
         print("------------------------------------------------------------")
 
         for self.player in self.players:
+            self.player.set_cards_arrangement(self.player.get_cards())
             self.player.print_arrangement()
-            self.player.check_arrengement()
+            self.player.check_arrangement()
 
-        self.compare_players_weights()
+            print(self.player.weight)
+
+        #self.compare_players_weights()
 
     def deal_cards(self):
         for idx in range(self.amount):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        while (True):
-            self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
+        self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
 
-            print()
+        print()
 
-            if self.amount == -1:
-                break
+        if self.amount == -1:
+            return
 
-            self.amount = self.player.return_to_croupier(self.amount)
-            print(self.amount)
+        self.amount = self.player.return_to_croupier(self.amount)
+        print(self.amount)
 
-            self.deal_cards()
+        self.deal_cards()
 
-            self.player.set_cards(self.player.get_cards())
-            self.player.print_arrangement()
-            self.player.check_arrengement()
+        self.player.set_cards_arrangement(self.player.get_cards())
+        self.player.print_arrangement()
+        self.player.check_arrangement()
 
-            break
-
-    def compare_players_weights(self):
-        for idx in self.weights:
-            print(idx)
+    # def compare_players_weights(self):
+    #     for idx in self.weights:
+    #         print(idx)
 
 

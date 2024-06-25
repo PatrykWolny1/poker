@@ -110,6 +110,13 @@ class Full(object):
                 print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
             print(indices[idx])
 
+    def dim(self, a):
+        # Jesli to nie jest lista to zwroc pusty zbior
+        if not type(a) == list:
+            return []
+        # Rekurencja. Dodawanie kolejno dlugosci kolejnych tablic np. [1 5 10 15] czyli 4-wymiarowa
+        return [len(a)] + self.dim(a[0])
+
     def get_indices_name(self, cards):
         self.indices_2d = []
 

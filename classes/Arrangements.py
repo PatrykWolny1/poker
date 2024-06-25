@@ -47,7 +47,6 @@ class Arrangements(object):
         self.weights.append(self.two_pairs.get_weight())
         self.weights.append(self.one_pair.get_weight())
         self.weights.append(self.high_card.get_weight())
-        print(self.weights)
         for idx in self.weights:
             if idx is not None:
                 return idx
@@ -62,6 +61,9 @@ class Arrangements(object):
         self.two_pairs.two_pairs()
         self.one_pair.one_pair()
         self.high_card.high_card()
+
+    def get_cards(self):
+        return self.cards
 
     def print(self):
         for idx in self.cards:
