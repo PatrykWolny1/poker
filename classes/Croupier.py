@@ -1,7 +1,6 @@
 from classes.Player import Player
 from classes.Deck import Deck
 from classes.Card import Card
-from classes.Arrangements import Arrangements
 from operator import itemgetter
 
 class Croupier(object):
