@@ -182,7 +182,7 @@ class StraightRoyalFlush(object):
                         straight_weight += self.perm_sorted[idx4][idx3].weight
 
                         #Zapisanie wagi do tablicy wag
-                        self.weight_arrangement = straight_weight + 11693159
+                        self.weight_arrangement = straight_weight + 12448474
                         self.weight_gen.append(self.weight_arrangement)
 
                         #Pobranie indeksow gdzie znajduja sie takie same kolory

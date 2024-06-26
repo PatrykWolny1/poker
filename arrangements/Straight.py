@@ -165,7 +165,7 @@ class Straight(object):
         if len(self.dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx6 = 0
-            self.c_idx6_iter = (120 * 1020) + 1
+            self.c_idx6_iter = (120 * 1020)
 
         # Przygotowanie tablicy do sortowania. Sortowanie jest uzywane zeby ulatwic okreslenie czy jest to strit
         self.perm[self.c_idx6] = sorted(self.perm[self.c_idx6], key=lambda x: x.weight)
@@ -202,14 +202,21 @@ class Straight(object):
             if ((self.perm[self.c_idx6][idx2].weight - self.perm[self.c_idx6][idx1].weight == 1) or
                     (self.perm[self.c_idx6][4].weight == 13 and (self.perm[self.c_idx6][idx2].weight - self.perm[self.c_idx6][idx1].weight) == 9)):
 
-                if self.c_idx6_iter in range(120 * 1020): #120*1020
-                    #print(idx1 + 2, self.perm[self.c_idx6][idx1].print_str())
+                if self.c_idx6_iter in range((120 * 1020) + 1): #120*1020
+                    print(idx1 + 2, self.perm[self.c_idx6][idx1].print_str())
                     straight_weight += pow(self.perm[self.c_idx6][idx1].weight, idx1 + 2)
                     weight_iter += 1
 
                     if self.perm[self.c_idx6][idx2].weight == 13:
                         #print("1", self.perm[self.c_idx6][idx2].print_str())
+                        straight_weight += pow(self.perm[self.c_idx6][idx2].weight, 1) - 10
+                        weight_iter += 1
+
+                    if self.perm[self.c_idx6][idx2].weight == 5:
+                        #print("1", self.perm[self.c_idx6][idx2].print_str())
                         straight_weight += pow(self.perm[self.c_idx6][idx2].weight, 1)
+                        weight_iter += 1
+
                 else:
                     #print(idx1 + 1, self.perm[self.c_idx6][idx1].print_str())
                     straight_weight += pow(self.perm[self.c_idx6][idx1].weight, idx1 + 1)
@@ -222,7 +229,7 @@ class Straight(object):
 
                 # Jesli jest strit to weight_iter == 4. Liczono od 0
                 if weight_iter == 5:
-                    self.weight_arrangement = straight_weight + 10871010
+                    self.weight_arrangement = straight_weight + 11242224
                     self.weight_gen.append(self.weight_arrangement)
                     calc_weights = False
 

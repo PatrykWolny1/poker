@@ -6,8 +6,9 @@ class Player(object):
     amount = 0
     weight = 0
     index = 0
+    cards = []
 
-    def __init__(self, deck, cards = [], nick = "Nick", index = 0, if_deck = False):
+    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
         self.cards = cards
         self.nick = nick
         self.index = index
@@ -56,7 +57,7 @@ class Player(object):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
 
         #if_all_perm = input()
-        if_all_perm = "2"
+        if_all_perm = "1"
 
         if if_all_perm == "1":
             self.random = False
@@ -75,7 +76,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "9"
+        arrangement = "5"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
