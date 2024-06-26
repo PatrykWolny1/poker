@@ -27,11 +27,17 @@ class Croupier(object):
         #
         # print()
 
+
+
         self.set_cards()
         player1 = Player(self.deck, self.cards)
-        player1.get_arrangements().set_cards(self.cards)
-        player1.print()
+        player1.cards_permutations()
+        player1.get_arrangements().print()
         player1.get_arrangements().check_arrangement()
+
+        # player1.get_arrangements().set_cards(self.cards)
+        # player1.print()
+        # player1.get_arrangements().check_arrangement()
 
 
         # self.cards_check_exchange_add_weights()

@@ -36,7 +36,7 @@ class HighCard(object):
         self.random = False
 
     def get_weight(self):
-        # Jesli to nie jest okreslony uklad to waga wynosi 0
+        # Jesli nie wystepuje uklad to waga wynosi 0
         if self.weight_arrangement > 0:
             return self.weight_arrangement
 

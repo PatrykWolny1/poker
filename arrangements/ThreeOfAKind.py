@@ -5,21 +5,20 @@ import random
 
 class ThreeOfAKind(object):
     cardmarkings = CardMarkings()  # Oznaczenia kart
-    cards_2d = []
-    indices_2d_name = []
-    perm = []
-    cards_all_permutations = []
-    weight_gen = []
+    indices_2d_name = []           # Lista na indeksy figur
+    perm = []                      # Lista na permutacje
+    cards_all_permutations = []    # Lista na wszystkie permutacje
+    weight_gen = []                # Lista na wagi
 
-    high_card = None
+    high_card = None               # Wysoka karta (Card)
 
-    weight_arrangement = 0
-    c_idx1 = 0
-    num_arr = 0
-    rand_int = 0
+    weight_arrangement = 0         # Waga ukladu
+    c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
+    num_arr = 0                    # Numer ukladu
+    rand_int = 0                   # Losowy numer
 
-    random = False
-    example = False
+    random = False                 # Czy uklad ma byc wylosowany
+    example = False                # Czy ma byc pokazany przykladowy uklad
 
     step_p = True
     str_1 = ""
@@ -33,6 +32,7 @@ class ThreeOfAKind(object):
         self.random = False
 
     def get_weight(self):
+        # Jesli nie wystepuje uklad to waga wynosi 0
         if self.weight_arrangement > 0:
             return self.weight_arrangement
 
@@ -134,16 +134,16 @@ class ThreeOfAKind(object):
         self.get_indices_name(cards_comb)
 
         for i in range(0, len(self.indices_2d_name)):
-            if len(self.indices_2d_name[i]) > 3:  # Jesli w wierszu tablicy znajduja sie 2 takie same elementy
+            if len(self.indices_2d_name[i]) > 3:  # Jesli w wierszu tablicy znajduje wiecej niz 3 takie same elementy
                 return True
 
         return False
 
     def three_of_a_kind(self):
-        three_count_3 = 0
-        three_count_1 = 0
-        once_2 = False
-        once_1 = False
+        three_count_3 = 0       # Wiekszy o 1 gdy wystepuja 3 takie same karty
+        three_count_1 = 0       # Wiekszy o 1 gdy wystepuje 1 taka sama karta
+        once_2 = False          # Jesli prawda to procedura zostala wykonana (1 raz)
+        once_1 = False          # Jesli prawda to procedura zostala wykonana (1 raz)
         three_weight = 0
 
         if len(self.dim(self.perm)) == 1:
@@ -154,6 +154,7 @@ class ThreeOfAKind(object):
 
         for idx in range(0, len(self.indices_2d_name)):
 
+            # Jesli dlugosc jest rowna 3 to znaczy ze wystepuja 3 takie same karty
             if len(self.indices_2d_name[idx]) == 3:
                 three_count_3 += 1
 
@@ -164,12 +165,15 @@ class ThreeOfAKind(object):
 
                     once_1 = True
 
+            # Jesli dlugosc jest rowna 1 to znaczy ze wystepuje 1 karta
             if len(self.indices_2d_name[idx]) == 1:
                 three_count_1 += 1
 
                 if once_2 == False:
                     for idx1 in range(idx + 1, len(self.indices_2d_name)):
                         if len(self.indices_2d_name[idx1]) == 1:
+
+                            # Starsza karta otrzymuje wieksza wage
                             if self.perm[self.c_idx1][self.indices_2d_name[idx][0]] < self.perm[self.c_idx1][self.indices_2d_name[idx1][0]]:
                                 self.high_card = self.perm[self.c_idx1][self.indices_2d_name[idx1][0]]
                                 three_weight += pow(self.perm[self.c_idx1][self.indices_2d_name[idx][0]].weight, 2)
@@ -182,6 +186,7 @@ class ThreeOfAKind(object):
 
                     once_2 = True
 
+        # Jesli prawda to uklad jest Trojka
         if three_count_3 == 3 and three_count_1 == 2:
             self.weight_arrangement = three_weight + 10126496
             self.weight_gen.append(self.weight_arrangement)   # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
@@ -199,6 +204,7 @@ class ThreeOfAKind(object):
         iter_ar = 0
         len_comb = 0
 
+        # Tworzenie talii kart
         for arrangement in self.cardmarkings.arrangements:
             for color in self.cardmarkings.colors:
                 cards_2d.append(Card(arrangement, color))
@@ -220,6 +226,7 @@ class ThreeOfAKind(object):
             cards_to_comb_rest.clear()
 
             for idx in range(0, len(cards_comb_rest)):
+                # Rozszerza o 4 pierwsze karty z talii o takich samych figurach ale o roznych kolorach
                 cards_to_comb.extend(cards_2d[0 + iter_ar : 4 + iter_ar])
 
                 cards_comb_rest[idx] = list(cards_comb_rest[idx])
@@ -228,12 +235,21 @@ class ThreeOfAKind(object):
                 #     cards_comb_rest[idx][idx1].print()
                 # print()
 
+                # Rozszerza o kombinacje 2 kart czyli jest 6 kart
                 cards_to_comb.extend(cards_comb_rest[idx])
 
                 cards_to_comb_1.append(cards_to_comb.copy())
 
                 cards_to_comb.clear()
 
+            # for idx in range(0, len(cards_to_comb_1)):
+            #     for idx1 in range(0, len(cards_to_comb_1[idx])):
+            #         cards_to_comb_1[idx][idx1].print()
+            #     print()
+
+            # Usuwanie gdy wystepuja 2 takie same karty oprocz ukladu ktory jest glowny (zostana usuniete w dalszym procesie)
+            # Glowne karty: 2Ki 2Tr 2Pi 2Ka 2Ki 2Tr
+            # Usuwane uklady. 2Ki 2Tr 2Pi 2Ka 3Ki 3Pi
             for idx in range(0, len(cards_to_comb_1)):
                 if_remove_comb_1 = self.remove_multiples(cards_to_comb_1[idx])
 
@@ -251,6 +267,7 @@ class ThreeOfAKind(object):
             for idx in range(0, len(cards_to_comb_1)):
                 cards_comb = list(combinations(cards_to_comb_1[idx], 5))
 
+                # Usuwanie wiersza gdy w ukladzie znajduja sie wiecej niz 3 takie same karty
                 for idx1 in range(0, len(cards_comb)):
                     if_remove_comb_2 = self.remove_multiples_more_3(cards_comb[idx1])
 
@@ -259,6 +276,7 @@ class ThreeOfAKind(object):
 
                 cards_comb = [x for x in cards_comb if x != []]
 
+                # Permutacje z gotowego uklady kombinacji
                 for idx1 in range(0, len(cards_comb)):
                     self.perm = list(permutations(cards_comb[idx1], 5))
 
@@ -274,6 +292,7 @@ class ThreeOfAKind(object):
                                 self.perm[idx1][idx2].print()
                             print()
 
+                        # Pomocnicza, indeks do petli for w funkcji three_of_a_kind() - do listy perm
                         self.c_idx1 = idx1
                         self.three_of_a_kind()
 
@@ -283,15 +302,18 @@ class ThreeOfAKind(object):
 
                         self.cards_all_permutations.append(self.perm[idx1])
 
+                # Liczenie ilosci kombinacji
                 len_comb += len(cards_comb)
 
             #print(len_comb)
 
             cards_to_comb_1.clear()
 
+            # Liczenie iteracji
             i_three += 1
             iter_ar += 4
 
+            # Jesli koniec ukladow to przerwij petle while
             if i_three == 13:
                 break
 
