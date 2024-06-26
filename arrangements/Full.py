@@ -169,7 +169,7 @@ class Full(object):
                 self.if_full += 1
 
         if (self.if_full == 2):
-            self.weight_arrangement = (weight_1 + weight_2) + 11657947
+            self.weight_arrangement = (weight_1 + weight_2) + 12408806
             self.weight_gen.append(self.weight_arrangement)  # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
             self.print_arrengement()
 

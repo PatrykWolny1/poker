@@ -6,8 +6,9 @@ class Player(object):
     amount = 0
     weight = 0
     index = 0
+    cards = []
 
-    def __init__(self, deck, cards = [], nick = "Nick", index = 0, if_deck = False):
+    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
         self.cards = cards
         self.nick = nick
         self.index = index
@@ -75,7 +76,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "6"
+        arrangement = "5"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)

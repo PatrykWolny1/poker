@@ -18,8 +18,6 @@ class Croupier(object):
     def __init__(self):
         self.deck = Deck()
 
-    ###############################################ZROBIC KOMENTARZE DO HIGH_CARD I ONE_PAIR I THREE_OF_A_KIND
-
     def play(self):
         # print()
         #
@@ -27,18 +25,16 @@ class Croupier(object):
         #
         # print()
 
+        #########################################################
 
-
+        # Dla testowania wybranych uklaldow
         self.set_cards()
-        player1 = Player(self.deck, self.cards)
-        player1.cards_permutations()
-        player1.get_arrangements().print()
+        player1 = Player(self.deck, cards = self.cards)
+        player1.get_arrangements().set_cards(self.cards)
+        player1.print()
         player1.get_arrangements().check_arrangement()
 
-        # player1.get_arrangements().set_cards(self.cards)
-        # player1.print()
-        # player1.get_arrangements().check_arrangement()
-
+        #########################################################
 
         # self.cards_check_exchange_add_weights()
         #
@@ -52,15 +48,14 @@ class Croupier(object):
         #     self.player.get_arrangements().check_arrangement()
         #
         # print(self.weights)
-        #
         # self.compare_players_weights()
 
     def set_cards(self):
         self.cards = [Card("2", "Ka"),
-                      Card("3", "Ka"),
-                      Card("4", "Ka"),
-                      Card("5", "Ka"),
-                      Card("A", "Ka")]
+                      Card("2", "Pi"),
+                      Card("3", "Ki"),
+                      Card("3", "Tr"),
+                      Card("4", "Ka")]
 
     def set_players_nicknames(self):
         self.idx_players = int(input("Ilu graczy: "))
