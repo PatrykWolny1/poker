@@ -1,3 +1,4 @@
 test.txt
 loop.bat
-'*\__pycache__\*'
+arrangements\__pycache__\*
+classes\__pycache__\*
