@@ -29,6 +29,9 @@ class Carriage(object):
     step_bar_finished = int(n_bar / 19) #Jaka czesc stanowia kropki (zaladowane)
     step_p = True
 
+    def __init__(self):
+        pass
+
     #Funkcja dla przykladowego ukladu wpisanego recznie
     def set_cards(self, cards):
         self.cards_perm_weights = cards
