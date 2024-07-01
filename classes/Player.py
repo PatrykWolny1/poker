@@ -1,4 +1,5 @@
 from classes.Arrangements import Arrangements
+from random import choice
 class Player(object):
     nick = None
     cards = None
@@ -7,9 +8,11 @@ class Player(object):
     weight = 0
     index = 0
     cards = []
+    all_combs = []
+    combs_perm = False
 
     def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
-        self.cards = cards
+        self.cards = []
         self.nick = nick
         self.index = index
         deck.shuffling()
@@ -31,7 +34,10 @@ class Player(object):
                 self.print()
 
             if self.amount != 5:
-                which_card = input("Ktora karta[1-5]: ")
+                #which_card = input("Ktora karta[1-5]: ")
+                which_card = choice(list(range(1, 5)))
+
+                print("Ktora karta: ", which_card)
 
                 print()
                 which = int(which_card)
@@ -57,12 +63,19 @@ class Player(object):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
 
         #if_all_perm = input()
-        if_all_perm = "1"
+        if_rand = "1"
 
-        if if_all_perm == "1":
+        if if_rand == "1":
             self.random = False
-        elif if_all_perm == "2":
+        elif if_rand == "2":
             self.random = True
+
+        if_combs_perm = "2"
+
+        if if_combs_perm == "1":
+            self.combs_perm = False
+        elif if_combs_perm == "2":
+            self.combs_perm = True
 
         print("Wybierz uklad do wygenerowania:\n"
               "(1 - POKER KROLEWSKI)\n"
@@ -76,7 +89,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "5"
+        arrangement = "6"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
@@ -89,9 +102,9 @@ class Player(object):
         if arrangement == "5":
             self.cards = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
-            self.cards = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
+            self.cards, self.all_combs = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random, self.combs_perm)
         if arrangement == "7":
-            self.cards = self.arrangements.two_pairs.two_pairs_generating(self.random)
+            self.cards, self.all_combs = self.arrangements.two_pairs.two_pairs_generating(self.random, self.combs_perm)
         if arrangement == "8":
             self.cards = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":

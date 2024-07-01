@@ -9,6 +9,7 @@ class ThreeOfAKind(object):
     perm = []                      # Lista na permutacje
     cards_all_permutations = []    # Lista na wszystkie permutacje
     weight_gen = []                # Lista na wagi
+    all_combs = []                 # Liczba kombinacji 54912
 
     high_card = None               # Wysoka karta (Card)
 
@@ -19,6 +20,7 @@ class ThreeOfAKind(object):
 
     random = False                 # Czy uklad ma byc wylosowany
     example = False                # Czy ma byc pokazany przykladowy uklad
+    combs_perm = None
 
     step_p = True
     str_1 = ""
@@ -82,10 +84,13 @@ class ThreeOfAKind(object):
                 indices.append(idx1)
             idx1 += 1
 
+        if self.combs_perm == False:
+            self.cards_all_permutations = self.all_combs
+
         for idx in range(0, len(indices)):
             for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
-                print(self.cards_all_permutations[indices[idx]][idx1].print_str(), indices[idx], end=" ")
-            print()
+                print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
+            print(indices[idx])
 
     def random_arrangement(self):
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
@@ -95,7 +100,7 @@ class ThreeOfAKind(object):
         print("Wylosowany uklad: ", self.rand_int)
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
 
-        return self.cards_all_permutations[self.rand_int]
+        return self.cards_all_permutations[self.rand_int], self.all_combs
 
     def dim(self, a):
         # Jesli to nie jest lista to zwroc pusty zbior
@@ -146,6 +151,9 @@ class ThreeOfAKind(object):
         once_1 = False          # Jesli prawda to procedura zostala wykonana (1 raz)
         three_weight = 0
 
+        if self.combs_perm == False:
+            self.perm = list(self.cards_comb[self.c_idx1])
+
         if len(self.dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx1 = 0
@@ -190,11 +198,12 @@ class ThreeOfAKind(object):
         if three_count_3 == 3 and three_count_1 == 2:
             self.weight_arrangement = three_weight + 10126496
             self.weight_gen.append(self.weight_arrangement)   # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
-            if self.random == False:
+            if self.random == False and self.combs_perm == True:
                 self.print_arrengement()
 
-    def three_of_a_kind_generating(self, random):
+    def three_of_a_kind_generating(self, random, combs_perm):
         self.random = random
+        self.combs_perm = combs_perm
 
         cards_2d = []
         cards_to_comb = []
@@ -265,45 +274,49 @@ class ThreeOfAKind(object):
             #     print()
 
             for idx in range(0, len(cards_to_comb_1)):
-                cards_comb = list(combinations(cards_to_comb_1[idx], 5))
+                self.cards_comb = list(combinations(cards_to_comb_1[idx], 5))
 
                 # Usuwanie wiersza gdy w ukladzie znajduja sie wiecej niz 3 takie same karty
-                for idx1 in range(0, len(cards_comb)):
-                    if_remove_comb_2 = self.remove_multiples_more_3(cards_comb[idx1])
+                for idx1 in range(0, len(self.cards_comb)):
+                    if_remove_comb_2 = self.remove_multiples_more_3(self.cards_comb[idx1])
 
                     if if_remove_comb_2 == True:
-                        cards_comb[idx1] = []
+                        self.cards_comb[idx1] = []
 
-                cards_comb = [x for x in cards_comb if x != []]
+                self.cards_comb = [x for x in self.cards_comb if x != []]
 
                 # Permutacje z gotowego uklady kombinacji
-                for idx1 in range(0, len(cards_comb)):
-                    self.perm = list(permutations(cards_comb[idx1], 5))
-
-                    # for idx2 in range(0, len(cards_comb[idx1])):
-                    #     cards_comb[idx1][idx2].print()
-                    # print()
-
-                    for idx1 in range(0, len(self.perm)):
-                        self.perm[idx1] = list(self.perm[idx1])
-
-                        if self.random == False:
-                            for idx2 in range(0, len(self.perm[idx1])):
-                                self.perm[idx1][idx2].print()
-                            print()
-
+                for idx1 in range(0, len(self.cards_comb)):
+                    if self.combs_perm == False:
+                        self.all_combs.append(list(self.cards_comb[idx1]))
                         # Pomocnicza, indeks do petli for w funkcji three_of_a_kind() - do listy perm
                         self.c_idx1 = idx1
                         self.three_of_a_kind()
+                    # for idx2 in range(0, len(cards_comb[idx1])):
+                    #     cards_comb[idx1][idx2].print()
+                    # print()
+                    if self.combs_perm == True:
+                        self.perm = list(permutations(self.cards_comb[idx1], 5))
+                        for idx1 in range(0, len(self.perm)):
+                            self.perm[idx1] = list(self.perm[idx1])
 
-                        if self.random == True:
-                            self.loading_bar()
-                            self.num_arr += 1
+                            if self.random == False:
+                                for idx2 in range(0, len(self.perm[idx1])):
+                                    self.perm[idx1][idx2].print()
+                                print()
 
-                        self.cards_all_permutations.append(self.perm[idx1])
+                            # Pomocnicza, indeks do petli for w funkcji three_of_a_kind() - do listy perm
+                            self.c_idx1 = idx1
+                            self.three_of_a_kind()
+
+                            if self.random == True:
+                                self.loading_bar()
+                                self.num_arr += 1
+
+                            self.cards_all_permutations.append(self.perm[idx1])
 
                 # Liczenie ilosci kombinacji
-                len_comb += len(cards_comb)
+                len_comb += len(self.cards_comb)
 
             #print(len_comb)
 

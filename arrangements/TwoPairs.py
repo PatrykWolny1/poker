@@ -19,7 +19,9 @@ class TwoPairs(object):
     all_perm_size = 0              # Liczba wszystkich permutacji dla danej iteracji
     high_card = None               # Wysoka karta
     count = 0                      # Licznik do funkcji temp_lambda()
+    all_combs = []                 # Liczba kombinacji 123552
 
+    combs_perm = True
     random = False
     example = False
     if_not_two_pairs = False
@@ -164,6 +166,8 @@ class TwoPairs(object):
                 indices.append(idx1)
             idx1 += 1
 
+        #print("Ilosc kombinacji: ", len(self.all_combs))
+
         #Wyswietlenie ukladow ktore nie pasuja
         for idx in range(0, len(indices)):
             for idx1 in range(0, len(self.all_perm_rand[indices[idx]])):
@@ -212,7 +216,7 @@ class TwoPairs(object):
 
             self.print_arrengement()
 
-        return self.all_perm_rand[self.rand_int]
+        return self.all_perm_rand[self.rand_int], self.all_combs
 
     def two_pairs(self, cards_perm = []):
         two_pairs_weight = 0    # Tymczasowa zmienna na wage
@@ -334,13 +338,26 @@ class TwoPairs(object):
 
         #print("Ilosc kombinacji: ", len(self.cards_comb))
 
+
         # for idx in range(0, len(self.cards_comb)):
         #     for idx1 in range(0, len(self.cards_comb[idx])):
         #         self.cards_comb[idx][idx1].print()
         #     print()
 
+        # ---------------------------------------------- Kombinacje ----------------------------------------------
         for idx1 in range(0, len(self.cards_comb)):
-            self.perm.append(list(permutations(self.cards_comb[idx1], 5)))
+            if self.combs_perm == True:
+                self.perm.append(list(permutations(self.cards_comb[idx1], 5)))
+
+            if self.combs_perm == False:
+                self.all_combs.append(self.cards_comb[idx1])
+                if_not_two_pairs = self.two_pairs(self.cards_comb[idx1])
+                if if_not_two_pairs:
+                    return None
+
+                print(len(self.all_combs))
+
+        # --------------------------------------------------------------------------------------------------------
 
         # Zamiana tuple na list
         self.perm = [[list(j) for j in row[0:]] for row in self.perm]
@@ -387,11 +404,11 @@ class TwoPairs(object):
         # print("##################################################################")
         # print("------------------------------------------------------------------")
 
-        perm_size = len(self.perm[0])
+        #perm_size = len(self.perm[0])
 
         #print("Ilosc permutacji: ", len(self.perm) * len(self.perm[0]))
 
-        self.all_perm_size += len(self.cards_comb) * perm_size
+        #self.all_perm_size += len(self.cards_comb) * perm_size
 
         #print("Ilosc permutacji: ", self.all_perm_size)
         #print("comb_size * perm_size", perm_size, len(self.cards_comb))
@@ -414,8 +431,9 @@ class TwoPairs(object):
         self.perm.clear()
         self.cards_comb.clear()
 
-    def two_pairs_generating(self, random):
+    def two_pairs_generating(self, random, combs_perm):
         self.random = random
+        self.combs_perm = combs_perm
 
         self.cards_2d = []
         cards = []
@@ -637,7 +655,7 @@ class TwoPairs(object):
                             #####################################TUTAJ UMIESCIC RESZTE
                             cards = self.combinations_generating()
                             if cards:
-                                return cards
+                                return cards, self.all_combs
 
                             for idx11 in range(0, 4):
                                 self.cards_begin.pop()
