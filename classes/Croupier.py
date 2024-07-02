@@ -26,7 +26,14 @@ class Croupier(object):
 
         #########################################################
 
-        # Dla testowania wybranych uklaldow
+        # player1 = Player(self.deck)
+        # player1.cards_permutations()
+        # player1.print()
+        # player1.get_arrangements().check_arrangement()
+
+        #########################################################
+
+        # # Dla testowania wybranych uklaldow
         self.set_cards()
         player1 = Player(self.deck, cards = self.cards)
         player1.get_arrangements().set_cards(self.cards)

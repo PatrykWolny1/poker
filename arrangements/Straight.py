@@ -203,7 +203,7 @@ class Straight(object):
                     (self.perm[self.c_idx6][4].weight == 13 and (self.perm[self.c_idx6][idx2].weight - self.perm[self.c_idx6][idx1].weight) == 9)):
 
                 if self.c_idx6_iter in range((120 * 1020) + 1): #120*1020
-                    print(idx1 + 2, self.perm[self.c_idx6][idx1].print_str())
+                    #print(idx1 + 2, self.perm[self.c_idx6][idx1].print_str())
                     straight_weight += pow(self.perm[self.c_idx6][idx1].weight, idx1 + 2)
                     weight_iter += 1
 

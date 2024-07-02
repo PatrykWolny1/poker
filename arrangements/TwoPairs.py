@@ -3,7 +3,7 @@ from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations, chain
 from operator import itemgetter
 import random
-import numpy as np
+#import numpy as np
 import time
 
 class TwoPairs(object):
