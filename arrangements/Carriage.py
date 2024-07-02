@@ -193,6 +193,7 @@ class Carriage(object):
                 self.weight_gen.append(self.weight_arrangement)
                 if self.example == True:
                     self.print_arrengement()
+                return 7
 
     def check_generate_cards(self, cards_2d):
         # Generowanie 5 kart oraz sprawdzanie jaki to uklad

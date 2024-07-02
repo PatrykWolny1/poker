@@ -11,15 +11,18 @@ class Player(object):
     all_combs = []
     combs_perm = False
 
-    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
-        self.cards = []
+    def __init__(self, deck, cards, nick = "Nick", index = 0, if_deck = False):
         self.nick = nick
         self.index = index
         deck.shuffling()
         self.arrangements = Arrangements()
         if if_deck:
+            self.cards = []
             for idx in range(5):
                 self.cards.append(deck.deal())
+            self.arrangements.set_cards(self.cards)
+        else:
+            self.cards = cards
             self.arrangements.set_cards(self.cards)
 
     def return_to_croupier(self, amount = 0):

@@ -235,6 +235,8 @@ class OnePair(object):
             if self.random == False:
                 self.print_arrengement()
 
+            return 1
+
     def one_pair_generating(self, random):
         start_time = time.time()
 

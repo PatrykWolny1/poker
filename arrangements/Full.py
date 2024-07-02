@@ -172,6 +172,7 @@ class Full(object):
             self.weight_arrangement = (weight_1 + weight_2) + 12408806
             self.weight_gen.append(self.weight_arrangement)  # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
             self.print_arrengement()
+            return 6
 
     def full_generating(self, random):
         self.cards_2d = []

@@ -197,6 +197,8 @@ class StraightRoyalFlush(object):
                 idx2 += 1
                 idx3 += 1
                 continue
+
+
     def straight_royal_flush(self):
         #Sortowanie tablicy permutacji w celu ulatwienia ustalenia ukladu kart
         self.perm_sorted = []
@@ -225,8 +227,14 @@ class StraightRoyalFlush(object):
                 print()
                 #Liczenie wag dla tablicy kart
                 self.arrangement_recognition_weights()
+
         else:
             self.arrangement_recognition_weights()
+
+            if self.if_royal_flush == True:
+                return 9
+            else:
+                return 8
 
     def straight_royal_flush_generating(self, random):
         self.random = random

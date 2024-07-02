@@ -12,7 +12,9 @@ import itertools
 class Arrangements(object):
     cards = []
     weights = []
+    ids_arr = []
     def __init__(self, cards = []):
+        self.id_arr = 0
         self.cards = cards
         self.straight_royal_flush = StraightRoyalFlush()
         self.carriage = Carriage()
@@ -52,15 +54,20 @@ class Arrangements(object):
                 return idx
 
     def check_arrangement(self):
-        self.straight_royal_flush.straight_royal_flush()
-        self.carriage.carriage()
-        self.full.full()
-        self.color.color()
-        self.straight.straight()
-        self.three_of_a_kind.three_of_a_kind()
-        self.two_pairs.two_pairs()
-        self.one_pair.one_pair()
-        self.high_card.high_card()
+        self.ids_arr = []
+        self.ids_arr.append(self.straight_royal_flush.straight_royal_flush())
+        self.ids_arr.append(self.carriage.carriage())
+        self.ids_arr.append(self.full.full())
+        self.ids_arr.append(self.color.color())
+        self.ids_arr.append(self.straight.straight())
+        self.ids_arr.append(self.three_of_a_kind.three_of_a_kind())
+        self.ids_arr.append(self.two_pairs.two_pairs())
+        self.ids_arr.append(self.one_pair.one_pair())
+        self.ids_arr.append(self.high_card.high_card())
+        for idx in self.ids_arr:
+            if idx is not None:
+                print(idx)
+                return idx
 
     def get_cards(self):
         return self.cards

@@ -299,7 +299,7 @@ class Color(object):
                     # print()
 
                     self.print_arrengement()
-                    return
+                    return 5
             return
 
         #Obliczenia dla wyswietlenia wszystkich permutacji ukladu Kolor

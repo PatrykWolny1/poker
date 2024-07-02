@@ -302,7 +302,7 @@ class TwoPairs(object):
         #         print(perm_sorted[idx1])
         #         print(self.high_card[0].print_str())
         #print(self.perm_unsort)
-
+            return 2
         else:
             self.two_pairs_sum = 0
 
@@ -325,7 +325,6 @@ class TwoPairs(object):
 
         #Calkowita suma ukladu
         #print("WAGA UKLADU: ", self.two_pairs_sum, " WYSOKA KARTA: ", self.high_card[0].print_str())
-
     def combinations_generating(self):
         perm_size = 0
 

@@ -19,11 +19,11 @@ class Croupier(object):
         self.deck = Deck()
 
     def play(self):
-        print()
-
-        self.set_players_nicknames()
-
-        print()
+        # print()
+        #
+        # self.set_players_nicknames()
+        #
+        # print()
 
         #########################################################
 
@@ -35,41 +35,41 @@ class Croupier(object):
         #     for idx1 in range(0, len(player1.all_combs[idx])):
         #         player1.all_combs[idx][idx1].print()
         #     print()
-
-        #player1.get_arrangements().check_arrangement()
-        #player1.get_arrangements().print()
-
-        #########################################################
-
-        # # Dla testowania wybranych uklaldow
-        # self.set_cards()
-        # player1 = Player(self.deck, cards = self.cards)
-        # player1.get_arrangements().set_cards(self.cards)
-        # player1.print()
+        #
         # player1.get_arrangements().check_arrangement()
+        # player1.get_arrangements().print()
 
         #########################################################
-        print(choice(['T', 'N']))
-        self.cards_check_exchange_add_weights()
 
-        print()
-        print("------------------------------------------------------------")
-        print("------------------------------------------------------------")
+        # Dla testowania wybranych uklaldow
+        self.set_cards()
+        player1 = Player(self.deck, self.cards, if_deck=False)
+        player1.get_arrangements().set_cards(self.cards)
+        player1.print()
+        player1.get_arrangements().check_arrangement()
 
-        for self.player in self.players:
-            self.player.get_arrangements().set_cards(self.player.get_cards())
-            self.player.print()
-            self.player.get_arrangements().check_arrangement()
-
-        print(self.weights)
-        self.compare_players_weights()
+        #########################################################
+        # print(choice(['T', 'N']))
+        # self.cards_check_exchange_add_weights()
+        #
+        # print()
+        # print("------------------------------------------------------------")
+        # print("------------------------------------------------------------")
+        #
+        # for self.player in self.players:
+        #     self.player.get_arrangements().set_cards(self.player.get_cards())
+        #     self.player.print()
+        #     self.player.get_arrangements().check_arrangement()
+        #
+        # print(self.weights)
+        # self.compare_players_weights()
 
     def set_cards(self):
-        self.cards = [Card("2", "Ka"),
-                      Card("2", "Pi"),
-                      Card("3", "Ki"),
-                      Card("3", "Tr"),
-                      Card("4", "Ka")]
+        self.cards = [Card("9", "Ka"),
+                      Card("K", "Ka"),
+                      Card("Q", "Ka"),
+                      Card("J", "Ka"),
+                      Card("10", "Ka")]
 
     def set_players_nicknames(self):
         self.idx_players = int(input("Ilu graczy: "))

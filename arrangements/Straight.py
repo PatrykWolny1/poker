@@ -236,6 +236,8 @@ class Straight(object):
                     if self.random == False or self.example == True:
                         self.print_arrengement()
 
+                    return 4
+
             idx1 += 1
             idx2 += 1
 

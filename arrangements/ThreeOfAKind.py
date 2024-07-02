@@ -201,6 +201,8 @@ class ThreeOfAKind(object):
             if self.random == False and self.combs_perm == True:
                 self.print_arrengement()
 
+            return 3
+
     def three_of_a_kind_generating(self, random, combs_perm):
         self.random = random
         self.combs_perm = combs_perm

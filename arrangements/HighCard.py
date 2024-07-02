@@ -189,6 +189,8 @@ class HighCard(object):
         if self.random == False:
             self.print_arrengement()
 
+        return 0
+
     def high_card_generating(self, random):
         self.random = random
 
