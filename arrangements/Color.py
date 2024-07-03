@@ -43,6 +43,9 @@ class Color(object):
         if self.color_sum > 0:
             return self.color_sum
 
+    def get_part_weight(self):
+        return None
+
     def loading_bar(self):
         #Pasek postepu
         #Jesli random = True to wybierana jest wartosc pierwsza

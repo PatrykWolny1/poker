@@ -18,6 +18,7 @@ class Carriage(object):
     cards_perm_weights = []
     num_arr = 0
     rand_int = 0
+    weight_arrangement_part = 0     #Waga ostatniej karty
     if_perm_weights = True
     print_permutations = True       #Wyswietlanie wszystkich permutacji
     example = False                 #Jesli jest recznie wpisany uklad
@@ -41,6 +42,10 @@ class Carriage(object):
     def get_weight(self):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+
+    def get_part_weight(self):
+        if self.weight_arrangement_part > 0:
+            return self.weight_arrangement_part
 
     def loading_bar(self):
         if self.step_p:
@@ -184,16 +189,25 @@ class Carriage(object):
                 for j in range(0, len(self.indices_2d[i])):
                     weight_1 = pow(self.cards_perm_weights[self.indices_2d[i][j]].weight, 4)
                 if_carriage += 1
+
             # Ostatnia karta
             if (len(self.indices_2d[i]) == 1):
                 for j in range(0, len(self.indices_2d[i])):
                     weight_2 = self.cards_perm_weights[self.indices_2d[i][j]].weight * 1
+
+                    self.weight_arrangement_part = self.cards_perm_weights[self.indices_2d[i][j]].weight
+
             if (i == size - 1) and (if_carriage == 4):
                 self.weight_arrangement = (weight_1 + weight_2) + 12415456
                 self.weight_gen.append(self.weight_arrangement)
+
                 if self.example == True:
                     self.print_arrengement()
+
                 return 7
+            else:
+                self.weight_arrangement = 0
+                self.weight_arrangement_part = 0
 
     def check_generate_cards(self, cards_2d):
         # Generowanie 5 kart oraz sprawdzanie jaki to uklad

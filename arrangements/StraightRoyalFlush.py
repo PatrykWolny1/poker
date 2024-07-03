@@ -21,6 +21,7 @@ class StraightRoyalFlush(object):
     random = False                 #Jesli jest losowanie ukladu
     example = False                #Jesli jest recznie wpisany uklad
     if_royal_flush = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
+    calc_weights = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
     num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
     rand_int = 0                   #Przechowywanie numeru losowego ukladu
 
@@ -32,6 +33,9 @@ class StraightRoyalFlush(object):
     def get_weight(self):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+
+    def get_part_weight(self):
+        return None
 
     def print_arrengement(self):
         if self.num_arr == len(self.cards_all_permutations):
@@ -137,7 +141,7 @@ class StraightRoyalFlush(object):
         count = 0
         weight_iter = 0
         straight_weight = 0
-        calc_weights = True
+        self.calc_weights = True
 
         if self.example == True:
             self.get_indices_name(self.perm)
@@ -157,7 +161,7 @@ class StraightRoyalFlush(object):
         #Dziala dla tablicy o 0 rozmiarze i wiekszym (120)
         for idx4 in range(0, len(self.perm_sorted)):
             #Obliczanie wag
-            while (calc_weights):
+            while (self.calc_weights):
                 #Sprawdzanie par kart 1-2, 2-3, 3-4, 4-5
                 idx2 = 0
                 idx3 = 1
@@ -191,7 +195,7 @@ class StraightRoyalFlush(object):
                         self.if_royal_flush = self.straight_royal_flush_recognition(self.perm_sorted[idx4])
 
                         self.print_arrengement()
-                        calc_weights = False
+                        self.calc_weights = False
                         break
                 weight_iter += 1
                 idx2 += 1
@@ -231,9 +235,9 @@ class StraightRoyalFlush(object):
         else:
             self.arrangement_recognition_weights()
 
-            if self.if_royal_flush == True:
+            if self.if_royal_flush == True and self.calc_weights == False:
                 return 9
-            else:
+            elif self.if_royal_flush == False and self.calc_weights == False:
                 return 8
 
     def straight_royal_flush_generating(self, random):

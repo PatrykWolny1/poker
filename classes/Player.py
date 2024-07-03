@@ -1,25 +1,30 @@
 from classes.Arrangements import Arrangements
+from classes.Deck import Deck
 from random import choice
 class Player(object):
     nick = None
     cards = None
     random = False
+    combs_perm = False
+    win_or_not = None
     amount = 0
     weight = 0
     index = 0
     cards = []
     all_combs = []
-    combs_perm = False
 
-    def __init__(self, deck, cards, nick = "Nick", index = 0, if_deck = False):
+    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
+        deck.shuffling()
         self.nick = nick
         self.index = index
-        deck.shuffling()
         self.arrangements = Arrangements()
-        if if_deck:
+
+        if if_deck == True:
             self.cards = []
+
             for idx in range(5):
                 self.cards.append(deck.deal())
+
             self.arrangements.set_cards(self.cards)
         else:
             self.cards = cards
@@ -38,7 +43,9 @@ class Player(object):
 
             if self.amount != 5:
                 #which_card = input("Ktora karta[1-5]: ")
-                which_card = choice(list(range(1, 5)))
+                which_card = choice(list(range(1, len(self.cards) + 1)))
+
+                print()
 
                 print("Ktora karta: ", which_card)
 
@@ -129,6 +136,9 @@ class Player(object):
 
     def set_cards(self, cards):
         self.cards = cards
+
+    def set_win_or_not(self, win_or_not):
+        self.win_or_not = win_or_not
 
     def print(self):
         print(self.nick)

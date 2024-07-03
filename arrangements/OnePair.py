@@ -10,6 +10,7 @@ class OnePair(object):
     perm = []                      # Lista na permutacje
     cards_all_permutations = []    # Lista na wszystkie permutacje
     weight_gen = []                # Lista na wagi
+    weight_arrangement_part = []   # Lista na wagi pozostalych kart
 
     high_card = None               # Wysoka karta
 
@@ -37,6 +38,10 @@ class OnePair(object):
         # Jesli to jest to aktualny uklad to zwroc wage ukladu
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+
+    def get_part_weight(self):
+        if sum(self.weight_arrangement_part) > 0:
+            return self.weight_arrangement_part
 
     def loading_bar(self):
         if self.step_p:
@@ -161,6 +166,8 @@ class OnePair(object):
         once_3 = False
         one_weight = 0          # Waga ukladu
         cards_max_sort = []     # Lista na karty do okreslenie najwyzszej karty (na pojedyncze karty)
+        self.weight_arrangement_part = []
+
 
         if len(self.dim(self.perm)) == 1:
             self.perm = [self.perm]
@@ -230,12 +237,21 @@ class OnePair(object):
 
         # Jesli pojedyncza karta wystepuje 3 razy oraz wystepuje 1 para to zakoncz
         if one_count_1 == 3 and one_count_2 == 2:
-            self.weight_arrangement = one_weight + 393468
+            self.weight_arrangement = one_weight + 390079
             self.weight_gen.append(self.weight_arrangement)   # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
             if self.random == False:
                 self.print_arrengement()
 
+            self.weight_arrangement_part.append(min_card.weight)
+            self.weight_arrangement_part.append(mid_card.weight)
+            self.weight_arrangement_part.append(self.high_card.weight)
+
             return 1
+
+        else:
+            self.weight_arrangement = 0
+            self.weight_arrangement_part = []
+
 
     def one_pair_generating(self, random):
         start_time = time.time()

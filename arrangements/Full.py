@@ -1,6 +1,6 @@
 from classes.Card import Card
 from arrangements.CardMarkings import CardMarkings
-import itertools
+from itertools import chain
 import random
 
 
@@ -41,6 +41,9 @@ class Full(object):
     def get_weight(self):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+
+    def get_part_weight(self):
+        return None
 
     def loading_bar(self):
         if self.step_p:
@@ -150,6 +153,9 @@ class Full(object):
         self.weight_arrangement = 0
 
         if self.random == True:
+            if len(self.dim(self.perm)) == 2:
+                self.perm = list(chain.from_iterable(self.perm))
+
             self.get_indices_name(self.perm)
             self.c_idx6 = 0
             self.perm = [self.perm]

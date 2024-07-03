@@ -23,5 +23,4 @@ class Deck(object):
         card = self.cards[self.counter]
         self.cards.pop(self.counter)
         self.counter = self.counter + 1
-        #print(self.counter)
         return card

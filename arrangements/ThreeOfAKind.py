@@ -14,6 +14,7 @@ class ThreeOfAKind(object):
     high_card = None               # Wysoka karta (Card)
 
     weight_arrangement = 0         # Waga ukladu
+    weight_arrangement_part = []   # Wagi wysokich kart
     c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
     num_arr = 0                    # Numer ukladu
     rand_int = 0                   # Losowy numer
@@ -37,6 +38,10 @@ class ThreeOfAKind(object):
         # Jesli nie wystepuje uklad to waga wynosi 0
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+
+    def get_part_weight(self):
+        if sum(self.weight_arrangement_part) > 0:
+            return self.weight_arrangement_part
 
     def loading_bar(self):
         if self.step_p:
@@ -185,12 +190,16 @@ class ThreeOfAKind(object):
                             if self.perm[self.c_idx1][self.indices_2d_name[idx][0]] < self.perm[self.c_idx1][self.indices_2d_name[idx1][0]]:
                                 self.high_card = self.perm[self.c_idx1][self.indices_2d_name[idx1][0]]
                                 three_weight += pow(self.perm[self.c_idx1][self.indices_2d_name[idx][0]].weight, 2)
+                                self.weight_arrangement_part.append(self.perm[self.c_idx1][self.indices_2d_name[idx][0]].weight)
                                 three_weight += pow(self.perm[self.c_idx1][self.indices_2d_name[idx1][0]].weight, 3)
+                                self.weight_arrangement_part.append(self.perm[self.c_idx1][self.indices_2d_name[idx1][0]].weight)
 
                             else:
                                 self.high_card = self.perm[self.c_idx1][self.indices_2d_name[idx][0]]
                                 three_weight += pow(self.perm[self.c_idx1][self.indices_2d_name[idx][0]].weight, 3)
+                                self.weight_arrangement_part.append(self.perm[self.c_idx1][self.indices_2d_name[idx][0]].weight)
                                 three_weight += pow(self.perm[self.c_idx1][self.indices_2d_name[idx1][0]].weight, 2)
+                                self.weight_arrangement_part.append(self.perm[self.c_idx1][self.indices_2d_name[idx1][0]].weight)
 
                     once_2 = True
 
@@ -202,6 +211,9 @@ class ThreeOfAKind(object):
                 self.print_arrengement()
 
             return 3
+        else:
+            self.weight_arrangement = 0
+            self.weight_arrangement_part = []
 
     def three_of_a_kind_generating(self, random, combs_perm):
         self.random = random

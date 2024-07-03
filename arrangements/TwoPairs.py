@@ -16,6 +16,7 @@ class TwoPairs(object):
     perm_unsort = []               # Lista po odsortowaniu
     indices_2d_name = []           # Lista na indeksy tych samych kart (figury)
     two_pairs_sum = 0              # Suma wag
+    two_pairs_part_sum = 0         # Waga wysokiej karty
     all_perm_size = 0              # Liczba wszystkich permutacji dla danej iteracji
     high_card = None               # Wysoka karta
     count = 0                      # Licznik do funkcji temp_lambda()
@@ -49,6 +50,10 @@ class TwoPairs(object):
     def get_weight(self):
         if self.two_pairs_sum > 0:
             return self.two_pairs_sum
+
+    def get_part_weight(self):
+        if self.two_pairs_part_sum > 0:
+            return [self.two_pairs_part_sum]
 
     def loading_bar(self):
         # Pasek postepu
@@ -222,9 +227,11 @@ class TwoPairs(object):
         two_pairs_weight = 0    # Tymczasowa zmienna na wage
         perm_unsorted = []      # Lista nieposortowana
         perm_unsort = []        # Lista odsortowana
-        count_two_pairs = 0     # Zmienna potrzebna do okreslenie czy sa dwie pary
+        count_one_pair = 0      # Zmienna potrzebna do okreslenie czy jest to para
+        count_two_pairs = 0     # Zmienna okreslajaca czy sa to dwie pary
         c_two_pairs = False     # Zmienna tymczasowa (pomocnicza)
-        pow_two_pairs = 4       # Potega dla jednej i drugiej pary [4 6]
+        first_it = True
+        pow_two_pairs = 3       # Potega dla jednej i drugiej pary [4 6]
         self.two_pairs_sum = 0  # Zmienna zawierajaca sume wag tymczasowych
 
         # Jesli podany jest przykladowy uklad
@@ -262,38 +269,54 @@ class TwoPairs(object):
             if len(self.indices_2d_name[idx]) == 1:
                 #Przypisanie wysokiej karty z posortowanej tablicy
                 self.high_card = perm_sorted[self.indices_2d_name[idx][0]]
+
                 two_pairs_weight = pow(perm_sorted[self.indices_2d_name[idx][0]][0].weight, 2)
+
                 # Sumowanie tymczasowej wagi wysokiej karty
                 self.two_pairs_sum += two_pairs_weight
+
+                self.two_pairs_part_sum = perm_sorted[self.indices_2d_name[idx][0]][0].weight
 
             # Jesli wystepuja dwie takie same karty to jest to para
             if len(self.indices_2d_name[idx]) == 2:
                 # Dla pierwszej iteracji (jednej pary) count_two_pairs != 0
-                # if c_two_pairs == True:
-                #     c_two_pairs = False
-                #     count_two_pairs = 0
+                if c_two_pairs == True:
+                    c_two_pairs = False
+                    count_one_pair = 0
+                count_one_pair += 1
                 count_two_pairs += 1
 
+                #----------------------------------------------------------------------
+                #                               BUG
+                # Nie wplywa na poprawne dzialanie programu. W przypadku zmiany nalezy zmienic
+                # wagi dla kazdego z ukladow
+                # W warunku ponizej powinny byc liczone potegi kazdej z par a liczone sa tylko jednej
+                # ew. zmienic count_two_pairs na 2 oraz odkomentowac warunek powyzej 'if c_two_pairs == True'
+                #----------------------------------------------------------------------
+
                 # Jesli jedna para z tablicy self.indices_2d_name czyli [1, 1][1, 1]
-                if count_two_pairs == 4:
+                if count_one_pair == 2:
                     # print(perm_sorted[self.indices_2d_name[idx][0]][0].weight)
                     # print(perm_sorted[self.indices_2d_name[idx][1]][0].weight)
                     two_pairs_weight = pow(perm_sorted[self.indices_2d_name[idx][0]][0].weight, pow_two_pairs)
                     self.two_pairs_sum += two_pairs_weight
                     two_pairs_weight = pow(perm_sorted[self.indices_2d_name[idx][1]][0].weight, pow_two_pairs)
                     self.two_pairs_sum += two_pairs_weight
+                    #print(self.two_pairs_sum)
                     # Zwiekszenie potegi do 6 dla nastepnej pary (wyzszej)
-                    pow_two_pairs = 6
+                    pow_two_pairs = 4
                     # Pierwsza iteracja zakonczona
                     c_two_pairs = True
 
+            # Jesli nie sa to dwie pary to zwroc Prawda i wyzeruj sume
             if len(self.indices_2d_name[idx]) == 3:
-                return True
+                self.two_pairs_sum = 0
+                return None
 
-        self.two_pairs_sum += 10069253
+        self.two_pairs_sum += 10065826
         perm_sorted.append([self.two_pairs_sum])
 
-        if self.example == True and c_two_pairs == True:
+        if self.example == True and count_two_pairs == 4:
             self.print_arrengement()
         # for idx1 in range(0, len(perm_sorted)):
         #     if idx1 != 5:
@@ -305,6 +328,7 @@ class TwoPairs(object):
             return 2
         else:
             self.two_pairs_sum = 0
+            self.two_pairs_part_sum = 0
 
         self.count = 0
         # Odsortowanie tablicy za pomoca indeksow
@@ -351,7 +375,7 @@ class TwoPairs(object):
             if self.combs_perm == False:
                 self.all_combs.append(self.cards_comb[idx1])
                 if_not_two_pairs = self.two_pairs(self.cards_comb[idx1])
-                if if_not_two_pairs:
+                if not if_not_two_pairs:
                     return None
 
                 print(len(self.all_combs))
