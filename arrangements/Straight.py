@@ -43,6 +43,9 @@ class Straight(object):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
 
+    def get_part_weight(self):
+        return None
+
     def loading_bar(self):
         if self.step_p:
             for i in range(0, self.n_bar, self.step_bar):
@@ -235,6 +238,8 @@ class Straight(object):
 
                     if self.random == False or self.example == True:
                         self.print_arrengement()
+
+                    return 4
 
             idx1 += 1
             idx2 += 1

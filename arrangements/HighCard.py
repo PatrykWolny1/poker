@@ -11,6 +11,7 @@ class HighCard(object):
     perm = []                       # Lista na karty gracza
     cards_all_permutations = []     # Lista na wszystkie permutacje
     weight_gen = []                 # Lista na wszystkie wagi
+    weight_arrangement_part = []    # Lista na wagi wszystkich kart
 
     high_card_1 = None
 
@@ -39,6 +40,10 @@ class HighCard(object):
         # Jesli nie wystepuje uklad to waga wynosi 0
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+
+    def get_part_weight(self):
+        if sum(self.weight_arrangement_part) > 0:
+            return self.weight_arrangement_part
 
     def loading_bar(self):
         if self.step_p:
@@ -141,8 +146,11 @@ class HighCard(object):
         # Wybor maksymalnej wartosci z ukladu
         card_temp = max(perm_temp)
 
+        self.weight_arrangement_part.append(card_temp.weight)
+
         # Obliczenie wagi a nastepnie usuniecie kart z listy w celu pobrania nastepnej maksymalnej wartosci
         self.high_card_weight = pow(card_temp.weight, pow_idx)
+
         perm_temp.remove(card_temp)
 
         pow_idx -= 1
@@ -157,6 +165,8 @@ class HighCard(object):
 
         straight_iter = 0
 
+        self.weight_arrangement_part = []
+
         # Jesli uklad to strit to powrot z funkcji
         for idx2, idx1 in zip(range(1, len(self.perm[self.c_idx1])), range(0, len(self.perm[self.c_idx1]))):
             if ((self.perm[self.c_idx1][idx2].weight - self.perm[self.c_idx1][idx1].weight == 1) or
@@ -164,6 +174,7 @@ class HighCard(object):
                 straight_iter += 1
 
             if straight_iter == 4:
+                self.weight_arrangement_part = [0]
                 return
 
         self.get_indices_name(self.perm[self.c_idx1])
@@ -173,8 +184,10 @@ class HighCard(object):
         for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
             # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
             if len(self.indices_2d_color[idx3]) == 5:
+                self.weight_arrangement_part = [0]
                 return
             if len(self.indices_2d_name[idx4]) > 1:
+                self.weight_arrangement_part = [0]
                 return
 
         # Najwieksza karta dla jej wyswietlenia
@@ -182,12 +195,14 @@ class HighCard(object):
 
         perm_temp = self.perm[self.c_idx1].copy()
 
-        self.weight_arrangement = self.card_max(perm_temp, 5)
+        self.weight_arrangement = self.card_max(perm_temp, 5) - 3200
 
         self.weight_gen.append(self.weight_arrangement)
 
         if self.random == False:
             self.print_arrengement()
+
+        return 0
 
     def high_card_generating(self, random):
         self.random = random

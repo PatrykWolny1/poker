@@ -1,22 +1,33 @@
 from classes.Arrangements import Arrangements
+from classes.Deck import Deck
+from random import choice
 class Player(object):
     nick = None
     cards = None
     random = False
+    combs_perm = False
+    win_or_not = None
     amount = 0
     weight = 0
     index = 0
     cards = []
+    all_combs = []
 
     def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
-        self.cards = cards
+        deck.shuffling()
         self.nick = nick
         self.index = index
-        deck.shuffling()
         self.arrangements = Arrangements()
-        if if_deck:
+
+        if if_deck == True:
+            self.cards = []
+
             for idx in range(5):
                 self.cards.append(deck.deal())
+
+            self.arrangements.set_cards(self.cards)
+        else:
+            self.cards = cards
             self.arrangements.set_cards(self.cards)
 
     def return_to_croupier(self, amount = 0):
@@ -31,7 +42,12 @@ class Player(object):
                 self.print()
 
             if self.amount != 5:
-                which_card = input("Ktora karta[1-5]: ")
+                #which_card = input("Ktora karta[1-5]: ")
+                which_card = choice(list(range(1, len(self.cards) + 1)))
+
+                print()
+
+                print("Ktora karta: ", which_card)
 
                 print()
                 which = int(which_card)
@@ -57,12 +73,19 @@ class Player(object):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
 
         #if_all_perm = input()
-        if_all_perm = "1"
+        if_rand = "1"
 
-        if if_all_perm == "1":
+        if if_rand == "1":
             self.random = False
-        elif if_all_perm == "2":
+        elif if_rand == "2":
             self.random = True
+
+        if_combs_perm = "2"
+
+        if if_combs_perm == "1":
+            self.combs_perm = False
+        elif if_combs_perm == "2":
+            self.combs_perm = True
 
         print("Wybierz uklad do wygenerowania:\n"
               "(1 - POKER KROLEWSKI)\n"
@@ -76,7 +99,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "5"
+        arrangement = "6"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
@@ -89,9 +112,9 @@ class Player(object):
         if arrangement == "5":
             self.cards = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
-            self.cards = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
+            self.cards, self.all_combs = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random, self.combs_perm)
         if arrangement == "7":
-            self.cards = self.arrangements.two_pairs.two_pairs_generating(self.random)
+            self.cards, self.all_combs = self.arrangements.two_pairs.two_pairs_generating(self.random, self.combs_perm)
         if arrangement == "8":
             self.cards = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":
@@ -113,6 +136,9 @@ class Player(object):
 
     def set_cards(self, cards):
         self.cards = cards
+
+    def set_win_or_not(self, win_or_not):
+        self.win_or_not = win_or_not
 
     def print(self):
         print(self.nick)
