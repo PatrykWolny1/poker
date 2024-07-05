@@ -24,31 +24,32 @@ class Croupier(object):
         pass
 
     def play(self):
-        print()
-
-        self.set_players_nicknames()
-
-        print()
+        # print()
+        #
+        # self.set_players_nicknames()
+        #
+        # print()
 
         #########################################################
 
-        # # # Dla testowania wybranych uklaldow
+        # Dla testowania wybranych uklaldow
         # self.set_cards()
         # player1 = Player(self.deck, cards = self.cards)
         # player1.get_arrangements().set_cards(self.cards)
         # player1.print()
         # player1.get_arrangements().check_arrangement()
 
+        player1 = Player(self.deck)
+        player1.cards_permutations()
 
-        # player1.cards_permutations()
-        #
         # for idx in range(0, len(player1.all_combs)):
         #     for idx1 in range(0, len(player1.all_combs[idx])):
         #         player1.all_combs[idx][idx1].print()
         #     print()
-        #
-        # player1.get_arrangements().check_arrangement()
-        # player1.get_arrangements().print()
+
+        player1.get_arrangements().print()
+        print()
+        player1.get_arrangements().check_arrangement()
 
         #########################################################
 
@@ -61,29 +62,29 @@ class Croupier(object):
         # print(player1.get_arrangements().get_weight())
 
         #########################################################
-        #self.player.get_arrangements().init_data_frame_ml_before_ex()
-        self.cards_check_exchange_add_weights()
-
-        print()
-        print("------------------------------------------------------------")
-        print("------------------------------------------------------------")
-        print()
-
-        for self.player in self.players:
-            self.player.print()
-            self.player.get_arrangements().check_arrangement()
-            self.player.get_arrangements().set_weights()
-            self.player.get_arrangements().init_data_frame_ml_after_ex()
-
-        print("Wagi ukladow graczy: ", self.weights)
-        self.compare_players_weights()
+        # #self.player.get_arrangements().init_data_frame_ml_before_ex()
+        # self.cards_check_exchange_add_weights()
+        #
+        # print()
+        # print("------------------------------------------------------------")
+        # print("------------------------------------------------------------")
+        # print()
+        #
+        # for self.player in self.players:
+        #     self.player.print()
+        #     self.player.get_arrangements().check_arrangement()
+        #     self.player.get_arrangements().set_weights()
+        #     self.player.get_arrangements().init_data_frame_ml_after_ex()
+        #
+        # print("Wagi ukladow graczy: ", self.weights)
+        # self.compare_players_weights()
 
     def set_cards(self):
         self.cards = [Card("2", "Ka"),
                       Card("3", "Tr"),
                       Card("4", "Ki"),
                       Card("5", "Pi"),
-                      Card("7", "Tr")]
+                      Card("6", "Tr")]
 
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))

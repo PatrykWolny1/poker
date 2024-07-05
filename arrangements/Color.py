@@ -1,38 +1,31 @@
 from classes.Card import Card
+from arrangements.HelperArrangement import HelperArrangement
 from arrangements.CardMarkings import CardMarkings
+from arrangements.LoadingBar import LoadingBar
 from itertools import permutations, combinations
-import random
 from operator import itemgetter
 from itertools import chain
 
-class Color(object):
+class Color(HelperArrangement):
     cardmarkings = CardMarkings()  #Oznaczenia kart
-    cards_2d = []
-    perm = []
-    weight_gen = []
-    cards_all_permutations = []
-    high_card = None
-    color_weight = 0
-    color_sum = 0
-    num_arr = 0
-    rand_int = 0
-    perm_final_2 = []
-    all_permutations = False
-    count = 0
-    perm_unsort = []
+    loading_bar_1 = LoadingBar(611519, 40, 39)
+    loading_bar_2 = LoadingBar(5095, 40, 39)
+
+    cards_2d = []           # Przygotowanie listy do wstepnego przetwarzania
+    perm = []               # Lista na permutacje
+    perm_unsort = []        # Nieposortowana lista na permutacje
+
+    high_card = None        # Zmienna na wysoka karte
+
+    color_weight = 0        # Waga karty
+    color_sum = 0           # Suma ukladu
+    num_arr = 0             # Licznik
+    count = 0               # Licznik pomocniczy do funkcji temp_lambda()
+    count_1 = 0             # Licznik do loading_bar()
+    count_2 = 0             # Licznik do loading_bar()
+
     random = False
     example = False
-    step_p = True
-    count = 0
-    count_1 = 0
-    count_2 = 0
-    str_1 = ""
-    n_bar = 611519                             #Ilosc ukladow (trzeba uruchomic program i policzyc)
-    n_bar_2 = 5095
-    step_bar = int(n_bar / 40)                 #Ilosc punktow ladowania (40 - dzielnik)
-    step_bar_2 = int(n_bar_2 / 30)
-    step_bar_finished = int(n_bar / 40)        #Ilosc zaladowanych punktow (co jeden) [.####][..###]
-    step_bar_finished_2 = int(n_bar_2 / 31)
 
     def set_cards(self, cards):
         self.perm = cards
@@ -45,46 +38,6 @@ class Color(object):
 
     def get_part_weight(self):
         return None
-
-    def loading_bar(self):
-        #Pasek postepu
-        #Jesli random = True to wybierana jest wartosc pierwsza
-        #Przyklad count_1_2_func to funkcja przyjmujaca argument random
-
-        count_1_2_func = lambda random: self.count_1 if self.random else self.count_2
-        n_bar_func = lambda random: self.n_bar if self.random else self.n_bar_2
-        step_bar_func = lambda random: self.step_bar if self.random else self.step_bar_2
-        step_bar_finished_func = lambda random: self.step_bar_finished if self.random else self.step_bar_finished_2
-
-        #Pierwsza wartosc step_p to prawda
-        #Tworzony jest pasek postepu stworzony ze znakow "#"
-        if self.step_p:
-            for i in range(0, n_bar_func(self.random), step_bar_func(self.random)):
-                self.str_1 += "#"
-        #Tutaj nastepuje wyswietlenie paska ze znakow "#"
-        if self.step_p:
-            print("[", end="")
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-            self.step_p = False
-        #Zamiana znaku "#" na ".", co okreslona liczbe iteracji
-        if self.step_p == False and (count_1_2_func(self.random) % step_bar_finished_func(self.random)) == 0:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-        #Ostatnia iteracja zamiana znaku
-        if self.count_1 == n_bar_func(self.random) - 1:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-
-    def dim(self, a):
-        #Jesli to nie jest lista to zwroc pusty zbior
-        if not type(a) == list:
-            return []
-        #Rekurencja. Dodawanie kolejno dlugosci kolejnych tablic np. [1 5 10 15] czyli 4-wymiarowa
-        return [len(a)] + self.dim(a[0])
 
     def temp_lambda(self, t1):
         #Jesli koniec sekwencji wag i sumy [[Card int] [Card int] ... [Card int] sum][[Card int] ... [Card int] sum]
@@ -104,55 +57,6 @@ class Color(object):
             if int(t3) > 4:
                 return t1
 
-    def check_if_weights_larger(self):
-        # Sprawdzanie czy wagi w wygenerowanych ukladach sa wieksze niz poprzedni uklad (min -> max)
-        self.weight_gen = [ele for ele in self.weight_gen if ele != []]
-        indices = []
-        count_all_weights = 0
-        idx1 = 1
-        for idx2 in range(0, len(self.weight_gen)):
-            if (idx1 == len(self.weight_gen)):
-                print("Dlugosc tablicy: ", len(self.weight_gen))
-                print("Wszystkie liczby sprawdzone: ", count_all_weights)
-                break
-            if (self.weight_gen[idx2] <= self.weight_gen[idx1]):
-                #print(self.weight_gen[idx2], "[", idx2, "]", "<=", self.weight_gen[idx1], "[", idx1, "]")
-                count_all_weights += 1
-            else:
-                indices.append(idx2)
-                indices.append(idx1)
-            idx1 += 1
-
-        for idx in range(0, len(indices)):
-            for idx1 in range(0, len(self.perm_unsort[indices[idx]])):
-                if idx1 < 5:
-                    print(self.perm_unsort[indices[idx]][idx1][0].print_str(), end=" ")
-                if idx1 == 5:
-                    print(self.perm_unsort[indices[idx]][idx1], end=" ")
-                    print(indices[idx])
-            print()
-
-    def random_arrangement(self):
-        self.perm_unsort = [ele for ele in self.perm_unsort if ele != []]
-
-        self.rand_int = random.randint(0, len(self.perm_unsort) - 1)
-
-        print("Wylosowany uklad: ", self.rand_int)
-        print("Ilosc ukladow: ", len(self.perm_unsort))
-
-        #Usuwanie indeksow do sortowania tablicy zeby zostaly same karty
-        for idx in range(0, len(self.perm_unsort[self.rand_int])):
-            self.perm_unsort[self.rand_int][idx].pop()
-
-        #Usuwanie podwojnej tablicy do pojedynczej
-        self.perm_unsort[self.rand_int] = list(chain.from_iterable(self.perm_unsort[self.rand_int]))
-
-        self.high_card = max(self.perm_unsort[self.rand_int])
-
-        self.random = True
-
-        return self.perm_unsort[self.rand_int]
-
     def print_arrengement(self):
         if self.random == False:
             print("Kolor:", self.color_sum, "Wysoka Karta:", self.high_card.print_str(), "Numer:", self.num_arr)
@@ -161,29 +65,6 @@ class Color(object):
 
         self.num_arr += 1
 
-    def get_indices_color(self, cards):
-        self.indices_2d_color = []
-
-        if self.random == True and self.example == True:
-            for idx in range(0, len(cards)):
-                indices = []
-                for (index, card) in enumerate(cards):
-                    if card.color == cards[idx].color:
-                        indices.append(index)
-                self.indices_2d_color.append(indices)
-            #print(self.indices_2d_color)
-            return
-
-        # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
-        for idx in range(0, len(cards)):
-            for idx1 in range(0, len(cards[idx])):
-                indices = []
-                for (index, card) in enumerate(cards[idx]):
-                    if card.color == cards[idx][idx1].color:
-                        indices.append(index)
-                self.indices_2d_color.append(indices)
-        #print(self.indices_2d_color)
-
     def check_if_straight_royal_flush(self):
         #Sprawdzanie czy w ukladach kart znajduje sie Poker lub Poker Krolewski (do eliminacji)
         count = 0
@@ -191,7 +72,7 @@ class Color(object):
             #Karty musza byc poukladane od najmniejszej do najwiekszej w odstepie wartosci wagi wynoszacej 1
             #As jest traktowany jako najwyzsza karta lub najnizsza wtedy roznica miedzy A, a 2 wynosi 9
             if (self.perm[idx1].weight - self.perm[idx].weight == 1 or
-                    (self.perm[4].weight == 13 and self.perm[idx1].weight - self.perm[idx].weight == 9)):
+                    (self.perm[0].weight == 1 and self.perm[4].weight == 13 and self.perm[4].weight - self.perm[3].weight == 9)):
                 count += 1
             if count == 4:
                 return True
@@ -222,9 +103,9 @@ class Color(object):
 
             #Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
             #Wykrywanie tych samych kart oraz strita
-            if ((self.cards_2d[idx1][idx3].weight - self.cards_2d[idx1][idx2].weight < 2) or
+            if ((self.cards_2d[idx1][idx3].weight - self.cards_2d[idx1][idx2].weight == 1) or
                     #Wykrywanie kombinacji kart A 2 3 4 5
-                    (self.cards_2d[idx1][4].weight == 13 and self.cards_2d[idx1][idx3].weight - self.cards_2d[idx1][idx2].weight == 9)):
+                    (self.cards_2d[idx1][0].weight == 1 and self.cards_2d[idx1][4].weight == 13 and self.cards_2d[idx1][4].weight - self.cards_2d[idx1][3].weight == 9)):
                 straight_flush_iter += 1
 
             #Jesli zostaly sprawdzone 4 uklady to usun dany wiersz kart
@@ -277,12 +158,12 @@ class Color(object):
             self.color_sum = 0
 
             #Pobranie indeksow tablicy, gdzie wystepuja takie same kolory
-            self.get_indices_color(self.perm)
+            HelperArrangement().get_indices_color(self.perm, self.random, self.example)
 
             #Lista ma dlugosc 1 w ktorej znajduje sie kolejna lista z kartami, a dalej z waga ukladu
-            for idx1 in range(0, len(self.indices_2d_color) - 4):
+            for idx1 in range(0, len(HelperArrangement().get_indices_2d_color()) - 4):
                 #Jesli wystepuje 5 kolorow to jest to uklad Kolor
-                if len(self.indices_2d_color[idx1]) == 5:
+                if len(HelperArrangement().get_indices_2d_color()[idx1]) == 5:
                     for idx in range(0, len(self.perm)):
                         #Dla kart innych niz najwyzsza policz czesciowo wage ukladu
                         if self.perm[idx] != max(self.perm):
@@ -307,14 +188,14 @@ class Color(object):
 
         #Obliczenia dla wyswietlenia wszystkich permutacji ukladu Kolor
         #Jesli tablica jest jednowymiarowa to dodaj jeden wymiar w celu uruchomienia nastepnej petli
-        if len(self.dim(self.perm)) == 1:
+        if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
 
         for idx in range(0, len(self.perm)):
-            self.get_indices_color(self.perm[idx])
+            HelperArrangement().get_indices_color(self.perm[idx])
 
-            for idx1 in range(0, len(self.indices_2d_color) - 4):
-                if len(self.indices_2d_color[idx1]) == 5:
+            for idx1 in range(0, len(HelperArrangement().get_indices_2d_color()) - 4):
+                if len(HelperArrangement().get_indices_2d_color()[idx1]) == 5:
                     for idx2 in range(0, len(self.perm[idx])):
                         self.color_weight = 0
                         self.color_sum = 0
@@ -323,9 +204,13 @@ class Color(object):
                         #     self.perm[idx][idx2][k].print()
                         # print()
 
+                        HelperArrangement().append_cards_all_permutations(self.perm[idx][idx2])
+
+
                         if self.random == True:
+                            self.loading_bar_1.set_count_bar(self.count_1)
+                            self.loading_bar_1.display_bar()
                             self.count_1 += 1
-                            self.loading_bar()
 
                         #Dodanie indeksow do nowej tablicy zlozonej z tablicy glownej w celu powrotu ze
                         # stanu posortowanego do nieposortowanego
@@ -375,43 +260,50 @@ class Color(object):
 
                         self.color_sum += self.color_weight
 
+                        if self.random == True:
+                            HelperArrangement().append_weight_gen(self.color_sum)
+
                         #print("SUM: ", self.color_sum)
 
                         #Zrobic z perm unsorted i dodac do self.perm_temp
-                        if self.all_permutations:
-                            #Dodanie wagi calego ukladu jako tablica
-                            perm_sorted.append([self.color_sum])
-                            # print("perm_sorted: ", end="")
-                            # for idx22 in range(0, len(perm_sorted)):
-                            #     if idx22 == 5:
-                            #         print("sum:", perm_sorted[idx22])
-                            #     else:
-                            #         print("[", end= "")
-                            #         print((perm_sorted[idx22][1]), end=", ")
-                            #         print(perm_sorted[idx22][0].print_str(), end="")
-                            #         print("]", end=" ")
+                        #Dodanie wagi calego ukladu jako tablica
+                        perm_sorted.append([self.color_sum])
+                        # print("perm_sorted: ", end="")
+                        # for idx22 in range(0, len(perm_sorted)):
+                        #     if idx22 == 5:
+                        #         print("sum:", perm_sorted[idx22])
+                        #     else:
+                        #         print("[", end= "")
+                        #         print((perm_sorted[idx22][1]), end=", ")
+                        #         print(perm_sorted[idx22][0].print_str(), end="")
+                        #         print("]", end=" ")
 
-                            #Uzywane w funkcji temp_lambda()
-                            self.count = 0
+                        #Uzywane w funkcji temp_lambda()
+                        self.count = 0
 
-                            #Sortowanie z kluczem (czyli wedlug dodanych indeksow)
-                            self.perm_unsort.append(sorted(perm_sorted.copy(), key=self.temp_lambda))
+                        #Sortowanie z kluczem (czyli wedlug dodanych indeksow)
+                        self.perm_unsort.append(sorted(perm_sorted.copy(), key=self.temp_lambda))
 
-                            # print("perm_unsort: ", end="")
-                            #
-                            # for idx11 in range(0, len(self.perm_unsort)):
-                            #     for idx22 in range(0, len(self.perm_unsort[idx11])):
-                            #         if idx22 == 5:
-                            #             print("sum:", self.perm_unsort[idx11][idx22])
-                            #         else:
-                            #             #print("[", end= "")
-                            #             print((self.perm_unsort[idx11][idx22][1]), end="-")
-                            #             print(self.perm_unsort[idx11][idx22][0].print_str(), end=" ")
-                            #             #print("]", end=" ")
-                            #     print()
+                        # print("perm_unsort: ", end="")
+                        #
+                        # for idx11 in range(0, len(self.perm_unsort)):
+                        #     for idx22 in range(0, len(self.perm_unsort[idx11])):
+                        #         if idx22 == 5:
+                        #             print("sum:", self.perm_unsort[idx11][idx22])
+                        #         else:
+                        #             #print("[", end= "")
+                        #             print((self.perm_unsort[idx11][idx22][1]), end="-")
+                        #             print(self.perm_unsort[idx11][idx22][0].print_str(), end=" ")
+                        #             #print("]", end=" ")
+                        #     print()
 
-                self.count_2 += 1
-                self.loading_bar()
+                if self.random == False:
+                    self.loading_bar_2.set_count_bar(self.count_2)
+                    self.loading_bar_2.display_bar()
+                    self.count_2 += 1
+
+                HelperArrangement().clear_indices_2d_color()
+
                 break
 
     def color_generating(self, random):
@@ -465,7 +357,7 @@ class Color(object):
                 self.perm.clear()
 
         #Jesli losowanie nie wybrane to nastepuje sortowanie wag ukladow (od najmniejszej do najwiekszej)
-        if self.random != True:
+        if self.random == False:
             self.perm_unsort.sort(key=itemgetter(5))
 
             #print("perm_unsort: ", end="")
@@ -473,10 +365,11 @@ class Color(object):
             for idx11 in range(0, len(self.perm_unsort)):
                 for idx22 in range(0, len(self.perm_unsort[idx11])):
                     if idx22 == 5:
-                        print("sum:", self.perm_unsort[idx11][idx22])
+                        #print("sum:", self.perm_unsort[idx11][idx22])
                         self.color_sum = self.perm_unsort[idx11][idx22]
-                        self.weight_gen.append(self.color_sum)
+                        HelperArrangement().append_weight_gen(self.color_sum)
                     else:
+                        pass
                         #print("[", end="")
                         #print((self.perm_unsort[idx11][idx22][1]), end="-")
                         print(self.perm_unsort[idx11][idx22][0].print_str(), end=" ")
@@ -486,10 +379,13 @@ class Color(object):
                 self.perm_unsort[idx11].pop()
                 #Wyszukiwanie najwyzszej karty [Card idx][Card idx] ... [Card idx]
                 self.high_card = max(self.perm_unsort[idx11])[0]
+                # for idx33 in range(0, len(self.perm_unsort[idx11])):
+                #     HelperArrangement.append_cards_all_permutations(self.perm_unsort[idx11][idx33][0])
+
                 self.print_arrengement()
 
             self.num_arr = 0
 
-        self.check_if_weights_larger()
+        HelperArrangement().check_if_weights_larger()
 
-        return self.random_arrangement()
+        return HelperArrangement().random_arrangement()

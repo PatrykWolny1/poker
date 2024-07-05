@@ -54,6 +54,8 @@ class Arrangements(object):
         self.weights.append(self.carriage.get_weight())
         self.weights.append(self.straight_royal_flush.get_weight())
 
+
+        # Zwraca None, gdy niema potrzeby okreslania czesciowej wagi ukladu
         self.part_weights = []
         self.part_weights.append(self.high_card.get_part_weight())
         self.part_weights.append(self.one_pair.get_part_weight())
@@ -120,4 +122,3 @@ class Arrangements(object):
     def print(self):
         for idx in self.cards:
             idx.print()
-        print()

@@ -1,4 +1,5 @@
 from classes.Card import Card
+from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations
 import random
@@ -23,11 +24,7 @@ class ThreeOfAKind(object):
     example = False                # Czy ma byc pokazany przykladowy uklad
     combs_perm = None
 
-    step_p = True
-    str_1 = ""
-    n_bar = 6589440
-    step_bar = int(n_bar / 40)              # Zwiekszanie dlugosci paska ladowania
-    step_bar_finished = int(n_bar / 39)     # Jaka czesc stanowia kropki (zaladowane)
+    loading_bar = LoadingBar(6589440, 40, 39)
 
     def set_cards(self, cards):
         self.perm = cards
@@ -42,25 +39,6 @@ class ThreeOfAKind(object):
     def get_part_weight(self):
         if sum(self.weight_arrangement_part) > 0:
             return self.weight_arrangement_part
-
-    def loading_bar(self):
-        if self.step_p:
-            for i in range(0, self.n_bar, self.step_bar):
-                self.str_1 += "#"
-        if self.step_p:
-            print("[", end="")
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-            self.step_p = False
-        if self.step_p == False and ((self.num_arr + 1) % self.step_bar_finished) == 0:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-        if self.num_arr == self.n_bar - 1:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
 
     def print_arrengement(self):
         if self.random == False:
@@ -324,7 +302,8 @@ class ThreeOfAKind(object):
                             self.three_of_a_kind()
 
                             if self.random == True:
-                                self.loading_bar()
+                                self.loading_bar.set_count_bar(self.num_arr)
+                                self.loading_bar.display_bar()
                                 self.num_arr += 1
 
                             self.cards_all_permutations.append(self.perm[idx1])

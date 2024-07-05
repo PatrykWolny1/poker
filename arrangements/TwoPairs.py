@@ -1,4 +1,5 @@
 from classes.Card import Card
+from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations, chain
 from operator import itemgetter
@@ -20,6 +21,7 @@ class TwoPairs(object):
     all_perm_size = 0              # Liczba wszystkich permutacji dla danej iteracji
     high_card = None               # Wysoka karta
     count = 0                      # Licznik do funkcji temp_lambda()
+    count_bar = 0                  # Licznik do obiektu LoadingBar
     all_combs = []                 # Liczba kombinacji 123552
 
     combs_perm = True
@@ -35,13 +37,7 @@ class TwoPairs(object):
     all_perm_rand = []             # Wszystkie permutacje do wylosowania ukladu
     weight_gen = []                # Lista na wagi
 
-    #loading_bar()
-    step_p = True
-    str_1 = ""
-    n_bar = 14826240                        # Ilosc ukladow (trzeba uruchomic program i policzyc)
-    step_bar = int(n_bar / 42)            # Ilosc punktow ladowania (40 - dzielnik)
-    step_bar_finished = int(n_bar / 7)   # Ilosc zaladowanych punktow (co jeden) [.####][..###]
-    count_bar = 0
+    loading_bar = LoadingBar(14826240, 42, 7)
 
     def set_cards(self, cards):
         self.perm = cards
@@ -54,32 +50,6 @@ class TwoPairs(object):
     def get_part_weight(self):
         if self.two_pairs_part_sum > 0:
             return [self.two_pairs_part_sum]
-
-    def loading_bar(self):
-        # Pasek postepu
-
-        # Pierwsza wartosc step_p to prawda
-        # Tworzony jest pasek postepu stworzony ze znakow "#"
-        if self.step_p:
-            for i in range(0, self.n_bar, self.step_bar):
-                self.str_1 += "#"
-        # Tutaj nastepuje wyswietlenie paska ze znakow "#"
-        if self.step_p:
-            print("[", end="")
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-            self.step_p = False
-        # Zamiana znaku "#" na ".", co okreslona liczbe iteracji
-        if self.step_p == False and (self.count_bar % self.step_bar_finished) == 0:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-        # Ostatnia iteracja zamiana znaku
-        if self.count_bar == self.n_bar - 1:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
 
     def print_arrengement(self):
         if self.random == False:
@@ -237,7 +207,7 @@ class TwoPairs(object):
         # Jesli podany jest przykladowy uklad
         if self.example == True:
             cards_perm = self.perm # Lista prawdopodobnie nie potrzebna cards_perm
-
+            pass
         # Dodanie indeksow do nowej tablicy zlozonej z tablicy glownej w celu powrotu ze
         # stanu posortowanego do nieposortowanego
         i = 0
@@ -394,8 +364,9 @@ class TwoPairs(object):
                     return None
                 for idx2 in range(0, len(self.perm[idx][idx1])):
                     pass
-                    #self.count_bar += 1
-                    #self.loading_bar()
+                    # self.count_bar += 1
+                    # self.loading_bar.set_count_bar(self.count_bar)
+                    # self.loading_bar.display_bar()
                     #self.perm[idx][idx1][idx2].print()
                 #print()
 
@@ -407,17 +378,18 @@ class TwoPairs(object):
         for idx1 in range(0, len(self.perm_unsort)):
             for idx2 in range(0, len(self.perm_unsort[idx1])):
                 self.count_bar += 1
-                self.loading_bar()
+                self.loading_bar.set_count_bar(self.count_bar)
+                self.loading_bar.display_bar()
                 pass
-                # if idx2 < 5:
-                #     print(self.perm_unsort[idx1][idx2][0].print_str(), end = " ")
-                # if idx2 == 5:
-                #     self.perm_unsort[idx1][idx2] = int(''.join(map(str, self.perm_unsort[idx1][idx2])))
-                #     self.two_pairs_sum = self.perm_unsort[idx1][idx2]
-                #     print(self.perm_unsort[idx1][idx2], end = " ")
-                # if idx2 == 6:
-                #     self.high_card = self.perm_unsort[idx1][idx2]
-                #     self.print_arrengement()
+                if idx2 < 5:
+                    print(self.perm_unsort[idx1][idx2][0].print_str(), end = " ")
+                if idx2 == 5:
+                    self.perm_unsort[idx1][idx2] = int(''.join(map(str, self.perm_unsort[idx1][idx2])))
+                    self.two_pairs_sum = self.perm_unsort[idx1][idx2]
+                    #print(self.perm_unsort[idx1][idx2], end = " ")
+                if idx2 == 6:
+                    self.high_card = self.perm_unsort[idx1][idx2]
+                    self.print_arrengement()
 
             self.weight_gen.append(self.two_pairs_sum)
             self.all_perm_rand.append(self.perm_unsort[idx1].copy())

@@ -1,4 +1,5 @@
 from classes.Card import Card
+from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations
 import random
@@ -22,12 +23,8 @@ class OnePair(object):
     random = False
     example = False
 
-    step_p = True
-    str_1 = ""
-    n_bar = 10137600                        #1 098 240 - number of combinations (all) | 84480 (1 iter) | permutations - 131 788 800 | 10 137 600 (1 iter)
-    step_bar = int(n_bar / 40)              # Zwiekszanie dlugosci paska ladowania
-    step_bar_finished = int(n_bar / 39)     # Jaka czesc stanowia kropki (zaladowane)
     idx_bar = 0
+    loading_bar = LoadingBar(10137600, 40, 39)
 
     def set_cards(self, cards):
         self.perm = cards
@@ -42,25 +39,6 @@ class OnePair(object):
     def get_part_weight(self):
         if sum(self.weight_arrangement_part) > 0:
             return self.weight_arrangement_part
-
-    def loading_bar(self):
-        if self.step_p:
-            for i in range(0, self.n_bar, self.step_bar):
-                self.str_1 += "#"
-        if self.step_p:
-            print("[", end="")
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-            self.step_p = False
-        if self.step_p == False and ((self.idx_bar + 1) % self.step_bar_finished) == 0:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-        if self.idx_bar == self.n_bar - 1:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
 
     def print_arrengement(self):
         if self.random == False:
@@ -367,7 +345,8 @@ class OnePair(object):
                         self.one_pair()
 
                         if self.random == True:
-                            self.loading_bar()
+                            self.loading_bar.set_count_bar(self.idx_bar)
+                            self.loading_bar.display_bar()
                             self.idx_bar += 1
 
                         self.cards_all_permutations.append(self.perm[idx1])

@@ -28,7 +28,6 @@ class Player(object):
             self.arrangements.set_cards(self.cards)
         else:
             self.cards = cards
-            self.arrangements.set_cards(self.cards)
 
     def return_to_croupier(self, amount = 0):
         self.amount = amount
@@ -88,7 +87,7 @@ class Player(object):
             self.combs_perm = True
 
         print("Wybierz uklad do wygenerowania:\n"
-              "(1 - POKER KROLEWSKI)\n"
+              "(1 - POKER/POKER KROLEWSKI)\n"
               "(2 - KARETA)\n"
               "(3 - FULL)\n"
               "(4 - KOLOR)\n"
@@ -99,7 +98,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "6"
+        arrangement = "1"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)

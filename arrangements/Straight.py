@@ -1,41 +1,27 @@
 from classes.Card import Card
+from arrangements.HelperArrangement import HelperArrangement
+from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
 import itertools
-import random
-import time
 
-class Straight(object):
+class Straight(HelperArrangement):
     cardmarkings = CardMarkings()   #Oznaczenia kart
-    weight_gen = []                 #Tablica na wagi
+    loading_bar = LoadingBar(1224000, 40, 40)
+
     cards = []                      #Tablica na karty
-    cards_2d = []                   #Tablica do przetwarzania
-    cards_perm_weights = []         #Tablica na permutacje do wag
     perm = []                       #Tablica na permutacje do wag - posortowana
-    cards_perm = []                 #Tablica na permutacje
-    indices_2d_name = []            #Tablica na indeksy nazwa
-    indices_2d_color = []           #Tablica na indeksy kolor
-    cards_all_permutations = []     #Tablica do wyswietlania losowego ukladu
+
     num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
     weight_arrangement = 0          #Zmienna pomocnicza do sumowania wagi ukladu
-    rand_int = 0                    #Przechowywanie numeru losowego ukladu
     straight_iter = 0               #Liczenie ile iteracji zostalo wykonanych
     c_idx6 = 0
     c_idx6_iter = 0
 
-    if_perm_weights = True
     random = False                  #Jesli jest losowanie ukladu
     example = False                 #Jesli jest recznie wpisany uklad
-    print_permutations = True       #Wyswietlenie wszystkich permutacji
-
-    step_p = True
-    str_1 = ""
-    n_bar = 1224000
-    step_bar = int(n_bar / 40)         # Zwiekszanie dlugosci paska ladowania
-    step_bar_finished = int(n_bar / 40)  # Jaka czesc stanowia kropki (zaladowane)
 
     def set_cards(self, cards):
         self.perm = cards
-        self.if_perm_weights = False
         self.example = True
         self.random = True
 
@@ -46,25 +32,6 @@ class Straight(object):
     def get_part_weight(self):
         return None
 
-    def loading_bar(self):
-        if self.step_p:
-            for i in range(0, self.n_bar, self.step_bar):
-                self.str_1 += "#"
-        if self.step_p:
-            print("[", end="")
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-            self.step_p = False
-        if self.step_p == False and (self.straight_iter % self.step_bar_finished) == 0:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-            # os.system('cls')
-        if self.num_arr == self.n_bar - 1:
-            print("[", end="")
-            self.str_1 = self.str_1.replace("#", ".", 1)
-            print(self.str_1, end="]\n")
-
     def print_arrengement(self):
         if self.random == False:
             print("Strit: ", self.weight_arrangement, " Numer: ", self.num_arr)
@@ -73,71 +40,9 @@ class Straight(object):
 
         self.num_arr += 1
 
-    def random_arrangement(self):
-        self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
-
-        self.rand_int = random.randint(0, len(self.weight_gen) - 1)
-
-        print("Wylosowany uklad: ", self.rand_int)
-        print("Ilosc ukladow: ", len(self.cards_all_permutations))
-
-        return self.cards_all_permutations[self.rand_int]
-
-    def check_if_weights_larger(self):
-        # Sprawdzanie czy wagi w wygenerowanych ukladach sa wieksze niz poprzedni uklad (min -> max)
-        self.weight_gen = [ele for ele in self.weight_gen if ele != []]
-        indices = []
-        count_all_weights = 0
-        idx1 = 1
-        for idx2 in range(0, len(self.weight_gen)):
-            if (idx1 == len(self.weight_gen)):
-                print("Dlugosc tablicy: ", len(self.weight_gen))
-                print("Wszystkie liczby sprawdzone: ", count_all_weights)
-                break
-            if (self.weight_gen[idx2] <= self.weight_gen[idx1]):
-                # print(self.weight_gen[idx2], "[", idx2, "]", "<=", self.weight_gen[idx1], "[", idx1, "]")
-                count_all_weights += 1
-            else:
-                indices.append(idx2)
-                indices.append(idx1)
-            idx1 += 1
-
-        for idx in range(0, len(indices)):
-            for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
-                if idx1 < 5:
-                    print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
-            print(indices[idx])
-            print()
-
-    def get_indices_name(self, cards):
-        self.indices_2d_name = []
-
-        # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
-
-        for idx in range(0, len(cards)):
-            indices = []
-            for (index, card) in enumerate(cards):
-                if card.name == cards[idx].name:
-                    indices.append(index)
-            self.indices_2d_name.append(indices)
-        #print(self.indices_2d_name)
-
-    def get_indices_color(self, cards):
-        self.indices_2d_color = []
-
-        #Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
-
-        for idx in range(0, len(cards)):
-            indices = []
-            for (index, card) in enumerate(cards):
-                if card.color == cards[idx].color:
-                    indices.append(index)
-            self.indices_2d_color.append(indices)
-        #print(self.indices_2d)
-
     def remove_royal_flush(self, cards_comb_list):
         # Pobranie indeksow kolorow czyli okreslenie indeksow w jakich wystepuja
-        self.get_indices_color(cards_comb_list)
+        HelperArrangement().get_indices_color(cards_comb_list, random = True, example = True)
 
         for idx1 in range(0, len(self.indices_2d_color)):
             #Jesli wystepuje 5 kolorow w ukladzie
@@ -149,33 +54,27 @@ class Straight(object):
     def remove_more_1(self, cards_comb_list):
         #Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
 
-        self.get_indices_name(cards_comb_list)
+        HelperArrangement().get_indices_1(cards_comb_list)
 
-        for i in range(0, len(self.indices_2d_name)):
-            if (len(self.indices_2d_name[i]) > 1):  # Jesli w wierszu tablicy znajduje sie wiecej niz 1 element
+        for i in range(0, len(HelperArrangement().get_indices_2d_1())):
+            if (len(HelperArrangement().get_indices_2d_1()[i]) > 1):  # Jesli w wierszu tablicy znajduje sie wiecej niz 1 element
                 return True
 
         return False
 
-    def dim(self, a):
-        # Jesli to nie jest lista to zwroc pusty zbior
-        if not type(a) == list:
-            return []
-        # Rekurencja. Dodawanie kolejno dlugosci kolejnych tablic np. [1 5 10 15] czyli 4-wymiarowa
-        return [len(a)] + self.dim(a[0])
-
     def straight(self):
-        if len(self.dim(self.perm)) == 1:
+        if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx6 = 0
-            self.c_idx6_iter = (120 * 1020)
+            self.c_idx6_iter = (120 * 1020) + 1
 
         # Przygotowanie tablicy do sortowania. Sortowanie jest uzywane zeby ulatwic okreslenie czy jest to strit
         self.perm[self.c_idx6] = sorted(self.perm[self.c_idx6], key=lambda x: x.weight)
 
         # Pobranie indeksow gdzie wystepuja powtorzenia kolorow lub pojedynczy kolor
-        self.get_indices_color(self.perm[self.c_idx6])
-        self.get_indices_name(self.perm[self.c_idx6])
+
+        HelperArrangement().get_indices_color(self.perm[self.c_idx6], random = True, example = True)
+        HelperArrangement().get_indices_1(self.perm[self.c_idx6])
 
 
         # for idx1 in range(0, len(self.perm[self.c_idx6])):
@@ -191,11 +90,11 @@ class Straight(object):
         while (calc_weights):
 
             # Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
-            for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
+            for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_1())), range(0, len(HelperArrangement().get_indices_2d_1()))):
                 # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
-                if len(self.indices_2d_color[idx3]) == 5:
+                if len(HelperArrangement().get_indices_2d_color()[idx3]) == 5:
                     return
-                if len(self.indices_2d_name[idx4]) > 1:
+                if len(HelperArrangement().get_indices_2d_1()[idx4]) > 1:
                     return
 
             if idx1 == 4:
@@ -203,7 +102,7 @@ class Straight(object):
 
             # Jesli waga pierwszej karty jest mniejsza od drugiej ... do 5 karty to jest to strit
             if ((self.perm[self.c_idx6][idx2].weight - self.perm[self.c_idx6][idx1].weight == 1) or
-                    (self.perm[self.c_idx6][4].weight == 13 and (self.perm[self.c_idx6][idx2].weight - self.perm[self.c_idx6][idx1].weight) == 9)):
+                    (self.perm[self.c_idx6][4].weight == 13 and (self.perm[self.c_idx6][4].weight - self.perm[self.c_idx6][3].weight) == 9)):
 
                 if self.c_idx6_iter in range((120 * 1020) + 1): #120*1020
                     #print(idx1 + 2, self.perm[self.c_idx6][idx1].print_str())
@@ -224,20 +123,25 @@ class Straight(object):
                     #print(idx1 + 1, self.perm[self.c_idx6][idx1].print_str())
                     straight_weight += pow(self.perm[self.c_idx6][idx1].weight, idx1 + 1)
                     weight_iter += 1
+                    #print(weight_iter)
 
                     if idx2 == 4:
                         #print(idx2 + 1, self.perm[self.c_idx6][idx2].print_str())
                         straight_weight += pow(self.perm[self.c_idx6][idx2].weight, idx2 + 1)
                         weight_iter += 1
+                        #print(weight_iter)
 
                 # Jesli jest strit to weight_iter == 4. Liczono od 0
                 if weight_iter == 5:
                     self.weight_arrangement = straight_weight + 11242224
-                    self.weight_gen.append(self.weight_arrangement)
-                    calc_weights = False
+                    HelperArrangement().append_weight_gen(self.weight_arrangement)
 
-                    if self.random == False or self.example == True:
+                    if self.random == False:
                         self.print_arrengement()
+                    if self.example == True:
+                        self.print_arrengement()
+
+                    calc_weights = False
 
                     return 4
 
@@ -302,6 +206,9 @@ class Straight(object):
                             if if_remove == True or if_remove_rf == True:
                                 cards_comb_list[idx5] = []
 
+                            HelperArrangement().clear_indices_2d_1()
+                            HelperArrangement().clear_indices_2d_color()
+
                         cards_comb_list = [ele for ele in cards_comb_list if ele != []]
 
                         # for idx5 in range(0, len(cards_comb_list)):
@@ -317,7 +224,7 @@ class Straight(object):
                             for idx6 in range(0, len(self.perm)):
                                 self.perm[idx6] = list(self.perm[idx6])
 
-                                self.get_indices_name(self.perm[idx6])
+                                HelperArrangement().get_indices_1(self.perm[idx6])
 
                                 if self.random == False:
                                     for idx7 in range(0, len(self.perm[idx6])):
@@ -327,14 +234,17 @@ class Straight(object):
                                 self.c_idx6 = idx6
                                 self.straight()
 
+                                HelperArrangement().clear_indices_2d_1()
+
                                 if self.random == True:
-                                    self.loading_bar()
+                                    self.loading_bar.set_count_bar(self.straight_iter)
+                                    self.loading_bar.display_bar()
                                     self.straight_iter += 1
 
-                                self.cards_all_permutations.append(self.perm[idx6])
+                                HelperArrangement().append_cards_all_permutations(self.perm[idx6])
 
                                 self.c_idx6_iter += 1
 
-        self.check_if_weights_larger()
+        HelperArrangement().check_if_weights_larger()
 
-        return self.random_arrangement()
+        return HelperArrangement().random_arrangement()
