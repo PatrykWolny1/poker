@@ -3,13 +3,14 @@ from classes.Deck import Deck
 from random import choice
 class Player(object):
     nick = None
-    cards = None
     random = False
     combs_perm = False
     win_or_not = None
+
     amount = 0
     weight = 0
     index = 0
+
     cards = []
     all_combs = []
 
@@ -79,13 +80,6 @@ class Player(object):
         elif if_rand == "2":
             self.random = True
 
-        if_combs_perm = "2"
-
-        if if_combs_perm == "1":
-            self.combs_perm = False
-        elif if_combs_perm == "2":
-            self.combs_perm = True
-
         print("Wybierz uklad do wygenerowania:\n"
               "(1 - POKER/POKER KROLEWSKI)\n"
               "(2 - KARETA)\n"
@@ -98,7 +92,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "1"
+        arrangement = "7"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
@@ -111,9 +105,9 @@ class Player(object):
         if arrangement == "5":
             self.cards = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
-            self.cards, self.all_combs = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random, self.combs_perm)
+            self.cards = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
         if arrangement == "7":
-            self.cards, self.all_combs = self.arrangements.two_pairs.two_pairs_generating(self.random, self.combs_perm)
+            self.cards = self.arrangements.two_pairs.two_pairs_generating(self.random)
         if arrangement == "8":
             self.cards = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":
@@ -127,7 +121,6 @@ class Player(object):
         return self.arrangements
 
     def get_weight(self):
-        self.weight = self.arrangements.set_get_weights()
         return self.weight
 
     def get_cards(self):

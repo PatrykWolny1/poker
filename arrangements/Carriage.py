@@ -7,15 +7,19 @@ import itertools
 class Carriage(HelperArrangement):
     cardmarkings = CardMarkings()   #Oznaczenia kart
     loading_bar = LoadingBar(74880, 20, 19)
-    weight_arrangement = 0
-    cards = []
-    cards_2d = []
-    cards_5 = []
+
+    cards = []                      #Tablica do wstepnego przetwarzania
+    cards_2d = []                   #Tablica do wstepnego przetwarzania
+    cards_5 = []                    #Tablca do wstepnego przetwarzania
     cards_perm = []                 #Tablica na permutacje
     combs = []                      #Tablica na kombinacje
-    cards_perm_weights = []
-    num_arr = 0
+    cards_perm = []                 #Tablica do obliczania wag w funkcji carriage()
+
+    num_arr = 0                     #Licznik ilosci ukladow
     weight_arrangement_part = 0     #Waga ostatniej karty
+    weight_arrangement = 0          #Waga ukladu
+    c_idx6 = 0
+
     if_perm_weights = True
     print_permutations = True       #Wyswietlanie wszystkich permutacji
     example = False                 #Jesli jest recznie wpisany uklad
@@ -23,9 +27,9 @@ class Carriage(HelperArrangement):
 
     #Funkcja dla przykladowego ukladu wpisanego recznie
     def set_cards(self, cards):
-        self.cards_perm_weights = cards
-        self.if_perm_weights = False
+        self.cards_perm = cards
         self.example = True
+        self.random = True
 
     def get_weight(self):
         if self.weight_arrangement > 0:
@@ -36,7 +40,6 @@ class Carriage(HelperArrangement):
             return self.weight_arrangement_part
 
     def print_arrengement(self):
-        print()
         if self.example:
             print("Kareta: ", self.weight_arrangement, "Numer: ", self.rand_int)
         if self.random and self.example == False:
@@ -49,17 +52,24 @@ class Carriage(HelperArrangement):
     def carriage(self):
         # Sprawdzanie czy uklad kart to kareta oraz przypisanie wagi do ukladu
 
-        if self.if_perm_weights:
-            self.cards_perm_weights = []
-            # Sprawdzanie czy tablica indeksow nie jest pusta
-            if len(HelperArrangement().get_indices_2d_1()) != 0:
-                for idx1 in self.cards_perm:
-                    # Zapisanie ukladow w innej tablicy bo tablica self.cards_perm jest zerowana w check_generate_cards
-                    self.cards_perm_weights.append(Card(idx1.name, idx1.color))
-        else:
-            HelperArrangement().get_indices_1(self.cards_perm_weights)
+        if self.example == True:
+            HelperArrangement().clear_indices_2d_1()
+            self.c_idx6 = 0
+            self.cards_perm = [self.cards_perm]
+            HelperArrangement().get_indices_1(self.cards_perm[self.c_idx6])
 
-        size = len(HelperArrangement().get_indices_2d_1())
+        else:
+            HelperArrangement().get_indices_1(self.cards_perm[self.c_idx6])
+
+        # if self.if_perm_weights:
+        #     self.cards_perm_weights = []
+        #     # Sprawdzanie czy tablica indeksow nie jest pusta
+        #     if len(HelperArrangement().get_indices_2d_1()) != 0:
+        #         for idx1 in self.cards_perm:
+        #             # Zapisanie ukladow w innej tablicy bo tablica self.cards_perm jest zerowana w check_generate_cards
+        #             self.cards_perm_weights.append(Card(idx1.name, idx1.color))
+        # else:
+        #     HelperArrangement().get_indices_1(self.cards_perm_weights)
 
         if_carriage = 0
         weight_1 = 0
@@ -68,22 +78,22 @@ class Carriage(HelperArrangement):
         # Waga ukladu
         self.weight_arrangement = 0
 
-        for i in range(0, size):
+        for i in range(0, len(HelperArrangement().get_indices_2d_1())):
             # print("Rozmiar: ", len(self.indeksy_2d[i]))
             # Jesli w wierszu tablicy znajduja sie 4 elementy | Indeksy powtorek, jesli jest kareta to dlugosc = 4
             if (len(HelperArrangement().get_indices_2d_1()[i]) == 4):
                 for j in range(0, len(HelperArrangement().get_indices_2d_1()[i])):
-                    weight_1 = pow(self.cards_perm_weights[HelperArrangement().get_indices_2d_1()[i][j]].weight, 4)
+                    weight_1 = pow(self.cards_perm[self.c_idx6][HelperArrangement().get_indices_2d_1()[i][j]].weight, 4)
                 if_carriage += 1
 
             # Ostatnia karta
             if (len(HelperArrangement().get_indices_2d_1()[i]) == 1):
                 for j in range(0, len(HelperArrangement().get_indices_2d_1()[i])):
-                    weight_2 = self.cards_perm_weights[HelperArrangement().get_indices_2d_1()[i][j]].weight * 1
+                    weight_2 = self.cards_perm[self.c_idx6][HelperArrangement().get_indices_2d_1()[i][j]].weight * 1
 
-                    self.weight_arrangement_part = self.cards_perm_weights[HelperArrangement().get_indices_2d_1()[i][j]].weight
+                    self.weight_arrangement_part = self.cards_perm[self.c_idx6][HelperArrangement().get_indices_2d_1()[i][j]].weight
 
-            if (i == size - 1) and (if_carriage == 4):
+            if (i == len(HelperArrangement().get_indices_2d_1()) - 1) and (if_carriage == 4):
                 self.weight_arrangement = (weight_1 + weight_2) + 12415456
                 HelperArrangement().append_weight_gen(self.weight_arrangement)
 
@@ -120,26 +130,23 @@ class Carriage(HelperArrangement):
                     #     for idx8 in range(0, len(self.combs[idx7])):
                     #         self.combs[idx7][idx8].print()
                     #     print()
+                    # self.cards_perm = []
 
-                    unique = set(self.combs)
+                    self.cards_perm = set(self.combs)
+                    self.cards_perm = [list(i) for i in self.cards_perm]
 
-                    for idx5 in unique:
-                        self.cards_perm = []
-
-                        for idx6 in range(0, len(idx5)):
-                            self.cards_perm.append(idx5[idx6])
-
+                    for idx6 in range(0, len(self.cards_perm)):
                         if self.print_permutations and self.random == False:
-                            for idx7 in range(0, len(self.cards_perm)):
-                                self.cards_perm[idx7].print()
+                            for idx7 in range(0, len(self.cards_perm[idx6])):
+                                self.cards_perm[idx6][idx7].print()
                         else:
                             self.loading_bar.set_count_bar(self.num_arr)
                             self.loading_bar.display_bar()
                             self.num_arr += 1
 
-                        HelperArrangement().append_cards_all_permutations(self.cards_perm)
+                        HelperArrangement().append_cards_all_permutations(self.cards_perm[idx6])
 
-                        HelperArrangement().get_indices_1(self.cards_perm)
+                        self.c_idx6 = idx6
                         self.carriage()
 
                         if self.random == False:

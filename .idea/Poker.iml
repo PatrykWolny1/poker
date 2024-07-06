@@ -11,6 +11,7 @@
     <option name="namespacePackageFolders">
       <list>
         <option value="$MODULE_DIR$/arrangements" />
+        <option value="$MODULE_DIR$/classes" />
       </list>
     </option>
   </component>

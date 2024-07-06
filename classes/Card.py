@@ -6,7 +6,7 @@ class Card(object):
     weight = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
     name_weight = 0
 
-    def __init__(self, name, color='Ki'):
+    def __init__(self, name='A', color='Ki'):
         #Dodawanie wag i nazw
 
         for idx1 in range(0, len(self.markings)):

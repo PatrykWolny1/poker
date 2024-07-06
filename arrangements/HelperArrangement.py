@@ -1,6 +1,5 @@
 import random
 
-
 class HelperArrangement(object):
     indices_2d = []                     #Indeksy ukladow kart figury
     indices_2d_color = []               # kolory
@@ -52,7 +51,7 @@ class HelperArrangement(object):
                 self.indices_2d_color.append(indices)
         #print(self.indices_2d_color)
 
-    def check_if_weights_larger(self):
+    def check_if_weights_larger(self, show = True):
         # Sprawdzanie czy wagi w wygenerowanych ukladach sa wieksze niz poprzedni uklad (min -> max)
         self.weight_gen = [ele for ele in self.weight_gen if ele != []]
         indices = []
@@ -73,13 +72,14 @@ class HelperArrangement(object):
                 indices.append(idx1)
             idx1 += 1
 
-        # Wyswietlenie ukladow ktore nie pasuja
-        for idx in range(0, len(indices)):
-            for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
-                print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
-                if idx1 == 4:
-                    print(indices[idx])
-            print()
+        if show == True:
+            # Wyswietlenie ukladow ktore nie pasuja
+            for idx in range(0, len(indices)):
+                for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
+                    print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
+                    if idx1 == 4:
+                        print(indices[idx])
+                print()
 
     def random_arrangement(self):
         #Zerowanie pustych wierszy

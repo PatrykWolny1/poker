@@ -25,7 +25,7 @@ class LoadingBar(object):
         if self.step_p:
             for i in range(0, self.n_bar, self.step_bar):
                 self.str_1 += "#"
-        # Tutaj nastepuje wyswietlenie paska ze znakow "#"
+        # Tutaj nastepuje wyswietlanie paska ze znakow "#"
         if self.step_p:
             print("[", end="")
             print(self.str_1, end="]\n")

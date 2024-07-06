@@ -1,3 +1,4 @@
+from arrangements.HelperArrangement import HelperArrangement
 from classes.Card import Card
 from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
@@ -5,7 +6,7 @@ from itertools import permutations, combinations
 import random
 import time
 
-class OnePair(object):
+class OnePair(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
     indices_2d_name = []           # Lista na indeksy figur
     perm = []                      # Lista na permutacje
@@ -365,7 +366,6 @@ class OnePair(object):
             self.str_1 = ""
 
             if i_pair == 1:
-                print(((time.time() - start_time)), " sec")
                 print(len(self.cards_all_permutations))
                 break
 

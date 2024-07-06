@@ -1,6 +1,9 @@
 from classes.Croupier import Croupier
 import time
 
+
+file = open("two_pairs.txt", "a")
+
 start_time = time.time()
 
 croupier = Croupier()
@@ -8,6 +11,8 @@ croupier = Croupier()
 croupier.play()
 
 print()
-print(((time.time() - start_time)), " sec")
+end_time = time.time() - start_time
+print(end_time, " sec")
 
-
+file.write((str(end_time)) + " sec\n")
+file.close()
