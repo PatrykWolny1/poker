@@ -8,7 +8,7 @@ class TwoPairs(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
     loading_bar = LoadingBar(14826239, 40, 35)
     high_card = Card()             # Wysoka karta
-    file = None
+    file = open("two_pairs.txt", "w")
 
     cards_2d = []                  # Przygotowanie listy pod kombinacje i permutacje
     cards_2d_acc = []              # Lista pomocnicza
@@ -221,8 +221,6 @@ class TwoPairs(HelperArrangement):
         p = True
         q = False
         z = False
-
-        self.file = open("two_pairs.txt", "w")
 
         idx = 0  # Do figur kart
         idx2 = 0  # While

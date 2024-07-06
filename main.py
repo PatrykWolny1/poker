@@ -2,7 +2,7 @@ from classes.Croupier import Croupier
 import time
 
 
-file = open("two_pairs.txt", "a")
+file = open("one_pair.txt", "a")
 
 start_time = time.time()
 

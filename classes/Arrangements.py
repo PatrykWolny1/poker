@@ -71,7 +71,7 @@ class Arrangements(object):
     def check_arrangement(self):
         self.ids_arr = []
         self.ids_arr.append(self.high_card.high_card())
-        self.ids_arr.append(self.one_pair.one_pair())
+        self.ids_arr.append(self.one_pair.one_pair(True))
         self.ids_arr.append(self.two_pairs.two_pairs())
         self.ids_arr.append(self.three_of_a_kind.three_of_a_kind())
         self.ids_arr.append(self.straight.straight())
