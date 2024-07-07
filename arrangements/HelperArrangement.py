@@ -39,6 +39,7 @@ class HelperArrangement(object):
         #     #print(self.indices_2d_color)
         #     return
 
+        #if self.dim(cards) == 1:
         cards = [cards]
 
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
@@ -58,6 +59,7 @@ class HelperArrangement(object):
         # print("Wagi: ")
         count_all_weights = 0
         idx1 = 1
+
         for idx2 in range(0, len(self.weight_gen)):
             if (idx1 == len(self.weight_gen)):
                 print("Dlugosc tablicy: ", len(self.weight_gen))
