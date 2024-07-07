@@ -86,7 +86,7 @@ class Full(HelperArrangement):
         if (self.if_full == 2):
             self.weight_arrangement = (weight_1 + weight_2) + 12408806
             HelperArrangement().append_weight_gen(self.weight_arrangement)  # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
-            if self.random == False:
+            if self.random == False or self.example == True:
                 self.print_arrengement()
             return 6
 
