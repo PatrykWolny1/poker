@@ -42,11 +42,11 @@ class Straight(HelperArrangement):
 
     def remove_royal_flush(self, cards_comb_list):
         # Pobranie indeksow kolorow czyli okreslenie indeksow w jakich wystepuja
-        HelperArrangement().get_indices_color(cards_comb_list, random = True, example = True)
+        HelperArrangement().get_indices_color(cards_comb_list)
 
-        for idx1 in range(0, len(self.indices_2d_color)):
+        for idx1 in range(0, len(self.get_indices_2d_color())):
             #Jesli wystepuje 5 kolorow w ukladzie
-            if len(self.indices_2d_color[idx1]) == 5:
+            if len(self.get_indices_2d_color()[idx1]) == 5:
                 return True
 
         return False
@@ -90,7 +90,7 @@ class Straight(HelperArrangement):
         while (calc_weights):
 
             # Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
-            for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_1())), range(0, len(HelperArrangement().get_indices_2d_1()))):
+            for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_color())), range(0, len(HelperArrangement().get_indices_2d_1()))):
                 # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
                 if len(HelperArrangement().get_indices_2d_color()[idx3]) == 5:
                     return

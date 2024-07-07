@@ -48,8 +48,8 @@ class StraightRoyalFlush(HelperArrangement):
     def straight_royal_flush_recognition(self, cards):
         #Czy jest 5 takich samych kolorow
         color_5 = False
-        for idx in range(0, len(self.indices_2d_color)):
-            if len(self.indices_2d_color[idx]) == 5:
+        for idx in range(0, len(self.get_indices_2d_color())):
+            if len(self.get_indices_2d_color()[idx]) == 5:
                 color_5 = True
 
         #Czy 5 wag zostalo sprawdzonych
@@ -86,10 +86,11 @@ class StraightRoyalFlush(HelperArrangement):
 
                 self.if_royal_flush = self.straight_royal_flush_recognition(sorted(self.perm[idx1]))
 
-            HelperArrangement().clear_indices_2d_1()
-            HelperArrangement().clear_indices_2d_color()
+     
 
             if count != 4:
+                HelperArrangement().clear_indices_2d_1()
+                HelperArrangement().clear_indices_2d_color()
                 return
 
         #Dziala dla tablicy o 0 rozmiarze i wiekszym (120)
