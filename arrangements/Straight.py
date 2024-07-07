@@ -70,6 +70,7 @@ class Straight(HelperArrangement):
             if sorted(self.perm[self.c_idx6])[4].weight == 13 and sorted(self.perm[self.c_idx6])[3].weight == 4:
                 self.c_idx6_iter = 0      
             HelperArrangement().clear_indices_2d_1()
+            HelperArrangement().clear_indices_2d_color()
 
         
         # Przygotowanie tablicy do sortowania. Sortowanie jest uzywane zeby ulatwic okreslenie czy jest to strit
@@ -79,9 +80,9 @@ class Straight(HelperArrangement):
         HelperArrangement().get_indices_color(self.perm[self.c_idx6], random = True, example = True)
         HelperArrangement().get_indices_1(self.perm[self.c_idx6])
 
-        for idx1 in range(0, len(self.perm[self.c_idx6])):
-            sorted(self.perm[self.c_idx6])[idx1].print()
-        print()
+        # for idx1 in range(0, len(self.perm[self.c_idx6])):
+        #     sorted(self.perm[self.c_idx6])[idx1].print()
+        # print()
 
         weight_iter = 0
         straight_weight = 0

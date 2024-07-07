@@ -14,6 +14,7 @@ class StraightRoyalFlush(HelperArrangement):
 
     weight_arrangement = 0         #Tablica na wage ukladu
     num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
+    c_idx2 = 0
 
     random = False                 #Jesli jest losowanie ukladu
     example = False                #Jesli jest recznie wpisany uklad
@@ -47,9 +48,11 @@ class StraightRoyalFlush(HelperArrangement):
 
     def straight_royal_flush_recognition(self, cards):
         #Czy jest 5 takich samych kolorow
+        HelperArrangement().get_indices_color(cards)
+        
         color_5 = False
-        for idx in range(0, len(self.get_indices_2d_color())):
-            if len(self.get_indices_2d_color()[idx]) == 5:
+        for idx in range(0, len(HelperArrangement().get_indices_2d_color())):
+            if len(HelperArrangement().get_indices_2d_color()[idx]) == 5:
                 color_5 = True
 
         #Czy 5 wag zostalo sprawdzonych
@@ -65,88 +68,86 @@ class StraightRoyalFlush(HelperArrangement):
         return False
 
     def arrangement_recognition_weights(self):
+        ace_five = False
+        if len(HelperArrangement().dim(self.perm)) == 1:
+            self.perm = [self.perm]
+            self.c_idx2 = 0
+            
+        if sorted(self.perm[self.c_idx2])[4].weight == 13 and sorted(self.perm[self.c_idx2])[3].weight == 4:
+            ace_five = True 
+                 
+        HelperArrangement().clear_indices_2d_1()
+        HelperArrangement().clear_indices_2d_color()
+            
         #Rozpoznawanie ukladu oraz obliczanie wagi
-
-        count = 0
         weight_iter = 0
         straight_weight = 0
         self.calc_weights = True
+        idx1 = 0
+        idx2 = 1
+        HelperArrangement().get_indices_1(self.perm[self.c_idx2])
+        while (self.calc_weights):
+            
+            # Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
+            for idx in range(0, len(HelperArrangement().get_indices_2d_1())):
+                # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
+                if len(HelperArrangement().get_indices_2d_1()[idx]) > 1:
+                    return
 
-        if self.example == True:
-            HelperArrangement().get_indices_1(self.perm)
-            HelperArrangement().get_indices_color(self.perm)
+            if idx1 == 4:
+                break
+            
+            # Jesli waga pierwszej karty jest mniejsza od drugiej ... do 5 karty to jest to strit
+            if ((sorted(self.perm[self.c_idx2])[idx2].weight - sorted(self.perm[self.c_idx2])[idx1].weight == 1) or
+                    (sorted(self.perm[self.c_idx2])[4].weight == 13 and ((sorted(self.perm[self.c_idx2])[4].weight - sorted(self.perm[self.c_idx2])[3].weight) == 9))):
 
-            self.perm = [self.perm]
+                if ace_five == True:
+                    #print(idx1 + 2, sorted(self.perm[self.c_idx2])[idx1].print_str())
+                    straight_weight += sorted(self.perm[self.c_idx2])[idx1].weight
+                    weight_iter += 1
 
-            for idx1 in range(0, len(sorted(self.perm))):
-                for idx2, idx3 in zip(range(1, len(sorted(self.perm[idx1]))), range(0, len(sorted(self.perm[idx1])) - 1)):
-                    if (((sorted(self.perm[idx1])[idx2].weight - sorted(self.perm[idx1])[idx3].weight) == 1) or
-                            (sorted(self.perm[idx1])[4].weight == 13 and sorted(self.perm[idx1])[4].weight - sorted(self.perm[idx1])[3].weight == 9)):
-                        count += 1
+                    if sorted(self.perm[self.c_idx2])[idx2].weight == 13:
+                        #print("1", sorted(self.perm[self.c_idx2])[idx2].print_str())
+                        straight_weight += sorted(self.perm[self.c_idx2])[idx2].weight - 20
+                        weight_iter += 1
+                else:
+                    #print(idx1 + 1, sorted(self.perm[self.c_idx6])[idx1].print_str())
+                    straight_weight += sorted(self.perm[self.c_idx2])[idx1].weight
+                    weight_iter += 1
+                    print(straight_weight)
 
-                self.if_royal_flush = self.straight_royal_flush_recognition(sorted(self.perm[idx1]))
+                    if idx2 == 4:
+                        #print(idx2 + 1, sorted(self.perm[self.c_idx6])[idx2].print_str())
+                        straight_weight += sorted(self.perm[self.c_idx2])[idx2].weight
+                        weight_iter += 1
+                        print(straight_weight)
 
-     
+                # Jesli jest strit to weight_iter == 4. Liczono od 0
+                if weight_iter == 5:
+                    self.weight_arrangement = straight_weight + 12448474
+                    HelperArrangement().append_weight_gen(self.weight_arrangement)
 
-            if count != 4:
-                HelperArrangement().clear_indices_2d_1()
-                HelperArrangement().clear_indices_2d_color()
-                return
+                    self.if_royal_flush = self.straight_royal_flush_recognition(sorted(self.perm[self.c_idx2]))
+                    
+                    #print(self.if_royal_flush)
+                    
+                    if self.random == False:
+                        self.print_arrengement()
+                    if self.example == True:
+                        self.print_arrengement()
+                        
+                    self.calc_weights = False
 
-        #Dziala dla tablicy o 0 rozmiarze i wiekszym (120)
-        for idx4 in range(0, len(sorted(self.perm))):
-            #Obliczanie wag
-            while (self.calc_weights):
-                #Sprawdzanie par kart 1-2, 2-3, 3-4, 4-5
-                idx2 = 0
-                idx3 = 1
-
-                for idx33 in range(0, len(HelperArrangement().get_indices_2d_1())):
-                    #Jesli jest wiecej kart o takich samych figurach od 1 to powrot z funkcji
-                    if len(HelperArrangement().get_indices_2d_1()[idx33]) > 1:
-                        return
-                for idx55 in range(0, len(HelperArrangement().get_indices_2d_color())):
-                    #Jesli jest mniej niz 5 kolorow to powrot z funkcji
-                    if len(HelperArrangement().get_indices_2d_color()[idx55]) != 5:
-                        return
-
-                self.if_royal_flush = False
-
-                if idx2 < 4 and idx3 < 5:
-                    #Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
-                    if (sorted(self.perm[idx4])[idx3].weight - sorted(self.perm[idx4])[idx2].weight) == 1:
-                        straight_weight += sorted(self.perm[idx4])[idx2].weight
-
-                    if weight_iter == 3:
-                        straight_weight += sorted(self.perm[idx4])[idx3].weight
-
-                        #Zapisanie wagi do tablicy wag
-                        self.weight_arrangement = straight_weight + 12448474
-                        HelperArrangement().append_weight_gen(self.weight_arrangement)
-
-                        #Pobranie indeksow gdzie znajduja sie takie same kolory
-                        HelperArrangement().get_indices_color(sorted(self.perm[idx4]))
-                        #Wykrycie Pokera (False) lub Pokera Krolewskiego (True) oraz zwrocenie wartosci logicznej
-                        self.if_royal_flush = self.straight_royal_flush_recognition(sorted(self.perm[idx4]))
-
-                        HelperArrangement().clear_indices_2d_color()
-                        if self.example == True or self.random == False:
-                            self.print_arrengement()
-                        self.calc_weights = False
-                        break
-                weight_iter += 1
-                idx2 += 1
-                idx3 += 1
-                continue
-
+            idx1 += 1
+            idx2 += 1
 
     def straight_royal_flush(self):
         self.arrangement_recognition_weights()
-
-        if self.if_royal_flush == True and self.calc_weights == False:
-            return 9
-        elif self.if_royal_flush == False and self.calc_weights == False:
-            return 8
+        if self.example == True:
+            if self.if_royal_flush == True and self.calc_weights == False:
+                return 9
+            elif self.if_royal_flush == False and self.calc_weights == False:
+                return 8
 
     def straight_royal_flush_generating(self, random):
         self.random = random
@@ -211,12 +212,12 @@ class StraightRoyalFlush(HelperArrangement):
 
                 for idx2 in range(0, len(self.perm)):
 
-
                     if self.random == False:
                         for idx3 in range(0, len(self.perm[idx1])):
                             self.perm[idx1][idx3].print()
                         print()
 
+                    self.c_idx2 = idx2
                     self.straight_royal_flush()
 
                     HelperArrangement().append_cards_all_permutations(self.perm[idx2])

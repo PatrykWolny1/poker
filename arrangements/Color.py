@@ -159,7 +159,6 @@ class Color(HelperArrangement):
             HelperArrangement().clear_indices_2d_color()
             #Pobranie indeksow tablicy, gdzie wystepuja takie same kolory
             HelperArrangement().get_indices_color(self.perm)
-            print(HelperArrangement().get_indices_2d_color())
 
             #Lista ma dlugosc 1 w ktorej znajduje sie kolejna lista z kartami, a dalej z waga ukladu
             for idx1 in range(0, len(HelperArrangement().get_indices_2d_color()) - 4):
@@ -171,7 +170,7 @@ class Color(HelperArrangement):
                             #Potega od 1 do 4
                             self.color_weight = pow(sorted(self.perm)[idx].weight, idx + 1)
                             self.color_sum += self.color_weight
-                            print(self.color_sum)
+                            #print(self.color_sum)
                     self.high_card = max(self.perm)
                     self.color_weight = pow(self.high_card.weight, 5)
 
