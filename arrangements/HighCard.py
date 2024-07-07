@@ -84,8 +84,8 @@ class HighCard(HelperArrangement):
                 self.weight_arrangement_part = [0]
                 return
 
-        self.get_indices_1(self.perm[self.c_idx1])
-        self.get_indices_color(self.perm[self.c_idx1])
+        HelperArrangement().get_indices_1(self.perm[self.c_idx1])
+        HelperArrangement().get_indices_color(self.perm[self.c_idx1])
 
         # Jesli uklad to kolor lub jest wiecej takich samych figure niz 1 to powrot z funkcji
         for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_color())), range(0, len(HelperArrangement().get_indices_2d_1()))):
@@ -103,17 +103,19 @@ class HighCard(HelperArrangement):
         perm_temp = self.perm[self.c_idx1].copy()
 
         self.weight_arrangement = self.card_max(perm_temp, 5) - 3200
-        #print(self.weight_arrangement)
+
         HelperArrangement().append_weight_gen(self.weight_arrangement)
 
         if self.random == False:
-            #self.print_arrengement()
             with open("high_card.txt", "a") as self.file:
                 self.file.write("Wysoka karta: " + str(self.weight_arrangement) + 
                                 " Wysoka karta: " + self.high_card_1.print_str() + 
                                 " Numer: " + str(self.num_arr) + "\n")
                 
             self.num_arr += 1
+        if self.example == True:
+            self.print_arrengement()
+        
         #print()
         HelperArrangement().clear_indices_2d_1()
         HelperArrangement().clear_indices_2d_color()

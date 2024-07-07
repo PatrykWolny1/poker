@@ -44,8 +44,6 @@ class OnePair(HelperArrangement):
     def remove_multiples(self, cards_comb):
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
 
-        HelperArrangement().get_indices_1(cards_comb)
-
         for i in range(0, len(HelperArrangement().get_indices_2d_1())):
             if len(HelperArrangement().get_indices_2d_1()[i]) in range(2, 4):  # Jesli w wierszu tablicy znajduja sie 2 lub 3 takie same elementy
                 return True
@@ -55,8 +53,6 @@ class OnePair(HelperArrangement):
     def remove_multiples_more_4(self, cards_comb):
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
 
-        HelperArrangement().get_indices_1(cards_comb)
-
         for i in range(0, len(HelperArrangement().get_indices_2d_1())):
             if len(HelperArrangement().get_indices_2d_1()[i]) > 4:  # Jesli w wierszu tablicy znajduja sie wiecej niz 4 takie same elementy
                 return True
@@ -65,8 +61,6 @@ class OnePair(HelperArrangement):
 
     def remove_multiples_more_2(self, cards_comb):
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
-
-        HelperArrangement().get_indices_1(cards_comb)
 
         for i in range(0, len(HelperArrangement().get_indices_2d_1())):
             if len(HelperArrangement().get_indices_2d_1()[i]) > 2:  # Jesli w wierszu tablicy znajduja sie wiecej niz 2 takie same elementy
@@ -83,14 +77,14 @@ class OnePair(HelperArrangement):
         one_weight = 0          # Waga ukladu
         cards_max_sort = []     # Lista na karty do okreslenie najwyzszej karty (na pojedyncze karty)
         self.weight_arrangement_part = []
-
-
+        
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx1 = 0
-
+            HelperArrangement().clear_indices_2d_1()
+            
         HelperArrangement().get_indices_1(self.perm[self.c_idx1])
-
+        
         for idx in range(0, len(HelperArrangement().get_indices_2d_1())):
             if len(HelperArrangement().get_indices_2d_1()[idx]) == 2:
                 one_count_2 += 1
@@ -133,8 +127,8 @@ class OnePair(HelperArrangement):
                                             if idx3 not in [min_card, self.high_card]:
                                                 mid_card = cards_max_sort[idx3]
                                                 one_weight += pow(mid_card.weight, 3)
-                                            # cards_max_sort[idx3].print()
-                                        # print()
+                                            #cards_max_sort[idx3].print()
+                                        #print()
 
                                         self.high_card = max(cards_max_sort)
                                         min_card = min(cards_max_sort)
@@ -158,7 +152,7 @@ class OnePair(HelperArrangement):
             if self.random == False:
                 #self.print_arrengement()
                 if file_o == True:
-                    self.print_arrengement()
+                    #self.print_arrengement()
                     self.file = open("one_pair.txt", 'a')
 
                 self.file.write("Jedna Para: " + str(self.weight_arrangement) + " Wysoka karta: " +
@@ -167,10 +161,10 @@ class OnePair(HelperArrangement):
                 #self.file.close()
 
             if self.example == True:
+                self.print_arrengement()
                 self.weight_arrangement_part.append(min_card.weight)
                 self.weight_arrangement_part.append(mid_card.weight)
                 self.weight_arrangement_part.append(self.high_card.weight)
-            HelperArrangement().clear_indices_2d_1()
             return 1
 
         else:
@@ -219,6 +213,8 @@ class OnePair(HelperArrangement):
                 # for idx1 in range(0, len(cards_comb_rest[idx])):
                 #     cards_comb_rest[idx][idx1].print()
                 # print()
+                
+                HelperArrangement().get_indices_1(cards_comb_rest[idx])
 
                 # Usuwanie powtorek powtarzajacych sie kart (2 lub 3)
                 if_remove_comb_1 = self.remove_multiples(cards_comb_rest[idx])
@@ -250,6 +246,8 @@ class OnePair(HelperArrangement):
                 if len(cards_to_comb_1[idx]) == 4:
                     cards_to_comb_1[idx] = []
 
+                HelperArrangement().get_indices_1(cards_comb_rest[idx])
+
                 # usuwanie kart ktorych wystepienia sa wieksze od 4
                 if_remove_comb_2 = self.remove_multiples_more_4(cards_to_comb_1[idx])
 
@@ -263,6 +261,8 @@ class OnePair(HelperArrangement):
             for idx in range(0, len(cards_to_comb_1)):
                 cards_comb = list(combinations(cards_to_comb_1[idx], 5))
 
+                HelperArrangement().get_indices_1(cards_comb[idx1])
+                
                 # Usuwanie kart ktorych wystepienia sa wieksze od 2
                 for idx1 in range(0, len(cards_comb)):
                     if_remove_comb_3 = self.remove_multiples_more_2(cards_comb[idx1])
@@ -270,7 +270,7 @@ class OnePair(HelperArrangement):
                     if if_remove_comb_3 == True:
                         cards_comb[idx1] = []
 
-                    HelperArrangement().clear_indices_2d_1()
+                HelperArrangement().clear_indices_2d_1()
 
                 cards_comb = [x for x in cards_comb if x != []]
 
@@ -290,8 +290,6 @@ class OnePair(HelperArrangement):
                                 self.file.write(self.perm[idx2][idx3].print_str() + " ")
                             #print()
                             self.file.write("\n")
-
-
                         # Zapisanie indeksu uzywanego w funkcji one_pair()
                         self.c_idx1 = idx2
                         self.one_pair()
