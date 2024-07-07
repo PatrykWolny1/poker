@@ -73,6 +73,7 @@ class ThreeOfAKind(HelperArrangement):
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx1 = 0
+            HelperArrangement().clear_indices_2d_1()
 
         HelperArrangement().get_indices_1(self.perm[self.c_idx1])
 

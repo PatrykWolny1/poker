@@ -80,11 +80,11 @@ class Croupier(object):
         # self.compare_players_weights()
 
     def set_cards(self):
-        self.cards = [Card("K", "Ka"),
-                      Card("Q", "Tr"),
-                      Card("A", "Ki"),
-                      Card("A", "Pi"),
-                      Card("J", "Tr")]
+        self.cards = [Card("2", "Ka"),
+                      Card("2", "Tr"),
+                      Card("3", "Ki"),
+                      Card("2", "Pi"),
+                      Card("4", "Tr")]
 
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
