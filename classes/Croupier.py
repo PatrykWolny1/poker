@@ -39,12 +39,17 @@ class Croupier(object):
         # player1.print()
         # player1.get_arrangements().check_arrangement()
 
-        player1 = Player(self.deck)
-        player1.cards_permutations()
+        # player1 = Player(self.deck)
+        # player1.cards_permutations()
 
-        player1.get_arrangements().print()
-        print()
-        player1.get_arrangements().check_arrangement()
+        # # for idx in range(0, len(player1.all_combs)):
+        # #     for idx1 in range(0, len(player1.all_combs[idx])):
+        # #         player1.all_combs[idx][idx1].print()
+        # #     print()
+
+        # player1.get_arrangements().print()
+        # print()
+        # player1.get_arrangements().check_arrangement()
 
         #########################################################
 
@@ -75,11 +80,11 @@ class Croupier(object):
         # self.compare_players_weights()
 
     def set_cards(self):
-        self.cards = [Card("6", "Tr"),
-                      Card("2", "Tr"),
-                      Card("3", "Tr"),
-                      Card("4", "Tr"),
-                      Card("5", "Tr")]
+        self.cards = [Card("9", "Ka"),
+                      Card("J", "Ka"),
+                      Card("Q", "Ka"),
+                      Card("K", "Ka"),
+                      Card("A", "Ka")]
 
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
