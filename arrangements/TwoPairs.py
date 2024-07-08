@@ -95,7 +95,8 @@ class TwoPairs(HelperArrangement):
         if self.example == True:
             self.perm = [self.perm]
             self.c_idx1 = 0
-
+            HelperArrangement().clear_indices_2d_1()
+            
         HelperArrangement().get_indices_1(sorted(self.perm[self.c_idx1]))
 
         # Okreslenie czy uklad to dwie pary

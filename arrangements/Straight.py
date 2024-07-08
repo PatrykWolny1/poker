@@ -42,11 +42,11 @@ class Straight(HelperArrangement):
 
     def remove_royal_flush(self, cards_comb_list):
         # Pobranie indeksow kolorow czyli okreslenie indeksow w jakich wystepuja
-        HelperArrangement().get_indices_color(cards_comb_list, random = True, example = True)
+        HelperArrangement().get_indices_color(cards_comb_list)
 
-        for idx1 in range(0, len(self.indices_2d_color)):
+        for idx1 in range(0, len(self.get_indices_2d_color())):
             #Jesli wystepuje 5 kolorow w ukladzie
-            if len(self.indices_2d_color[idx1]) == 5:
+            if len(self.get_indices_2d_color()[idx1]) == 5:
                 return True
 
         return False
@@ -66,19 +66,22 @@ class Straight(HelperArrangement):
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx6 = 0
-            self.c_idx6_iter = (120 * 1020) + 1
+            self.c_idx6_iter = (120*1020) + 1
+            if sorted(self.perm[self.c_idx6])[4].weight == 13 and sorted(self.perm[self.c_idx6])[3].weight == 4:
+                self.c_idx6_iter = 0      
+            HelperArrangement().clear_indices_2d_1()
+            HelperArrangement().clear_indices_2d_color()
 
+        
         # Przygotowanie tablicy do sortowania. Sortowanie jest uzywane zeby ulatwic okreslenie czy jest to strit
-        self.perm[self.c_idx6] = sorted(self.perm[self.c_idx6], key=lambda x: x.weight)
-
+        #self.perm[self.c_idx6] = sorted(self.perm[self.c_idx6], key=lambda x: x.weight)
         # Pobranie indeksow gdzie wystepuja powtorzenia kolorow lub pojedynczy kolor
 
         HelperArrangement().get_indices_color(self.perm[self.c_idx6], random = True, example = True)
         HelperArrangement().get_indices_1(self.perm[self.c_idx6])
 
-
         # for idx1 in range(0, len(self.perm[self.c_idx6])):
-        #     self.perm[self.c_idx6][idx1].print()
+        #     sorted(self.perm[self.c_idx6])[idx1].print()
         # print()
 
         weight_iter = 0
@@ -90,7 +93,7 @@ class Straight(HelperArrangement):
         while (calc_weights):
 
             # Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
-            for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_1())), range(0, len(HelperArrangement().get_indices_2d_1()))):
+            for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_color())), range(0, len(HelperArrangement().get_indices_2d_1()))):
                 # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
                 if len(HelperArrangement().get_indices_2d_color()[idx3]) == 5:
                     return
@@ -99,37 +102,31 @@ class Straight(HelperArrangement):
 
             if idx1 == 4:
                 break
-
             # Jesli waga pierwszej karty jest mniejsza od drugiej ... do 5 karty to jest to strit
-            if ((self.perm[self.c_idx6][idx2].weight - self.perm[self.c_idx6][idx1].weight == 1) or
-                    (self.perm[self.c_idx6][4].weight == 13 and (self.perm[self.c_idx6][4].weight - self.perm[self.c_idx6][3].weight) == 9)):
+            if ((sorted(self.perm[self.c_idx6])[idx2].weight - sorted(self.perm[self.c_idx6])[idx1].weight == 1) or
+                    (sorted(self.perm[self.c_idx6])[4].weight == 13 and ((sorted(self.perm[self.c_idx6])[4].weight - sorted(self.perm[self.c_idx6])[3].weight) == 9))):
 
                 if self.c_idx6_iter in range((120 * 1020) + 1): #120*1020
-                    #print(idx1 + 2, self.perm[self.c_idx6][idx1].print_str())
-                    straight_weight += pow(self.perm[self.c_idx6][idx1].weight, idx1 + 2)
+                    print(idx1 + 2, sorted(self.perm[self.c_idx6])[idx1].print_str())
+                    straight_weight += pow(sorted(self.perm[self.c_idx6])[idx1].weight, idx1 + 2)
                     weight_iter += 1
 
-                    if self.perm[self.c_idx6][idx2].weight == 13:
-                        #print("1", self.perm[self.c_idx6][idx2].print_str())
-                        straight_weight += pow(self.perm[self.c_idx6][idx2].weight, 1) - 10
-                        weight_iter += 1
-
-                    if self.perm[self.c_idx6][idx2].weight == 5:
-                        #print("1", self.perm[self.c_idx6][idx2].print_str())
-                        straight_weight += pow(self.perm[self.c_idx6][idx2].weight, 1)
+                    if sorted(self.perm[self.c_idx6])[idx2].weight == 13:
+                        print("1", sorted(self.perm[self.c_idx6])[idx2].print_str())
+                        straight_weight += pow(sorted(self.perm[self.c_idx6])[idx2].weight, 1)
                         weight_iter += 1
 
                 else:
-                    #print(idx1 + 1, self.perm[self.c_idx6][idx1].print_str())
-                    straight_weight += pow(self.perm[self.c_idx6][idx1].weight, idx1 + 1)
+                    #print(idx1 + 1, sorted(self.perm[self.c_idx6])[idx1].print_str())
+                    straight_weight += pow(sorted(self.perm[self.c_idx6])[idx1].weight, idx1 + 1)
                     weight_iter += 1
-                    #print(weight_iter)
+                    print(straight_weight)
 
                     if idx2 == 4:
-                        #print(idx2 + 1, self.perm[self.c_idx6][idx2].print_str())
-                        straight_weight += pow(self.perm[self.c_idx6][idx2].weight, idx2 + 1)
+                        #print(idx2 + 1, sorted(self.perm[self.c_idx6])[idx2].print_str())
+                        straight_weight += pow(sorted(self.perm[self.c_idx6])[idx2].weight, idx2 + 1)
                         weight_iter += 1
-                        #print(weight_iter)
+                        print(straight_weight)
 
                 # Jesli jest strit to weight_iter == 4. Liczono od 0
                 if weight_iter == 5:

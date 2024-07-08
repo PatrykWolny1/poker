@@ -1,33 +1,30 @@
-from classes.Card import Card
+from arrangements.HelperArrangement import HelperArrangement
 from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
+from classes.Card import Card
 from itertools import permutations, combinations
-import random
-import time
 
-class HighCard(object):
+class HighCard(HelperArrangement):
     cardmarkings = CardMarkings()   # Oznaczenia kart
-    indices_2d_name = []            # Lista na indeksy figur
-    indices_2d_color = []           # Lista na indeksy kolorow
+    high_card_1 = Card()
+    limit_arr = 10000               # np. 10137600 - iteracja
+    loading_bar = LoadingBar(limit_arr - 1, 40, 39)      
+    file = open("high_card.txt", "w")
+
     perm = []                       # Lista na karty gracza
-    cards_all_permutations = []     # Lista na wszystkie permutacje
-    weight_gen = []                 # Lista na wszystkie wagi
     weight_arrangement_part = []    # Lista na wagi wszystkich kart
-
-    high_card_1 = None
-
+    
+    high_card_weight = 0            # Waga najwyzszej karty
+    idx_bar = 0
     weight_arrangement = 0          # Waga ukladu
     c_idx1 = 0                      # Zapisywanie aktualnego indeksu z petli for
     num_arr = 0                     # Numer ukladu
-    rand_int = 0                    # Losowany numer
     iter_high = 0                   # Ilosc wykonanych iteracji dla tworzenia permutacji ukladow
 
     random = False
     example = False
 
-    idx_bar = 0
-    loading_bar = LoadingBar(10137600, 40, 39)
-
+    
     def set_cards(self, cards):
         self.perm = cards
         self.example = True
@@ -47,74 +44,6 @@ class HighCard(object):
             print("Wysoka karta: ", self.weight_arrangement, "Wysoka karta: ", self.high_card_1.print_str(),  "Numer: ", self.num_arr)
         if self.random == True:
             print("Wysoka karta: ", self.weight_arrangement, "Wysoka karta: ", self.high_card_1.print_str(),  "Numer: ", self.rand_int)
-
-        self.num_arr += 1
-
-    def check_if_weights_larger(self):
-        # Sprawdzanie czy wagi w wygenerowanych ukladach sa wieksze niz poprzedni uklad (min -> max)
-        self.weight_gen = [ele for ele in self.weight_gen if ele != []]
-        indices = []
-        count_all_weights = 0
-        idx1 = 1
-        for idx2 in range(0, len(self.weight_gen)):
-            if (idx1 == len(self.weight_gen)):
-                print("Dlugosc tablicy: ", len(self.weight_gen))
-                print("Wszystkie liczby sprawdzone: ", count_all_weights)
-                break
-            if (self.weight_gen[idx2] <= self.weight_gen[idx1]):
-                #print(self.weight_gen[idx2], "[", idx2, "]", "<=", self.weight_gen[idx1], "[", idx1, "]")
-                count_all_weights += 1
-            else:
-                indices.append(idx2)
-                indices.append(idx1)
-            idx1 += 1
-
-        # for idx in range(0, len(indices)):
-        #     for idx1 in range(0, len(self.cards_all_permutations[indices[idx]])):
-        #         print(self.cards_all_permutations[indices[idx]][idx1].print_str(), end=" ")
-        #     print()
-        #     print("IDX: ", indices[idx])
-
-    def random_arrangement(self):
-        self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
-
-        self.rand_int = random.randint(0, len(self.weight_gen) - 1)
-
-        print("Wylosowany uklad: ", self.rand_int)
-        print("Ilosc ukladow: ", len(self.cards_all_permutations))
-
-        return self.cards_all_permutations[self.rand_int]
-
-    def dim(self, a):
-        # Jesli to nie jest lista to zwroc pusty zbior
-        if not type(a) == list:
-            return []
-        # Rekurencja. Dodawanie kolejno dlugosci kolejnych tablic np. [1 5 10 15] czyli 4-wymiarowa
-        return [len(a)] + self.dim(a[0])
-
-    def get_indices_name(self, cards):
-        self.indices_2d_name = []
-
-        # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
-
-        for idx in range(0, len(cards)):
-            indices = []
-            for (index, card) in enumerate(cards):
-                if card.name == cards[idx].name:
-                    indices.append(index)
-            self.indices_2d_name.append(indices)
-        #print(self.indices_2d_name)
-
-    def get_indices_color(self, cards):
-        self.indices_2d_color = []
-
-        for idx in range(0, len(cards)):
-            indices = []
-            for (index, card) in enumerate(cards):
-                if card.color == cards[idx].color:
-                    indices.append(index)
-            self.indices_2d_color.append(indices)
-        # print(self.indices_2d_color)
 
     def card_max(self, perm_temp, pow_idx):
         # Jesli lista jest pusta to wyjdz
@@ -137,7 +66,7 @@ class HighCard(object):
         return self.high_card_weight + self.card_max(perm_temp, pow_idx)
 
     def high_card(self):
-        if len(self.dim(self.perm)) == 1:
+        if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx1 = 0
 
@@ -155,16 +84,16 @@ class HighCard(object):
                 self.weight_arrangement_part = [0]
                 return
 
-        self.get_indices_name(self.perm[self.c_idx1])
-        self.get_indices_color(self.perm[self.c_idx1])
+        HelperArrangement().get_indices_1(self.perm[self.c_idx1])
+        HelperArrangement().get_indices_color(self.perm[self.c_idx1])
 
         # Jesli uklad to kolor lub jest wiecej takich samych figure niz 1 to powrot z funkcji
-        for idx3, idx4 in zip(range(0, len(self.indices_2d_color)), range(0, len(self.indices_2d_name))):
+        for idx3, idx4 in zip(range(0, len(HelperArrangement().get_indices_2d_color())), range(0, len(HelperArrangement().get_indices_2d_1()))):
             # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
-            if len(self.indices_2d_color[idx3]) == 5:
+            if len(HelperArrangement().get_indices_2d_color()[idx3]) == 5:
                 self.weight_arrangement_part = [0]
                 return
-            if len(self.indices_2d_name[idx4]) > 1:
+            if len(HelperArrangement().get_indices_2d_1()[idx4]) > 1:
                 self.weight_arrangement_part = [0]
                 return
 
@@ -175,11 +104,22 @@ class HighCard(object):
 
         self.weight_arrangement = self.card_max(perm_temp, 5) - 3200
 
-        self.weight_gen.append(self.weight_arrangement)
+        HelperArrangement().append_weight_gen(self.weight_arrangement)
 
         if self.random == False:
+            with open("high_card.txt", "a") as self.file:
+                self.file.write("Wysoka karta: " + str(self.weight_arrangement) + 
+                                " Wysoka karta: " + self.high_card_1.print_str() + 
+                                " Numer: " + str(self.num_arr) + "\n")
+                
+            self.num_arr += 1
+        if self.example == True:
             self.print_arrengement()
-
+        
+        #print()
+        HelperArrangement().clear_indices_2d_1()
+        HelperArrangement().clear_indices_2d_color()
+        
         return 0
 
     def high_card_generating(self, random):
@@ -195,106 +135,88 @@ class HighCard(object):
             for color in self.cardmarkings.colors:
                 cards_2d.append(Card(arrangement, color))
 
-        while (True):
-            start_time = time.time()
+    
+        # Utworzenie kombinacji ukladow z talii kart
+        cards_comb_rest = list(combinations(cards_2d, 5))
+        
+        # cards_to_comb_rest.clear()
 
-            cards_to_comb_rest.extend(cards_2d[0:52])
+        for idx in range(0, len(cards_comb_rest)):
+            cards_comb_rest[idx] = list(cards_comb_rest[idx])
+            
+            #print(cards_comb_rest[idx])
 
-            # for idx in range(0, len(cards_to_comb_rest)):
-            #     cards_to_comb_rest[idx].print()
-            # print()
+            HelperArrangement().get_indices_1(cards_comb_rest[idx])
+            HelperArrangement().get_indices_color(cards_comb_rest[idx])
+            
+            #print(len(HelperArrangement().get_indices_2d_1()))
+            
+            # Usuwanie ukladow ktore sa kolorem lub posiadaja wiecej takich samych figur niz 1
+            for idx1, idx2 in zip(range(0, len(HelperArrangement().get_indices_2d_1())), 
+                                  range(0, len(HelperArrangement().get_indices_2d_color()))):
+                if len(HelperArrangement().get_indices_2d_1()[idx1]) > 1:
+                    cards_comb_rest[idx] = []
+                if len(HelperArrangement().get_indices_2d_color()[idx2]) == 5:
+                    cards_comb_rest[idx] = []
+            
+            HelperArrangement().clear_indices_2d_1()
+            HelperArrangement().clear_indices_2d_color()
+            
+            # Usuwanie ukladow ktore sa stritem
+            for idx2, idx3 in zip(range(1, len(sorted(cards_comb_rest[idx]))),
+                                    range(0, len(sorted(cards_comb_rest[idx])) - 1)):
 
-            # Utworzenie kombinacji ukladow z talii kart
-            cards_comb_rest = list(combinations(cards_to_comb_rest, 5))
+                if (((sorted(cards_comb_rest[idx])[idx2].weight - sorted(cards_comb_rest[idx])[idx3].weight) == 1) or
+                        (sorted(cards_comb_rest[idx])[4].weight == 13 and sorted(cards_comb_rest[idx])[4].weight -
+                            sorted(cards_comb_rest[idx])[3].weight == 9)):
+                    count += 1
 
-            cards_to_comb_rest.clear()
-
-            for idx in range(0, len(cards_comb_rest)):
-
-                cards_comb_rest[idx] = list(cards_comb_rest[idx])
-
-                # Sortowanie kombinacji ukladow na podstawie wagi
-                cards_comb_rest_sorted.append(sorted(cards_comb_rest[idx].copy(), key = lambda x: x.weight))
-
-                self.get_indices_name(cards_comb_rest_sorted[idx])
-                self.get_indices_color(cards_comb_rest_sorted[idx])
-
-                # Usuwanie ukladow ktore sa kolorem lub posiadaja wiecej takich samych figur niz 1
-                for idx1 in range(0, len(self.indices_2d_name)):
-                    if len(self.indices_2d_name[idx1]) != 1:
-                        cards_comb_rest[idx] = []
-                    if len(self.indices_2d_color[idx1]) == 5:
-                        cards_comb_rest[idx] = []
-
-                #print(idx)
-
-                # Usuwanie ukladow ktore sa stritem
-                if cards_comb_rest_sorted[idx] != []:
-                    for idx2, idx3 in zip(range(1, len(cards_comb_rest_sorted[idx])),
-                                          range(0, len(cards_comb_rest_sorted[idx]) - 1)):
-
-                        if (((cards_comb_rest_sorted[idx][idx2].weight - cards_comb_rest_sorted[idx][idx3].weight) == 1) or
-                                (cards_comb_rest_sorted[idx][4].weight == 13 and cards_comb_rest_sorted[idx][idx2].weight -
-                                 cards_comb_rest_sorted[idx][idx3].weight == 9)):
-                            count += 1
-
-                        if count == 4:
-                            cards_comb_rest[idx] = []
-
-                    count = 0
+                if count == 4:
+                    cards_comb_rest[idx] = []
+            count = 0
 
             # Usuwanie pustych list
-            cards_comb_rest = [x for x in cards_comb_rest if x != []]
+            cards_comb_rest[idx] = list(filter(None, cards_comb_rest[idx]))
 
-            # for idx in range(0, len(cards_comb_rest)):
-            #     for idx1 in range(0, len(cards_comb_rest[idx])):
-            #         cards_comb_rest[idx][idx1].print()
-            #     print()
-
-            #print(len(cards_comb_rest))
+            # for idx4 in range(0, len(cards_comb_rest[idx])):
+            #     cards_comb_rest[idx][idx4].print()
+            # print()
 
             # Tworzenie permutacji kart z kombinacji
-            for idx in range(0, len(cards_comb_rest)):
-                self.perm = list(permutations(cards_comb_rest[idx], 5))
+            self.perm = list(permutations(cards_comb_rest[idx], 5))
 
-                # for idx2 in range(0, len(cards_comb[idx1])):
-                #     cards_comb[idx1][idx2].print()
-                # print()
+            # for idx2 in range(0, len(cards_comb[idx1])):
+            #     cards_comb[idx1][idx2].print()
+            # print()
+            
+            for idx5 in range(0, len(self.perm)):
+                self.perm[idx5] = list(self.perm[idx5])
 
-                for idx1 in range(0, len(self.perm)):
-                    self.perm[idx1] = list(self.perm[idx1])
+                self.loading_bar.set_count_bar(self.idx_bar)
+                self.loading_bar.display_bar()
+                self.idx_bar += 1
+                    
+                for idx2 in range(0, len(self.perm[idx5])):
+                    #self.perm[idx5][idx2].print()
+                    with open("high_card.txt", "a") as self.file:
+                        self.file.write(self.perm[idx5][idx2].print_str() + " ")
+                #print()
+                with open("high_card.txt", "a") as self.file:
+                    self.file.write("\n")
 
-                    if self.random == False:
-                        for idx2 in range(0, len(self.perm[idx1])):
-                            self.perm[idx1][idx2].print()
-                        print()
+                # Zapisanie indeksu uzywanego w funkcji high_card()
+                self.c_idx1 = idx5
+                self.high_card()
 
-                    # Zapisanie indeksu uzywanego w funkcji high_card()
-                    self.c_idx1 = idx1
-                    self.high_card()
+                HelperArrangement().append_cards_all_permutations(self.perm[idx5])
 
-                    #print(int(time.time() - start_time))
+                self.iter_high += 1
+                #print(self.iter_high)
+                # Iteracja po jakiej ma skonczyc sie generowanie permutacji
+                if self.iter_high == self.limit_arr:
+                    HelperArrangement().check_if_weights_larger(True)
+                    return HelperArrangement().random_arrangement()
 
-                    self.cards_all_permutations.append(self.perm[idx1])
+        HelperArrangement().check_if_weights_larger(False)
 
-                    if self.random == True:
-                        self.loading_bar.set_count_bar(self.idx_bar)
-                        self.loading_bar.display_bar()
-                        self.idx_bar += 1
-
-                    self.iter_high += 1
-
-                    # Czas po jakim ma skonczyc sie generowanie permutacji
-                    if int(time.time() - start_time) == 160:
-                        pass
-
-                    # Iteracja po jakiej ma skonczyc sie generowanie permutacji
-                    if self.iter_high == self.n_bar:
-                        self.check_if_weights_larger()
-                        return self.random_arrangement()
-
-            print(len(self.cards_all_permutations))
-
-        self.check_if_weights_larger()
-
-        return self.random_arrangement()
+        return HelperArrangement().random_arrangement()

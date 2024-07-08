@@ -156,9 +156,9 @@ class Color(HelperArrangement):
 
             self.color_weight = 0
             self.color_sum = 0
-
+            HelperArrangement().clear_indices_2d_color()
             #Pobranie indeksow tablicy, gdzie wystepuja takie same kolory
-            HelperArrangement().get_indices_color(self.perm, self.random, self.example)
+            HelperArrangement().get_indices_color(self.perm)
 
             #Lista ma dlugosc 1 w ktorej znajduje sie kolejna lista z kartami, a dalej z waga ukladu
             for idx1 in range(0, len(HelperArrangement().get_indices_2d_color()) - 4):
@@ -168,15 +168,15 @@ class Color(HelperArrangement):
                         #Dla kart innych niz najwyzsza policz czesciowo wage ukladu
                         if self.perm[idx] != max(self.perm):
                             #Potega od 1 do 4
-                            self.color_weight = pow(self.perm[idx].weight, idx + 1)
+                            self.color_weight = pow(sorted(self.perm)[idx].weight, idx + 1)
                             self.color_sum += self.color_weight
-
+                            #print(self.color_sum)
                     self.high_card = max(self.perm)
                     self.color_weight = pow(self.high_card.weight, 5)
 
                     #Calkowita suma ukladu
                     self.color_sum += self.color_weight + 12007274
-
+            
                     # print()
                     # for idx in range(0, len(self.perm_unsorted)):
                     #     self.perm_unsorted[idx].print()
@@ -190,9 +190,11 @@ class Color(HelperArrangement):
         #Jesli tablica jest jednowymiarowa to dodaj jeden wymiar w celu uruchomienia nastepnej petli
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
+            HelperArrangement().clear_indices_2d_color()
+        
+        HelperArrangement().get_indices_color(self.perm)
 
         for idx in range(0, len(self.perm)):
-            HelperArrangement().get_indices_color(self.perm[idx])
 
             for idx1 in range(0, len(HelperArrangement().get_indices_2d_color()) - 4):
                 if len(HelperArrangement().get_indices_2d_color()[idx1]) == 5:
@@ -257,7 +259,6 @@ class Color(HelperArrangement):
 
                         self.high_card = max(perm_sorted, key = lambda t4: t4[0])
                         self.color_weight = pow(self.high_card[0].weight, 5)
-
                         self.color_sum += self.color_weight
 
                         if self.random == True:
