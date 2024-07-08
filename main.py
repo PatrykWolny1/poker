@@ -9,7 +9,7 @@ croupier.play()
 
 end_time = time.time() - start_time
 
-with open("high_card.txt", "a") as file:
+with open("straight_royal_flush.txt", "a") as file:
     file.write(str(end_time) + " sec\n")
 
 print()    

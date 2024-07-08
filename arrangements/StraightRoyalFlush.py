@@ -6,9 +6,8 @@ from itertools import permutations
 
 class StraightRoyalFlush(HelperArrangement):
     cardmarkings = CardMarkings()  #Oznaczenia kart
-
     loading_bar = LoadingBar(4799, 40, 39)
-
+    file = open("straight_royal_flush.txt", "w")
     cards = []                     #Tablica na karty
     perm = []                      #Tablica na permutacje do wag
 
@@ -34,9 +33,6 @@ class StraightRoyalFlush(HelperArrangement):
         return None
 
     def print_arrengement(self):
-        if self.num_arr == len(self.cards_all_permutations):
-            self.random = True
-
         if self.random == False and self.if_royal_flush == False:
             print("Poker: ", self.weight_arrangement, " Numer: ", self.num_arr)
         elif self.random == True and self.if_royal_flush == False:
@@ -48,8 +44,11 @@ class StraightRoyalFlush(HelperArrangement):
 
     def straight_royal_flush_recognition(self, cards):
         #Czy jest 5 takich samych kolorow
-        HelperArrangement().get_indices_color(cards)
         
+        HelperArrangement().clear_indices_2d_color()
+                
+        HelperArrangement().get_indices_color(cards)
+
         color_5 = False
         for idx in range(0, len(HelperArrangement().get_indices_2d_color())):
             if len(HelperArrangement().get_indices_2d_color()[idx]) == 5:
@@ -69,15 +68,13 @@ class StraightRoyalFlush(HelperArrangement):
 
     def arrangement_recognition_weights(self):
         ace_five = False
+        
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx2 = 0
             
         if sorted(self.perm[self.c_idx2])[4].weight == 13 and sorted(self.perm[self.c_idx2])[3].weight == 4:
             ace_five = True 
-                 
-        HelperArrangement().clear_indices_2d_1()
-        HelperArrangement().clear_indices_2d_color()
             
         #Rozpoznawanie ukladu oraz obliczanie wagi
         weight_iter = 0
@@ -85,13 +82,21 @@ class StraightRoyalFlush(HelperArrangement):
         self.calc_weights = True
         idx1 = 0
         idx2 = 1
+        
+        HelperArrangement().clear_indices_2d_1()
+        HelperArrangement().clear_indices_2d_color()
+        
+        HelperArrangement().get_indices_color(self.perm[self.c_idx2])
         HelperArrangement().get_indices_1(self.perm[self.c_idx2])
+        
         while (self.calc_weights):
             
             # Dla posortowanej tablicy sprawdz czy waga jest mniejsza od kolejnej
             for idx in range(0, len(HelperArrangement().get_indices_2d_1())):
                 # Jesli jest 5 takich samych kolorow to powrot z funkcji (poker krolewski)
                 if len(HelperArrangement().get_indices_2d_1()[idx]) > 1:
+                    return
+                if len(HelperArrangement().get_indices_2d_color()[idx]) != 5:
                     return
 
             if idx1 == 4:
@@ -114,13 +119,13 @@ class StraightRoyalFlush(HelperArrangement):
                     #print(idx1 + 1, sorted(self.perm[self.c_idx6])[idx1].print_str())
                     straight_weight += sorted(self.perm[self.c_idx2])[idx1].weight
                     weight_iter += 1
-                    print(straight_weight)
+                    #print(straight_weight)
 
                     if idx2 == 4:
                         #print(idx2 + 1, sorted(self.perm[self.c_idx6])[idx2].print_str())
                         straight_weight += sorted(self.perm[self.c_idx2])[idx2].weight
                         weight_iter += 1
-                        print(straight_weight)
+                        #print(straight_weight)
 
                 # Jesli jest strit to weight_iter == 4. Liczono od 0
                 if weight_iter == 5:
@@ -128,14 +133,23 @@ class StraightRoyalFlush(HelperArrangement):
                     HelperArrangement().append_weight_gen(self.weight_arrangement)
 
                     self.if_royal_flush = self.straight_royal_flush_recognition(sorted(self.perm[self.c_idx2]))
-                    
-                    #print(self.if_royal_flush)
-                    
+
                     if self.random == False:
-                        self.print_arrengement()
+                        #self.print_arrengement()
+                        with open("straight_royal_flush.txt", "a") as self.file:
+                            if self.if_royal_flush == False:
+                                self.file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                            else:
+                                self.file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                                
                     if self.example == True:
                         self.print_arrengement()
-                        
+                        with open("straight_royal_flush.txt", "a") as self.file:
+                            if self.if_royal_flush == False:
+                                self.file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                            else:
+                                self.file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                                                 
                     self.calc_weights = False
 
             idx1 += 1
@@ -143,6 +157,7 @@ class StraightRoyalFlush(HelperArrangement):
 
     def straight_royal_flush(self):
         self.arrangement_recognition_weights()
+
         if self.example == True:
             if self.if_royal_flush == True and self.calc_weights == False:
                 return 9
@@ -206,25 +221,31 @@ class StraightRoyalFlush(HelperArrangement):
             for step1, step2 in zip(range(0, len(temp[idx1]), 5), range(5, len(temp[idx1]) + 1, 5)):
             #Generowanie tablicy permutacji
                 self.perm = list(permutations(temp[idx1][step1:step2]))
-                #print(self.perm)
 
                 self.perm = [list(i) for i in self.perm]
 
                 for idx2 in range(0, len(self.perm)):
 
                     if self.random == False:
-                        for idx3 in range(0, len(self.perm[idx1])):
-                            self.perm[idx1][idx3].print()
-                        print()
+                        for idx3 in range(0, len(self.perm[idx2])):
+                            #self.perm[idx2][idx3].print()
+                            with open("straight_royal_flush.txt", "a") as self.file:
+                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                        #print()
+                        with open("straight_royal_flush.txt", "a") as self.file:
+                            self.file.write("\n")
 
                     self.c_idx2 = idx2
                     self.straight_royal_flush()
 
                     HelperArrangement().append_cards_all_permutations(self.perm[idx2])
+                    
                     self.loading_bar.set_count_bar(self.num_arr)
                     self.loading_bar.display_bar()
                     self.num_arr += 1
-
+        
+        self.file.close()
+        
         HelperArrangement().check_if_weights_larger()
 
         return HelperArrangement().random_arrangement()
