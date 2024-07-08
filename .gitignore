@@ -1,3 +1,8 @@
 test.txt
 loop.bat
 */__pycache__/
+.vscode/
+high_card.txt
+one_pair.txt
+straight_royal_flush.txt
+two_pairs.txt
