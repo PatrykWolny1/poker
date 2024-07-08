@@ -120,13 +120,13 @@ class Straight(HelperArrangement):
                     #print(idx1 + 1, sorted(self.perm[self.c_idx6])[idx1].print_str())
                     straight_weight += pow(sorted(self.perm[self.c_idx6])[idx1].weight, idx1 + 1)
                     weight_iter += 1
-                    print(straight_weight)
+                    #print(straight_weight)
 
                     if idx2 == 4:
                         #print(idx2 + 1, sorted(self.perm[self.c_idx6])[idx2].print_str())
                         straight_weight += pow(sorted(self.perm[self.c_idx6])[idx2].weight, idx2 + 1)
                         weight_iter += 1
-                        print(straight_weight)
+                        #print(straight_weight)
 
                 # Jesli jest strit to weight_iter == 4. Liczono od 0
                 if weight_iter == 5:
