@@ -264,4 +264,6 @@ class Straight(HelperArrangement):
 
         HelperArrangement().check_if_weights_larger()
 
+        self.file.close()
+        
         return HelperArrangement().random_arrangement()
