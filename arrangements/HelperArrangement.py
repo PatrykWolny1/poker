@@ -6,9 +6,7 @@ class HelperArrangement(object):
     rand_int = 0
     cards_all_permutations = []         #Tablica na permutacje - losowy uklad
     weight_gen = []                     #Tablica na wagi kart
-
-    def __init__(self, rand_int):
-        
+    perm = []
     
     def dim(self, a):
         #Jesli to nie jest lista to zwroc pusty zbior

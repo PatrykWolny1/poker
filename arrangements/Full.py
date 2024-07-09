@@ -24,10 +24,8 @@ class Full(HelperArrangement):
     random = False                  #Jesli jest losowanie ukladu
     example = False                 #Jesli jest recznie wpisany uklad
     print_permutations = True       #Czy wyswietlic wszystkie permutacje
-
-    def __init__(self):
-        super()
     
+    #tabnine: document
     def set_cards(self, cards):
         self.perm = cards
         self.random = True

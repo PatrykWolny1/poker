@@ -93,12 +93,12 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "3"
+        arrangement = "2"
 
         if arrangement == "1":
             self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
         if arrangement == "2":
-            self.cards = self.arrangements.carriage.carriage_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.carriage.carriage_generating(self.random)
         if arrangement == "3":
             self.cards, self.rand_int = self.arrangements.full.full_generating(self.random)
         if arrangement == "4":
@@ -117,6 +117,7 @@ class Player(object):
         self.cards = list(self.cards)
 
         self.arrangements.set_cards(self.cards)
+        self.arrangements.set_rand_int(self.rand_int)
 
     def get_arrangements(self):
         return self.arrangements
