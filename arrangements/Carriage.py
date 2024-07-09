@@ -7,7 +7,8 @@ import itertools
 class Carriage(HelperArrangement):
     cardmarkings = CardMarkings()   #Oznaczenia kart
     loading_bar = LoadingBar(74880, 20, 19)
-
+    file = open("carriage.txt", "w")
+    
     cards = []                      #Tablica do wstepnego przetwarzania
     cards_2d = []                   #Tablica do wstepnego przetwarzania
     cards_5 = []                    #Tablca do wstepnego przetwarzania
@@ -46,8 +47,6 @@ class Carriage(HelperArrangement):
             print("Kareta: ", self.weight_arrangement)
         if self.random == False and self.example == False:
             print("Kareta: ", self.weight_arrangement, " Numer: ", self.num_arr)
-
-        self.num_arr += 1
 
     def carriage(self):
         # Sprawdzanie czy uklad kart to kareta oraz przypisanie wagi do ukladu
@@ -99,7 +98,11 @@ class Carriage(HelperArrangement):
 
                 if self.example == True:
                     self.print_arrengement()
-
+                    with open("carriage.txt", "a") as file:
+                        file.write("Kareta: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
+                
+                self.num_arr += 1
+                        
                 return 7
             else:
                 self.weight_arrangement = 0
@@ -136,13 +139,18 @@ class Carriage(HelperArrangement):
                     self.cards_perm = [list(i) for i in self.cards_perm]
 
                     for idx6 in range(0, len(self.cards_perm)):
-                        if self.print_permutations and self.random == False:
+                        if self.random == False:
                             for idx7 in range(0, len(self.cards_perm[idx6])):
-                                self.cards_perm[idx6][idx7].print()
-                        else:
-                            self.loading_bar.set_count_bar(self.num_arr)
-                            self.loading_bar.display_bar()
-                            self.num_arr += 1
+                                #self.cards_perm[idx6][idx7].print()
+                                with open("carriage.txt", "a") as file:
+                                    file.write(self.cards_perm[idx6][idx7].print_str() + " ")
+                            #print()
+                        if self.random == False:
+                            with open("carriage.txt", "a") as file:
+                                file.write("\n")
+                                
+                        self.loading_bar.set_count_bar(self.num_arr)
+                        self.loading_bar.display_bar()
 
                         HelperArrangement().append_cards_all_permutations(self.cards_perm[idx6])
 
@@ -150,7 +158,9 @@ class Carriage(HelperArrangement):
                         self.carriage()
 
                         if self.random == False:
-                            self.print_arrengement()
+                            #self.print_arrengement()
+                            with open("carriage.txt", "a") as file:
+                                file.write("Kareta: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
 
                         HelperArrangement().clear_indices_2d_1()
 
