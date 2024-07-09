@@ -19,7 +19,7 @@ class Straight(HelperArrangement):
 
     random = False                  #Jesli jest losowanie ukladu
     example = False                 #Jesli jest recznie wpisany uklad
-
+    
     def set_cards(self, cards):
         self.perm = cards
         self.example = True

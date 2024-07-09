@@ -186,8 +186,9 @@ class Color(HelperArrangement):
                 
                 HelperArrangement().append_weight_gen(self.color_sum)
                 
-                #self.print_arrengement()
-                self.file.write("Kolor: " + str(self.color_sum) + " Wysoka Karta: " + self.high_card.print_str() + " Numer: " + str(self.num_arr) + "\n")              
+                if self.random == False or self.example == True:
+                    #self.print_arrengement()
+                    self.file.write("Kolor: " + str(self.color_sum) + " Wysoka Karta: " + self.high_card.print_str() + " Numer: " + str(self.num_arr) + "\n")              
                 
                 self.num_arr += 1
                     
@@ -233,13 +234,14 @@ class Color(HelperArrangement):
 
                 #print(len(self.perm))
                 for idx2 in range(0, len(self.perm)):
-                    for idx3 in range(0, len(self.perm[idx2])):
-                        #self.perm[idx2][idx3].print()
-                        # with open("color.txt", "a") as f:
-                        self.file.write(self.perm[idx2][idx3].print_str() + " ")
-                    #print()
-                    # with open("color.txt", "a") as f:
-                    self.file.write("\n")
+                    if self.random == False:
+                        for idx3 in range(0, len(self.perm[idx2])):
+                            #self.perm[idx2][idx3].print()
+                            with open("color.txt", "a") as f:
+                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                        #print()
+                        with open("color.txt", "a") as f:
+                            self.file.write("\n")
 
                     self.c_idx2 = idx2
                     self.color()

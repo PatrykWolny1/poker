@@ -49,6 +49,7 @@ class Croupier(object):
 
         player1.get_arrangements().print()
         print()
+        player1.get_arrangements().set_rand_int(self.player.get_rand_int())
         player1.get_arrangements().check_arrangement()
 
         #########################################################

@@ -7,6 +7,9 @@ class HelperArrangement(object):
     cards_all_permutations = []         #Tablica na permutacje - losowy uklad
     weight_gen = []                     #Tablica na wagi kart
 
+    def __init__(self, rand_int):
+        
+    
     def dim(self, a):
         #Jesli to nie jest lista to zwroc pusty zbior
         if not type(a) == list:
@@ -93,7 +96,7 @@ class HelperArrangement(object):
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
         print()
 
-        return self.cards_all_permutations[self.rand_int]
+        return self.cards_all_permutations[self.rand_int], self.rand_int
 
     def get_indices_2d_1(self):
         return self.indices_2d
@@ -104,6 +107,9 @@ class HelperArrangement(object):
     def get_cards_all_permutations(self):
         return self.cards_all_permutations
 
+    def get_rand_int(self):
+        return self.rand_int
+    
     def append_cards_all_permutations(self, cards_perm):
         self.cards_all_permutations.append(cards_perm)
 
