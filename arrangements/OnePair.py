@@ -7,7 +7,7 @@ from itertools import permutations, combinations
 class OnePair(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
     high_card = Card()             # Wysoka karta
-    limit_rand = 1000              # Ograniczenie dla liczby obliczen 143 - pelne obliczenie
+    limit_rand = 1000              # Ograniczenie dla liczby obliczen
     one_iter = 120
     loading_bar = LoadingBar(one_iter * limit_rand - 1, 40, 40)          #Ponad 100 milinonow permutacji
     file = open("one_pair.txt", "w")
@@ -163,7 +163,7 @@ class OnePair(HelperArrangement):
                                 " Wysoka Karta: " + self.high_card.print_str() +
                                 " Numer: " + str(self.num_arr) + "\n")
                                     
-                self.num_arr += 1
+            self.num_arr += 1
                 
             if self.example == True:
                 self.print_arrengement()
@@ -182,7 +182,6 @@ class OnePair(HelperArrangement):
                 self.weight_arrangement_part.append(min_card.weight)
                 self.weight_arrangement_part.append(mid_card.weight)
                 self.weight_arrangement_part.append(self.high_card.weight)
-                
                 return 1
 
         else:
