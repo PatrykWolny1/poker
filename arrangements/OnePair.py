@@ -9,7 +9,7 @@ class OnePair(HelperArrangement):
     high_card = Card()             # Wysoka karta
     limit_rand = 1000              # Ograniczenie dla liczby obliczen
     one_iter = 120
-    loading_bar = LoadingBar(one_iter * limit_rand - 1, 40, 40)          #Ponad 100 milinonow permutacji
+    loading_bar = LoadingBar(one_iter * limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
     file = open("one_pair.txt", "w")
 
     perm = []                      # Lista na permutacje

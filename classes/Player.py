@@ -93,7 +93,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "8"
+        arrangement = "9"
 
         if arrangement == "1":
             self.cards, self.rand_int = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
@@ -112,7 +112,7 @@ class Player(object):
         if arrangement == "8":
             self.cards, self.rand_int = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":
-            self.cards = self.arrangements.high_card.high_card_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.high_card.high_card_generating(self.random)
 
         self.cards = list(self.cards)
 

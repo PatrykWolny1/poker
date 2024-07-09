@@ -7,8 +7,9 @@ from itertools import permutations, combinations
 class HighCard(HelperArrangement):
     cardmarkings = CardMarkings()   # Oznaczenia kart
     high_card_1 = Card()
-    limit_arr = 10000               # np. 10137600 - iteracja
-    loading_bar = LoadingBar(limit_arr - 1, 40, 39)      
+    limit_rand = 1000               # Ograniczenie dla liczby obliczen
+    one_iter = 120    
+    loading_bar = LoadingBar(limit_rand * one_iter - 1, 40, 40)   # ponad 200 milionow permutacji           
     file = open("high_card.txt", "w")
 
     perm = []                       # Lista na karty gracza
@@ -19,7 +20,7 @@ class HighCard(HelperArrangement):
     weight_arrangement = 0          # Waga ukladu
     c_idx1 = 0                      # Zapisywanie aktualnego indeksu z petli for
     num_arr = 0                     # Numer ukladu
-    iter_high = 0                   # Ilosc wykonanych iteracji dla tworzenia permutacji ukladow
+    iter_rand = 0                   # Ilosc wykonanych iteracji dla tworzenia permutacji ukladow
 
     random = False
     example = False
@@ -28,8 +29,11 @@ class HighCard(HelperArrangement):
     def set_cards(self, cards):
         self.perm = cards
         self.example = True
-        self.random = False
+        self.random = True
 
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+        
     def get_weight(self):
         # Jesli nie wystepuje uklad to waga wynosi 0
         if self.weight_arrangement > 0:
@@ -83,7 +87,10 @@ class HighCard(HelperArrangement):
             if straight_iter == 4:
                 self.weight_arrangement_part = [0]
                 return
-
+        
+        HelperArrangement().clear_indices_2d_1()        
+        HelperArrangement().clear_indices_2d_color()
+        
         HelperArrangement().get_indices_1(self.perm[self.c_idx1])
         HelperArrangement().get_indices_color(self.perm[self.c_idx1])
 
@@ -107,19 +114,27 @@ class HighCard(HelperArrangement):
         HelperArrangement().append_weight_gen(self.weight_arrangement)
 
         if self.random == False:
-            with open("high_card.txt", "a") as self.file:
-                self.file.write("Wysoka karta: " + str(self.weight_arrangement) + 
-                                " Wysoka karta: " + self.high_card_1.print_str() + 
-                                " Numer: " + str(self.num_arr) + "\n")
-                
-            self.num_arr += 1
+            #self.print_arrengement()
+            self.file.write("Jedna para: " + str(self.weight_arrangement) +
+                            " Wysoka Karta: " + self.high_card_1.print_str() +
+                            " Numer: " + str(self.num_arr) + "\n")
+                                
+        self.num_arr += 1
+            
         if self.example == True:
             self.print_arrengement()
-        
-        #print()
-        HelperArrangement().clear_indices_2d_1()
-        HelperArrangement().clear_indices_2d_color()
-        
+            
+            for idx in range(0, len(self.perm[self.c_idx1])):
+                with open("high_card.txt", "a") as file:
+                    file.write(self.perm[self.c_idx1][idx].print_str() + " ")
+                    
+            with open("high_card.txt", "a") as file:
+                file.write("\n")
+            
+            with open("high_card.txt", "a") as file:
+                file.write("Wysoka karta: " + str(self.weight_arrangement) + " Wysoka karta: " +
+                            self.high_card_1.print_str() + " Numer: " + str(self.rand_int) + "\n")
+                        
         return 0
 
     def high_card_generating(self, random):
@@ -191,32 +206,37 @@ class HighCard(HelperArrangement):
             
             for idx5 in range(0, len(self.perm)):
                 self.perm[idx5] = list(self.perm[idx5])
-
-                self.loading_bar.set_count_bar(self.idx_bar)
-                self.loading_bar.display_bar()
-                self.idx_bar += 1
-                    
-                for idx2 in range(0, len(self.perm[idx5])):
-                    #self.perm[idx5][idx2].print()
-                    with open("high_card.txt", "a") as self.file:
+                
+                if self.random == False:
+                    for idx2 in range(0, len(self.perm[idx5])):
+                        #self.perm[idx5][idx2].print()
                         self.file.write(self.perm[idx5][idx2].print_str() + " ")
-                #print()
-                with open("high_card.txt", "a") as self.file:
+                    #print()
                     self.file.write("\n")
 
                 # Zapisanie indeksu uzywanego w funkcji high_card()
                 self.c_idx1 = idx5
                 self.high_card()
+                
+                self.loading_bar.set_count_bar(self.num_arr)
+                self.loading_bar.display_bar()
 
                 HelperArrangement().append_cards_all_permutations(self.perm[idx5])
 
-                self.iter_high += 1
                 #print(self.iter_high)
+                
                 # Iteracja po jakiej ma skonczyc sie generowanie permutacji
-                if self.iter_high == self.limit_arr:
+                if self.iter_rand == self.limit_rand * self.one_iter:
                     HelperArrangement().check_if_weights_larger(True)
+                    
+                    self.file.close()
+                    
                     return HelperArrangement().random_arrangement()
+                
+                self.iter_rand += 1
 
         HelperArrangement().check_if_weights_larger(False)
 
+        self.file.close()
+        
         return HelperArrangement().random_arrangement()

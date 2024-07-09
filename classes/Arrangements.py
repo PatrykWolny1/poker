@@ -74,7 +74,7 @@ class Arrangements(object):
     def check_arrangement(self):
         self.ids_arr = []
         
-        
+        self.high_card.set_rand_int(self.rand_int)
         self.ids_arr.append(self.high_card.high_card())
         
         self.one_pair.set_rand_int(self.rand_int)
