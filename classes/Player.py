@@ -102,7 +102,7 @@ class Player(object):
         if arrangement == "3":
             self.cards, self.rand_int = self.arrangements.full.full_generating(self.random)
         if arrangement == "4":
-            self.cards, self.rand_int = self.arrangements.color.color_generating(self.random)
+            self.cards = self.arrangements.color.color_generating(self.random)
         if arrangement == "5":
             self.cards = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
