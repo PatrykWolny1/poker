@@ -95,20 +95,18 @@ class Full(HelperArrangement):
                 
             self.num_arr += 1
                 
-            if self.example == True:
-                self.file = open('full.txt', 'a')
-                
+            if self.example == True:                
                 self.print_arrengement()
                 
                 for idx in range(0, len(self.perm[self.c_idx6])):
-                    self.file.write(self.perm[self.c_idx6][idx].print_str() + " ")
-                self.file.write("\n")
+                    with open('full.txt', 'a') as file:
+                        file.write(self.perm[self.c_idx6][idx].print_str() + " ")
+                with open('full.txt', 'a') as file:
+                    file.write("\n")
+                    
+                with open('full.txt', 'a') as file:
+                    file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
-                if self.random == False:    
-                    self.file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
-                else:
-                    self.file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
-            
             return 6
 
     def full_generating(self, random):

@@ -33,7 +33,10 @@ class Color(HelperArrangement):
         self.perm = cards
         self.example = True
         self.random = True
-
+    
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+    
     def get_weight(self):
         if self.color_sum > 0:
             return self.color_sum
@@ -186,9 +189,21 @@ class Color(HelperArrangement):
                 
                 HelperArrangement().append_weight_gen(self.color_sum)
                 
-                if self.random == False or self.example == True:
+                if self.random == False:
                     #self.print_arrengement()
                     self.file.write("Kolor: " + str(self.color_sum) + " Wysoka Karta: " + self.high_card.print_str() + " Numer: " + str(self.num_arr) + "\n")              
+                
+                if self.example == True:
+                    self.print_arrengement()
+                    for idx in range(0, len(self.perm[self.c_idx2])):
+                        with open("color.txt", "a") as file:
+                            file.write(self.perm[self.c_idx2][idx].print_str() + " ")
+                    with open("color.txt", "a") as file:
+                        file.write("\n")
+                    
+                    with open("color.txt", "a") as file:
+                        file.write("Kareta: " + str(self.color_sum) + " Numer: " + str(self.rand_int) + "\n")
+                    
                 
                 self.num_arr += 1
                     
@@ -237,11 +252,9 @@ class Color(HelperArrangement):
                     if self.random == False:
                         for idx3 in range(0, len(self.perm[idx2])):
                             #self.perm[idx2][idx3].print()
-                            with open("color.txt", "a") as f:
-                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                            self.file.write(self.perm[idx2][idx3].print_str() + " ")
                         #print()
-                        with open("color.txt", "a") as f:
-                            self.file.write("\n")
+                        self.file.write("\n")
 
                     self.c_idx2 = idx2
                     self.color()
@@ -254,4 +267,6 @@ class Color(HelperArrangement):
         
         HelperArrangement().check_if_weights_larger()
 
+        self.file.close()
+        
         return HelperArrangement().random_arrangement()

@@ -97,7 +97,10 @@ class Carriage(HelperArrangement):
             if (i == len(HelperArrangement().get_indices_2d_1()) - 1) and (if_carriage == 4):
                 self.weight_arrangement = (weight_1 + weight_2) + 12415456
                 HelperArrangement().append_weight_gen(self.weight_arrangement)
+                
                 if self.random == False:
+                    #self.print_arrengement()
+                    
                     self.file.write("Kareta: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
 
                 if self.example == True:
