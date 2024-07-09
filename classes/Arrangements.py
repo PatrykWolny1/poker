@@ -77,8 +77,8 @@ class Arrangements(object):
         
         self.ids_arr.append(self.high_card.high_card())
         
-        
-        self.ids_arr.append(self.one_pair.one_pair(True))
+        self.one_pair.set_rand_int(self.rand_int)
+        self.ids_arr.append(self.one_pair.one_pair())
         
         self.two_pairs.set_rand_int(self.rand_int)
         self.ids_arr.append(self.two_pairs.two_pairs())

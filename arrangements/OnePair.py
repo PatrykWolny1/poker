@@ -7,7 +7,9 @@ from itertools import permutations, combinations
 class OnePair(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
     high_card = Card()             # Wysoka karta
-    loading_bar = LoadingBar(10137599, 40, 39)
+    limit_rand = 1000              # Ograniczenie dla liczby obliczen 143 - pelne obliczenie
+    one_iter = 120
+    loading_bar = LoadingBar(one_iter * limit_rand - 1, 40, 40)          #Ponad 100 milinonow permutacji
     file = open("one_pair.txt", "w")
 
     perm = []                      # Lista na permutacje
@@ -16,7 +18,7 @@ class OnePair(HelperArrangement):
     weight_arrangement = 0         # Waga ukladu
     c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
     num_arr = 0                    # Numer ukladu
-    idx_bar = 0
+    rand_iter = 0
 
     random = False
     example = False
@@ -24,8 +26,11 @@ class OnePair(HelperArrangement):
     def set_cards(self, cards):
         self.perm = cards
         self.example = True
-        self.random = False
-
+        self.random = True
+    
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+        
     def get_weight(self):
         # Jesli to jest to aktualny uklad to zwroc wage ukladu
         if self.weight_arrangement > 0:
@@ -38,7 +43,7 @@ class OnePair(HelperArrangement):
     def print_arrengement(self):
         if self.random == False:
             print("Jedna Para: ", self.weight_arrangement, "Wysoka karta: ", self.high_card.print_str(),  "Numer: ", self.num_arr)
-        if self.random == True:
+        if self.example == True:
             print("Jedna Para: ", self.weight_arrangement, "Wysoka karta: ", self.high_card.print_str(),  "Numer: ", self.rand_int)
 
     def remove_multiples(self, cards_comb):
@@ -68,7 +73,7 @@ class OnePair(HelperArrangement):
 
         return False
 
-    def one_pair(self, file_o = False):
+    def one_pair(self):
         one_count_1 = 0     # Licznik na uklad wysoka karta
         one_count_2 = 0     # Licznik na uklad para
         once_1 = False      # Zmienne ktore sluza do wykonania petli jeden raz
@@ -81,8 +86,9 @@ class OnePair(HelperArrangement):
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx1 = 0
-            HelperArrangement().clear_indices_2d_1()
-            
+        
+        
+        HelperArrangement().clear_indices_2d_1()
         HelperArrangement().get_indices_1(self.perm[self.c_idx1])
         
         for idx in range(0, len(HelperArrangement().get_indices_2d_1())):
@@ -148,24 +154,36 @@ class OnePair(HelperArrangement):
         # Jesli pojedyncza karta wystepuje 3 razy oraz wystepuje 1 para to zakoncz
         if one_count_1 == 3 and one_count_2 == 2:
             self.weight_arrangement = one_weight + 390079
+
             HelperArrangement().append_weight_gen(self.weight_arrangement)   # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
+            
             if self.random == False:
                 #self.print_arrengement()
-                if file_o == True:
-                    #self.print_arrengement()
-                    self.file = open("one_pair.txt", 'a')
-
-                self.file.write("Jedna Para: " + str(self.weight_arrangement) + " Wysoka karta: " +
-                                self.high_card.print_str() + " Numer: " + str(self.num_arr) + "\n")
+                self.file.write("Jedna para: " + str(self.weight_arrangement) +
+                                " Wysoka Karta: " + self.high_card.print_str() +
+                                " Numer: " + str(self.num_arr) + "\n")
+                                    
                 self.num_arr += 1
-                #self.file.close()
-
+                
             if self.example == True:
                 self.print_arrengement()
+                
+                for idx in range(0, len(self.perm[self.c_idx1])):
+                    with open("one_pair.txt", "a") as file:
+                        file.write(self.perm[self.c_idx1][idx].print_str() + " ")
+                        
+                with open("one_pair.txt", "a") as file:
+                    file.write("\n")
+                
+                with open("one_pair.txt", "a") as file:
+                    file.write("Jedna Para: " + str(self.weight_arrangement) + " Wysoka karta: " +
+                                    self.high_card.print_str() + " Numer: " + str(self.rand_int) + "\n")
+                
                 self.weight_arrangement_part.append(min_card.weight)
                 self.weight_arrangement_part.append(mid_card.weight)
                 self.weight_arrangement_part.append(self.high_card.weight)
-            return 1
+                
+                return 1
 
         else:
             self.weight_arrangement = 0
@@ -188,134 +206,131 @@ class OnePair(HelperArrangement):
             for color in self.cardmarkings.colors:
                 cards_2d.append(Card(arrangement, color))
 
-        while (True):
-            # for idx in range(0 + iter_ar, 4 + iter_ar):
-            #     cards_2d[idx].print()
-            # print("###############################")
+        #while (True):
+        # for idx in range(0 + iter_ar, 4 + iter_ar):
+        #     cards_2d[idx].print()
+        # print("###############################")
 
-            cards_to_comb_rest.extend(cards_2d[0:52])
+        cards_to_comb_rest.extend(cards_2d[0:52])
 
-            # for idx in range(0, len(cards_to_comb_rest)):
-            #     cards_to_comb_rest[idx].print()
+        # for idx in range(0, len(cards_to_comb_rest)):
+        #     cards_to_comb_rest[idx].print()
+        # print()
+
+        # Tworzenie kombinacji 3 kart (maja byc pojedyncze)
+        cards_comb_rest = list(combinations(cards_to_comb_rest, 3))
+
+        cards_to_comb_rest.clear()
+
+        for idx in range(0, len(cards_comb_rest)):
+            # Tworzenie serii kart (od indeksu 0 do 3 itd.)
+            cards_to_comb.extend(cards_2d[0 + iter_ar : 4 + iter_ar])
+
+            cards_comb_rest[idx] = list(cards_comb_rest[idx])
+
+            # for idx1 in range(0, len(cards_comb_rest[idx])):
+            #     cards_comb_rest[idx][idx1].print()
             # print()
+            
+            HelperArrangement().get_indices_1(cards_comb_rest[idx])
 
-            # Tworzenie kombinacji 3 kart (maja byc pojedyncze)
-            cards_comb_rest = list(combinations(cards_to_comb_rest, 3))
+            # Usuwanie powtorek powtarzajacych sie kart (2 lub 3)
+            if_remove_comb_1 = self.remove_multiples(cards_comb_rest[idx])
 
-            cards_to_comb_rest.clear()
+            if if_remove_comb_1 == True:
+                cards_comb_rest[idx] = []
 
-            for idx in range(0, len(cards_comb_rest)):
-                # Tworzenie serii kart (od indeksu 0 do 3 itd.)
-                cards_to_comb.extend(cards_2d[0 + iter_ar : 4 + iter_ar])
+            HelperArrangement().clear_indices_2d_1()
 
-                cards_comb_rest[idx] = list(cards_comb_rest[idx])
+            # Dodanie do serii kart kolejnych 3 kart
+            cards_to_comb.extend(cards_comb_rest[idx])
+            cards_to_comb_1.append(cards_to_comb.copy())
+            cards_to_comb.clear()
 
-                # for idx1 in range(0, len(cards_comb_rest[idx])):
-                #     cards_comb_rest[idx][idx1].print()
-                # print()
-                
-                HelperArrangement().get_indices_1(cards_comb_rest[idx])
+        cards_to_comb_1 = [x for x in cards_to_comb_1 if x != []]
 
-                # Usuwanie powtorek powtarzajacych sie kart (2 lub 3)
-                if_remove_comb_1 = self.remove_multiples(cards_comb_rest[idx])
+        # for idx in range(0, len(cards_comb_rest)):
+        #     for idx1 in range(0, len(cards_comb_rest[idx])):
+        #         cards_comb_rest[idx][idx1].print()
+        #     print()
 
-                if if_remove_comb_1 == True:
-                    cards_comb_rest[idx] = []
+        # for idx in range(0, len(cards_to_comb_1)):
+        #     for idx1 in range(0, len(cards_to_comb_1[idx])):
+        #         cards_to_comb_1[idx][idx1].print()
+        #     print()
 
-                HelperArrangement().clear_indices_2d_1()
+        for idx in range(0, len(cards_to_comb_1)):
+            # Usuwanie kart ktorych wystapienia sa rowne 4
+            if len(cards_to_comb_1[idx]) == 4:
+                cards_to_comb_1[idx] = []
 
-                # Dodanie do serii kart kolejnych 3 kart
-                cards_to_comb.extend(cards_comb_rest[idx])
-                cards_to_comb_1.append(cards_to_comb.copy())
-                cards_to_comb.clear()
+            HelperArrangement().get_indices_1(cards_comb_rest[idx])
 
-            cards_to_comb_1 = [x for x in cards_to_comb_1 if x != []]
+            # usuwanie kart ktorych wystepienia sa wieksze od 4
+            if_remove_comb_2 = self.remove_multiples_more_4(cards_to_comb_1[idx])
 
-            # for idx in range(0, len(cards_comb_rest)):
-            #     for idx1 in range(0, len(cards_comb_rest[idx])):
-            #         cards_comb_rest[idx][idx1].print()
-            #     print()
+            if if_remove_comb_2 == True:
+                cards_to_comb_1[idx] = []
 
-            # for idx in range(0, len(cards_to_comb_1)):
-            #     for idx1 in range(0, len(cards_to_comb_1[idx])):
-            #         cards_to_comb_1[idx][idx1].print()
-            #     print()
+            HelperArrangement().clear_indices_2d_1()
 
-            for idx in range(0, len(cards_to_comb_1)):
-                # Usuwanie kart ktorych wystapienia sa rowne 4
-                if len(cards_to_comb_1[idx]) == 4:
-                    cards_to_comb_1[idx] = []
+        cards_to_comb_1 = [x for x in cards_to_comb_1 if x != []]
 
-                HelperArrangement().get_indices_1(cards_comb_rest[idx])
-
-                # usuwanie kart ktorych wystepienia sa wieksze od 4
-                if_remove_comb_2 = self.remove_multiples_more_4(cards_to_comb_1[idx])
-
-                if if_remove_comb_2 == True:
-                    cards_to_comb_1[idx] = []
-
-                HelperArrangement().clear_indices_2d_1()
-
-            cards_to_comb_1 = [x for x in cards_to_comb_1 if x != []]
-
-            for idx in range(0, len(cards_to_comb_1)):
-                cards_comb = list(combinations(cards_to_comb_1[idx], 5))
-
+        for idx in range(0, len(cards_to_comb_1)):
+            cards_comb = list(combinations(cards_to_comb_1[idx], 5))
+            
+            # Usuwanie kart ktorych wystepienia sa wieksze od 2
+            for idx1 in range(0, len(cards_comb)):
                 HelperArrangement().get_indices_1(cards_comb[idx1])
-                
-                # Usuwanie kart ktorych wystepienia sa wieksze od 2
-                for idx1 in range(0, len(cards_comb)):
-                    if_remove_comb_3 = self.remove_multiples_more_2(cards_comb[idx1])
 
-                    if if_remove_comb_3 == True:
-                        cards_comb[idx1] = []
+                if_remove_comb_3 = self.remove_multiples_more_2(cards_comb[idx1])
+
+                if if_remove_comb_3 == True:
+                    cards_comb[idx1] = []
 
                 HelperArrangement().clear_indices_2d_1()
 
-                cards_comb = [x for x in cards_comb if x != []]
+            cards_comb = [x for x in cards_comb if x != []]
 
-                for idx1 in range(0, len(cards_comb)):
-                    self.perm = list(permutations(cards_comb[idx1], 5))
+            for idx1 in range(0, len(cards_comb)):
+                self.perm = list(permutations(cards_comb[idx1], 5))
 
-                    # for idx2 in range(0, len(cards_comb[idx1])):
-                    #     cards_comb[idx1][idx2].print()
-                    # print()
+                # for idx2 in range(0, len(cards_comb[idx1])):
+                #     cards_comb[idx1][idx2].print()
+                # print()
 
-                    for idx2 in range(0, len(self.perm)):
-                        self.perm[idx2] = list(self.perm[idx2])
+                for idx2 in range(0, len(self.perm)):
+                    self.perm[idx2] = list(self.perm[idx2])
 
-                        if self.random == False:
-                            for idx3 in range(0, len(self.perm[idx2])):
-                                #self.perm[idx2][idx3].print()
-                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
-                            #print()
-                            self.file.write("\n")
-                        # Zapisanie indeksu uzywanego w funkcji one_pair()
-                        self.c_idx1 = idx2
-                        self.one_pair()
+                    if self.random == False:
+                        for idx3 in range(0, len(self.perm[idx2])):
+                            #self.perm[idx2][idx3].print()
+                            self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                        #print()
+                        self.file.write("\n")
+                    # Zapisanie indeksu uzywanego w funkcji one_pair()
+                    self.c_idx1 = idx2
+                    self.one_pair()
 
+                    self.loading_bar.set_count_bar(self.num_arr)
+                    self.loading_bar.display_bar()
 
-                        self.loading_bar.set_count_bar(self.idx_bar)
-                        self.loading_bar.display_bar()
-                        self.idx_bar += 1
+                    HelperArrangement().append_cards_all_permutations(self.perm[idx2])
+        
+                    self.rand_iter += 1
+                #print(self.rand_iter) 
+        
+                    if self.rand_iter == self.one_iter * self.limit_rand:
+                        HelperArrangement().check_if_weights_larger(False)
 
-                        HelperArrangement().append_cards_all_permutations(self.perm[idx1])
+                        self.file.close()
 
-            cards_to_comb_1.clear()
+                        return HelperArrangement().random_arrangement()
 
-            i_pair += 1
-            iter_ar += 4
-
-            self.step_p = True
-            self.idx_bar = 0
-            self.str_1 = ""
-
-            if i_pair == 1:
-                print(len(HelperArrangement().get_cards_all_permutations()))
-                break
-
-        self.file.close()
+        iter_ar += 4
 
         HelperArrangement().check_if_weights_larger(False)
+
+        self.file.close()
 
         return HelperArrangement().random_arrangement()
