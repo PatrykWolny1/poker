@@ -7,6 +7,7 @@ class Player(object):
     combs_perm = False
     win_or_not = None
 
+    rand_int = 0
     amount = 0
     weight = 0
     index = 0
@@ -92,30 +93,31 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "4"
+        arrangement = "9"
 
         if arrangement == "1":
-            self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
         if arrangement == "2":
-            self.cards = self.arrangements.carriage.carriage_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.carriage.carriage_generating(self.random)
         if arrangement == "3":
-            self.cards = self.arrangements.full.full_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.full.full_generating(self.random)
         if arrangement == "4":
-            self.cards = self.arrangements.color.color_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.color.color_generating(self.random)
         if arrangement == "5":
-            self.cards = self.arrangements.straight.straight_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
-            self.cards = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
         if arrangement == "7":
-            self.cards = self.arrangements.two_pairs.two_pairs_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.two_pairs.two_pairs_generating(self.random)
         if arrangement == "8":
-            self.cards = self.arrangements.one_pair.one_pair_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":
-            self.cards = self.arrangements.high_card.high_card_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.high_card.high_card_generating(self.random)
 
         self.cards = list(self.cards)
 
         self.arrangements.set_cards(self.cards)
+        self.arrangements.set_rand_int(self.rand_int)
 
     def get_arrangements(self):
         return self.arrangements
@@ -125,6 +127,9 @@ class Player(object):
 
     def get_cards(self):
         return self.cards
+    
+    def get_rand_int(self):
+        return self.rand_int
 
     def set_cards(self, cards):
         self.cards = cards

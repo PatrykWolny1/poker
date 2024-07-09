@@ -6,7 +6,9 @@ from itertools import permutations, combinations, chain
 
 class TwoPairs(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
-    loading_bar = LoadingBar(14826239, 40, 35)
+    limit_rand = 2                 # Ograniczenie dla liczby obliczen 143 - pelne obliczenie
+    one_iter = 103680
+    loading_bar = LoadingBar(one_iter * limit_rand - 1, 40, 54)   #14826239
     high_card = Card()             # Wysoka karta
     file = open("two_pairs.txt", "w")
 
@@ -24,7 +26,6 @@ class TwoPairs(HelperArrangement):
     num_arr = 0                    # Licznik ukladow
     idx_high_c = 0                 # Zmienna pomocnicza do dodania kolumny z wysoka karta
     rand_iter = 0                  # Ile iteracji zostalo wykonanych w celu ograniczenia liczby obliczen
-    limit_rand = 5                 # Ograniczenie dla liczby obliczen
 
     random = False
     example = False
@@ -32,7 +33,11 @@ class TwoPairs(HelperArrangement):
     def set_cards(self, cards):
         self.perm = cards
         self.example = True
+        self.random = True
 
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+        
     def get_weight(self):
         if self.two_pairs_sum > 0:
             return self.two_pairs_sum
@@ -151,15 +156,27 @@ class TwoPairs(HelperArrangement):
         HelperArrangement().append_weight_gen(self.two_pairs_sum)
 
         if self.random == False and count_two_pairs == 4:
-            self.file.write("Dwie pary: " + str(self.two_pairs_sum) + " " +
-                            "Wysoka Karta: " + self.high_card.print_str() + " " +
-                            "Numer: " + str(self.num_arr) + "\n")
+            self.file.write("Dwie pary: " + str(self.two_pairs_sum) +
+                            " Wysoka Karta: " + self.high_card.print_str() +
+                            " Numer: " + str(self.num_arr) + "\n")
             self.num_arr += 1
             #self.print_arrengement()
 
         if self.example == True and count_two_pairs == 4:
             self.print_arrengement()
-
+            
+            for idx in range(0, len(self.perm[self.c_idx1])):
+                with open("two_pairs.txt", "a") as file:
+                    file.write(self.perm[self.c_idx1][idx].print_str() + " ")
+                    
+            with open("two_pairs.txt", "a") as file:
+                file.write("\n")
+            
+            with open("two_pairs.txt", "a") as file:
+                file.write("Dwie pary: " + str(self.two_pairs_sum) + 
+                           " Wysoka Karta: " + self.high_card.print_str() + " " +
+                           " Numer: " + str(self.rand_int) + "\n")
+            
             return 2
         else:
             self.two_pairs_sum = 0
@@ -191,23 +208,29 @@ class TwoPairs(HelperArrangement):
                 self.loading_bar.display_bar()
                 self.count_bar += 1
 
-                for idx2 in range(0, len(self.perm[idx1])):
-                    #self.perm[idx1][idx2].print()
-                    self.file.write(self.perm[idx1][idx2].print_str() + " ")
-                #print()
-                self.file.write("\n")
+                if self.random == False:
+                    for idx2 in range(0, len(self.perm[idx1])):
+                        #self.perm[idx1][idx2].print()
+                        self.file.write(self.perm[idx1][idx2].print_str() + " ")
+                    #print()
+                    self.file.write("\n")
+                
                 self.c_idx1 = idx1
+                
                 if_not_two_pairs = self.two_pairs()
                 if if_not_two_pairs:
                     return None
+                
                 HelperArrangement().clear_indices_2d_1()
 
                 HelperArrangement().append_cards_all_permutations(self.perm[idx1])
-
-        if self.rand_iter == self.limit_rand and self.random == True:
+        
+        if self.rand_iter == self.limit_rand:
             HelperArrangement().check_if_weights_larger(False)
 
             return HelperArrangement().random_arrangement()
+        
+        self.rand_iter += 1
 
         self.file.write("Numer iteracji: " + str(self.rand_iter) + "\n")
 
@@ -279,6 +302,7 @@ class TwoPairs(HelperArrangement):
 
                     if count_11 == 11:
                         self.check_if_weights_larger(False)
+                                                
                         return self.random_arrangement()
 
                     # Jesli jest ostatnia karta to zacznij operacje A ... K ... Q ... J ... 10 ...
@@ -436,6 +460,7 @@ class TwoPairs(HelperArrangement):
                             #####################################TUTAJ UMIESCIC RESZTE
                             cards = self.combinations_generating()
                             if cards:
+                                self.file.close()
                                 return cards
 
                             for idx11 in range(0, 4):
@@ -478,7 +503,6 @@ class TwoPairs(HelperArrangement):
                                     count_all = -1
                                     limit_1 = 4
                                     limit_2 = 8
-                                    self.rand_iter += 1
                                     self.cards_begin.clear()
                                     self.cards_2d_acc.clear()
                                     break
@@ -486,4 +510,3 @@ class TwoPairs(HelperArrangement):
                                     continue
                 count_all += 1
 
-        self.file.close()

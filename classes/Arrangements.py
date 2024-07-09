@@ -16,19 +16,22 @@ class Arrangements(object):
     part_weights = []
     ids_arr = []
     data_frame_ml = DataFrameML()
+    
+    rand_int = 0    
     def __init__(self, cards = []):
         self.id_arr = 0
         self.data_frame_ml = DataFrameML()
         self.cards = cards
-        self.straight_royal_flush = StraightRoyalFlush()
-        self.carriage = Carriage()
-        self.full = Full()
-        self.color = Color()
-        self.straight = Straight()
-        self.three_of_a_kind = ThreeOfAKind()
-        self.two_pairs = TwoPairs()
-        self.one_pair = OnePair()
+
         self.high_card = HighCard()
+        self.one_pair = OnePair()
+        self.two_pairs = TwoPairs()
+        self.three_of_a_kind = ThreeOfAKind()
+        self.straight = Straight()
+        self.color = Color()
+        self.full = Full()
+        self.carriage = Carriage()
+        self.straight_royal_flush = StraightRoyalFlush()        
 
     def set_cards(self, cards):
         self.cards = cards
@@ -70,17 +73,39 @@ class Arrangements(object):
 
     def check_arrangement(self):
         self.ids_arr = []
+        
+        self.high_card.set_rand_int(self.rand_int)
         self.ids_arr.append(self.high_card.high_card())
-        self.ids_arr.append(self.one_pair.one_pair(True))
+        
+        self.one_pair.set_rand_int(self.rand_int)
+        self.ids_arr.append(self.one_pair.one_pair())
+        
+        self.two_pairs.set_rand_int(self.rand_int)
         self.ids_arr.append(self.two_pairs.two_pairs())
+        
+        self.three_of_a_kind.set_rand_int(self.rand_int)
         self.ids_arr.append(self.three_of_a_kind.three_of_a_kind())
+        
+        self.straight.set_rand_int(self.rand_int)
         self.ids_arr.append(self.straight.straight())
+        
+        self.color.set_rand_int(self.rand_int)
         self.ids_arr.append(self.color.color())
+        
+        self.full.set_rand_int(self.rand_int)
         self.ids_arr.append(self.full.full())
+        
+        self.carriage.set_rand_int(self.rand_int)
         self.ids_arr.append(self.carriage.carriage())
+        
+        self.straight_royal_flush.set_rand_int(self.rand_int)
         self.ids_arr.append(self.straight_royal_flush.straight_royal_flush())
+        
         print(self.ids_arr)
 
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+        
     def get_cards(self):
         return self.cards
 

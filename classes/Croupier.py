@@ -39,17 +39,17 @@ class Croupier(object):
         # player1.print()
         # player1.get_arrangements().check_arrangement()
 
-        # player1 = Player(self.deck)
-        # player1.cards_permutations()
+        player1 = Player(self.deck)
+        player1.cards_permutations()
 
-        # # for idx in range(0, len(player1.all_combs)):
-        # #     for idx1 in range(0, len(player1.all_combs[idx])):
-        # #         player1.all_combs[idx][idx1].print()
-        # #     print()
+        # for idx in range(0, len(player1.all_combs)):
+        #     for idx1 in range(0, len(player1.all_combs[idx])):
+        #         player1.all_combs[idx][idx1].print()
+        #     print()
 
-        # player1.get_arrangements().print()
-        # print()
-        # player1.get_arrangements().check_arrangement()
+        player1.get_arrangements().print()
+        print()
+        player1.get_arrangements().check_arrangement()
 
         #########################################################
 

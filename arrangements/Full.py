@@ -7,8 +7,9 @@ import itertools
 
 class Full(HelperArrangement):
     cardmarkings = CardMarkings()   #Oznaczenia kart
-    loading_bar = LoadingBar(449279, 20, 19)
-
+    loading_bar = LoadingBar(449279, 40, 39)
+    file = open('full.txt', 'w')
+    
     cards = []                      #Tablica na karty
     cards_2d = []                   #Tablica do przetwarzania ukladow
     cards_1d = []                   #Tablica do przetwarzania ukladow
@@ -16,17 +17,22 @@ class Full(HelperArrangement):
     cards_2d_5 = []                 #Tablica do wyswietlania (testy)
     num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
     c_idx6 = 0
+    rand_int = 0
     perm = []
 
     if_perm_weights = True
     random = False                  #Jesli jest losowanie ukladu
     example = False                 #Jesli jest recznie wpisany uklad
     print_permutations = True       #Czy wyswietlic wszystkie permutacje
-
+    
+    #tabnine: document
     def set_cards(self, cards):
         self.perm = cards
         self.random = True
         self.example = True
+    
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
 
     def get_weight(self):
         if self.weight_arrangement > 0:
@@ -40,8 +46,6 @@ class Full(HelperArrangement):
             print("Full: ", self.weight_arrangement, "Numer: ", self.num_arr)
         if self.random == True:
             print("Full: ", self.weight_arrangement, "Numer: ", self.rand_int)
-
-        self.num_arr += 1
 
     def remove_repeats_full(self):
         #Usuwanie tych samych kart ktorych liczba jest rowna 4
@@ -86,8 +90,23 @@ class Full(HelperArrangement):
         if (self.if_full == 2):
             self.weight_arrangement = (weight_1 + weight_2) + 12408806
             HelperArrangement().append_weight_gen(self.weight_arrangement)  # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
-            if self.random == False or self.example == True:
+            if self.random == False:
+                self.file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                
+            self.num_arr += 1
+                
+            if self.example == True:                
                 self.print_arrengement()
+                
+                for idx in range(0, len(self.perm[self.c_idx6])):
+                    with open('full.txt', 'a') as file:
+                        file.write(self.perm[self.c_idx6][idx].print_str() + " ")
+                with open('full.txt', 'a') as file:
+                    file.write("\n")
+                    
+                with open('full.txt', 'a') as file:
+                    file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
+                
             return 6
 
     def full_generating(self, random):
@@ -228,19 +247,21 @@ class Full(HelperArrangement):
                             #     print()
 
                             self.perm = list(itertools.permutations(self.cards_2d_5[idx5], 5))
-
+                            self.file = open("full.txt", "a")
                             for idx6 in range(0, len(self.perm)):
                                 HelperArrangement().get_indices_1(self.perm[idx6])
 
                                 if self.random == False:
                                     for idx7 in range(0, len(self.perm[idx6])):
-                                        self.perm[idx6][idx7].print()
-                                    print()
-
-                                if self.random == True:
-                                    self.loading_bar.set_count_bar(self.num_arr)
-                                    self.loading_bar.display_bar()
-                                    self.num_arr += 1
+                                        #self.perm[idx6][idx7].print()
+                                        # with open("full.txt", "a") as f:
+                                        self.file.write(self.perm[idx6][idx7].print_str() + " ")
+                                    #print()
+                                    # with open("full.txt", "a") as f:
+                                    self.file.write("\n")
+            
+                                self.loading_bar.set_count_bar(self.num_arr)
+                                self.loading_bar.display_bar()
 
                                 self.c_idx6 = idx6
                                 self.full()
@@ -257,5 +278,7 @@ class Full(HelperArrangement):
             step3 += 4
 
         HelperArrangement().check_if_weights_larger()
-
+        
+        self.file.close()
+        
         return HelperArrangement().random_arrangement()

@@ -8,6 +8,7 @@ class ThreeOfAKind(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
     high_card = Card()             # Wysoka karta (Card)
     loading_bar = LoadingBar(6589440, 40, 39)
+    file = open("three_of_a_kind.txt", "w")
 
     perm = []                      # Lista na permutacje
     weight_arrangement_part = []   # Wagi wysokich kart
@@ -15,6 +16,7 @@ class ThreeOfAKind(HelperArrangement):
     weight_arrangement = 0         # Waga ukladu
     c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
     num_arr = 0                    # Numer ukladu
+    rand_int = 0
 
     random = False                 # Czy uklad ma byc wylosowany
     example = False                # Czy ma byc pokazany przykladowy uklad
@@ -24,6 +26,9 @@ class ThreeOfAKind(HelperArrangement):
         self.example = True
         self.random = True
 
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+        
     def get_weight(self):
         # Jesli nie wystepuje uklad to waga wynosi 0
         if self.weight_arrangement > 0:
@@ -123,9 +128,25 @@ class ThreeOfAKind(HelperArrangement):
         if three_count_3 == 3 and three_count_1 == 2:
             self.weight_arrangement = three_weight + 10126496
             HelperArrangement().append_weight_gen(self.weight_arrangement) # Tablica wag dla sprawdzania czy wygenerowane uklady maja wieksze
-            if self.random == False or self.example == True:
-                self.print_arrengement()
+            if self.random == False:
+                #self.print_arrengement()
+                
+                self.file.write("Trojka: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
 
+            if self.example == True:
+                self.print_arrengement()
+                
+                for idx in range(0, len(self.perm[self.c_idx1])):
+                    with open("three_of_a_kind.txt", "a") as file:
+                        file.write(self.perm[self.c_idx1][idx].print_str() + " ")
+                with open("three_of_a_kind.txt", "a") as file:
+                    file.write("\n")
+                
+                with open("three_of_a_kind.txt", "a") as file:
+                    file.write("Trojka: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
+                
+            self.num_arr += 1
+            
             return 3
         else:
             self.weight_arrangement = 0
@@ -226,10 +247,12 @@ class ThreeOfAKind(HelperArrangement):
                     for idx1 in range(0, len(self.perm)):
                         self.perm[idx1] = list(self.perm[idx1])
 
-                        #if self.random == False:
-                        for idx2 in range(0, len(self.perm[idx1])):
-                            self.perm[idx1][idx2].print()
-                        print()
+                        if self.random == False:
+                            for idx2 in range(0, len(self.perm[idx1])):
+                                #self.perm[idx1][idx2].print()
+                                self.file.write(self.perm[idx1][idx2].print_str() + " ")
+                            #print()
+                            self.file.write("\n")
 
                         # Pomocnicza, indeks do petli for w funkcji three_of_a_kind() - do listy perm
                         self.c_idx1 = idx1
@@ -237,10 +260,8 @@ class ThreeOfAKind(HelperArrangement):
 
                         HelperArrangement().clear_indices_2d_1()
 
-                        if self.random == True:
-                            self.loading_bar.set_count_bar(self.num_arr)
-                            self.loading_bar.display_bar()
-                            self.num_arr += 1
+                        self.loading_bar.set_count_bar(self.num_arr)
+                        self.loading_bar.display_bar()
 
                         HelperArrangement().append_cards_all_permutations(self.perm[idx1])
 
@@ -261,5 +282,7 @@ class ThreeOfAKind(HelperArrangement):
 
         if self.random == False:
             HelperArrangement().check_if_weights_larger()
-
+        
+        self.file.close()
+        
         return HelperArrangement().random_arrangement()
