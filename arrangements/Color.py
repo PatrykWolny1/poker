@@ -172,12 +172,10 @@ class Color(HelperArrangement):
                     #Dla kart innych niz najwyzsza policz czesciowo wage ukladu
                     if sorted(self.perm[self.c_idx2])[idx] != max(self.perm[self.c_idx2]):
                         #Potega od 1 do 4
-                        #self.file.write("IDX: " + str(idx+1) + "WEIGHT: " + str(sorted(self.perm[self.c_idx2])[idx].weight) + "\n")
-                        #print("IDX: ", idx+1, "WEIGHT: ", sorted(self.perm[self.c_idx2])[idx].weight)
-                        
                         self.color_weight = pow(sorted(self.perm[self.c_idx2])[idx].weight, idx + 1)
                         self.color_sum += self.color_weight
                         #print(self.color_sum)
+                        
                 self.high_card = max(self.perm[self.c_idx2])
                 self.color_weight = pow(self.high_card.weight, 5)
 
@@ -186,9 +184,21 @@ class Color(HelperArrangement):
                 
                 HelperArrangement().append_weight_gen(self.color_sum)
                 
-                if self.random == False or self.example == True:
-                    #self.print_arrengement()
+                if self.random == False:
+                    #self.print_arrengeement()
                     self.file.write("Kolor: " + str(self.color_sum) + " Wysoka Karta: " + self.high_card.print_str() + " Numer: " + str(self.num_arr) + "\n")              
+                
+                if self.example == True:
+                    self.print_arrengement()
+                    
+                    for idx in range(0, len(self.cards_perm[self.c_idx6])):
+                        with open("carriage.txt", "a") as file:
+                            file.write(self.cards_perm[self.c_idx6][idx].print_str() + " ")
+                    with open("carriage.txt", "a") as file:
+                        file.write("\n")
+                    
+                    with open("carriage.txt", "a") as file:
+                        file.write("Kareta: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
                 self.num_arr += 1
                     
@@ -237,11 +247,9 @@ class Color(HelperArrangement):
                     if self.random == False:
                         for idx3 in range(0, len(self.perm[idx2])):
                             #self.perm[idx2][idx3].print()
-                            with open("color.txt", "a") as f:
-                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                            self.file.write(self.perm[idx2][idx3].print_str() + " ")
                         #print()
-                        with open("color.txt", "a") as f:
-                            self.file.write("\n")
+                        self.file.write("\n")
 
                     self.c_idx2 = idx2
                     self.color()
@@ -254,4 +262,6 @@ class Color(HelperArrangement):
         
         HelperArrangement().check_if_weights_larger()
 
+        self.file.close()
+        
         return HelperArrangement().random_arrangement()
