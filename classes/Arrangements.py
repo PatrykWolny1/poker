@@ -77,6 +77,7 @@ class Arrangements(object):
         self.ids_arr.append(self.one_pair.one_pair(True))
         self.ids_arr.append(self.two_pairs.two_pairs())
         self.ids_arr.append(self.three_of_a_kind.three_of_a_kind())
+        self.straight.set_rand_int(self.rand_int)
         self.ids_arr.append(self.straight.straight())
         self.color.set_rand_int(self.rand_int)
         self.ids_arr.append(self.color.color())
@@ -84,6 +85,7 @@ class Arrangements(object):
         self.ids_arr.append(self.full.full())
         self.carriage.set_rand_int(self.rand_int)
         self.ids_arr.append(self.carriage.carriage())
+        self.straight_royal_flush.set_rand_int(self.rand_int)
         self.ids_arr.append(self.straight_royal_flush.straight_royal_flush())
         print(self.ids_arr)
 

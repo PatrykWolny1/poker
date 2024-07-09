@@ -6,7 +6,7 @@ from itertools import permutations
 
 class StraightRoyalFlush(HelperArrangement):
     cardmarkings = CardMarkings()  #Oznaczenia kart
-    loading_bar = LoadingBar(4799, 40, 39)
+    loading_bar = LoadingBar(4799, 39, 40)
     file = open("straight_royal_flush.txt", "w")
     cards = []                     #Tablica na karty
     perm = []                      #Tablica na permutacje do wag
@@ -14,6 +14,7 @@ class StraightRoyalFlush(HelperArrangement):
     weight_arrangement = 0         #Tablica na wage ukladu
     num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
     c_idx2 = 0
+    rand_int = 0
 
     random = False                 #Jesli jest losowanie ukladu
     example = False                #Jesli jest recznie wpisany uklad
@@ -24,7 +25,10 @@ class StraightRoyalFlush(HelperArrangement):
         self.perm = cards
         self.example = True
         self.random = True
-
+    
+    def set_rand_int(self, rand_int):
+        self.rand_int = rand_int
+        
     def get_weight(self):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
@@ -136,20 +140,31 @@ class StraightRoyalFlush(HelperArrangement):
 
                     if self.random == False:
                         #self.print_arrengement()
-                        with open("straight_royal_flush.txt", "a") as self.file:
-                            if self.if_royal_flush == False:
-                                self.file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
-                            else:
-                                self.file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
-                                
+
+                        if self.if_royal_flush == False:
+                            self.file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                        else:
+                            self.file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
+                                               
+                
                     if self.example == True:
                         self.print_arrengement()
-                        with open("straight_royal_flush.txt", "a") as self.file:
-                            if self.if_royal_flush == False:
-                                self.file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
-                            else:
-                                self.file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.num_arr) + "\n")
-                                                 
+                
+                        for idx in range(0, len(self.perm[self.c_idx2])):
+                            with open('straight_royal_flush.txt', 'a') as file:
+                                file.write(self.perm[self.c_idx2][idx].print_str() + " ")
+                        with open('straight_royal_flush.txt', 'a') as file:
+                            file.write("\n")
+                                        
+                        if self.if_royal_flush == False:
+                            with open('straight_royal_flush.txt', 'a') as file:
+                                file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
+                        else:
+                            with open('straight_royal_flush.txt', 'a') as file:
+                                file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
+
+                    self.num_arr += 1
+         
                     self.calc_weights = False
 
             idx1 += 1
@@ -229,11 +244,9 @@ class StraightRoyalFlush(HelperArrangement):
                     if self.random == False:
                         for idx3 in range(0, len(self.perm[idx2])):
                             #self.perm[idx2][idx3].print()
-                            with open("straight_royal_flush.txt", "a") as self.file:
-                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                            self.file.write(self.perm[idx2][idx3].print_str() + " ")
                         #print()
-                        with open("straight_royal_flush.txt", "a") as self.file:
-                            self.file.write("\n")
+                        self.file.write("\n")
 
                     self.c_idx2 = idx2
                     self.straight_royal_flush()
@@ -241,11 +254,10 @@ class StraightRoyalFlush(HelperArrangement):
                     HelperArrangement().append_cards_all_permutations(self.perm[idx2])
                     
                     self.loading_bar.set_count_bar(self.num_arr)
-                    self.loading_bar.display_bar()
-                    self.num_arr += 1
-        
-        self.file.close()
+                    self.loading_bar.display_bar()        
         
         HelperArrangement().check_if_weights_larger()
+
+        self.file.close()
 
         return HelperArrangement().random_arrangement()

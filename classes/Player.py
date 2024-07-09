@@ -74,7 +74,7 @@ class Player(object):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
 
         #if_all_perm = input()
-        if_rand = "2"
+        if_rand = "1"
 
         if if_rand == "1":
             self.random = False
@@ -93,10 +93,10 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "3"
+        arrangement = "5"
 
         if arrangement == "1":
-            self.cards = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
         if arrangement == "2":
             self.cards, self.rand_int = self.arrangements.carriage.carriage_generating(self.random)
         if arrangement == "3":
@@ -104,7 +104,7 @@ class Player(object):
         if arrangement == "4":
             self.cards, self.rand_int = self.arrangements.color.color_generating(self.random)
         if arrangement == "5":
-            self.cards = self.arrangements.straight.straight_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
             self.cards = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
         if arrangement == "7":
