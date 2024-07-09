@@ -106,9 +106,9 @@ class Player(object):
         if arrangement == "5":
             self.cards, self.rand_int = self.arrangements.straight.straight_generating(self.random)
         if arrangement == "6":
-            self.cards = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
         if arrangement == "7":
-            self.cards = self.arrangements.two_pairs.two_pairs_generating(self.random)
+            self.cards, self.rand_int = self.arrangements.two_pairs.two_pairs_generating(self.random)
         if arrangement == "8":
             self.cards = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":
