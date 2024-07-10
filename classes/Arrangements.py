@@ -47,16 +47,6 @@ class Arrangements(object):
         for x in self.arrangements:
             x.set_cards(self.cards)
 
-        # self.straight_royal_flush.set_cards(self.cards)
-        # self.carriage.set_cards(self.cards)
-        # self.full.set_cards(self.cards)
-        # self.color.set_cards(self.cards)
-        # self.straight.set_cards(self.cards)
-        # self.three_of_a_kind.set_cards(self.cards)
-        # self.two_pairs.set_cards(self.cards)
-        # self.one_pair.set_cards(self.cards)
-        # self.high_card.set_cards(self.cards)
-
     def set_weights(self):
         self.weights = []
         
