@@ -70,12 +70,13 @@ class HighCard(HelperArrangement):
         return self.high_card_weight + self.card_max(perm_temp, pow_idx)
 
     def arrangement_recogn(self):
-        if len(HelperArrangement().dim(self.perm)) == 1:
-            self.perm = [self.perm]
+        if self.example == True:
             self.c_idx1 = 0
 
+            if len(HelperArrangement().dim(self.perm)) == 1:
+                self.perm = [self.perm]
+            
         straight_iter = 0
-
         self.weight_arrangement_part = []
 
         # Jesli uklad to strit to powrot z funkcji

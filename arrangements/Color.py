@@ -149,7 +149,9 @@ class Color(HelperArrangement):
 
         if self.example == True:
             self.c_idx2 = 0
-            self.perm = [self.perm]
+            
+            if len(HelperArrangement().dim(self.perm)) == 1:
+                self.perm = [self.perm]
 
         if self.check_if_straight_royal_flush():
             return
