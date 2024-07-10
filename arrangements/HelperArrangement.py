@@ -1,4 +1,5 @@
 import random
+from itertools import chain
 
 class HelperArrangement(object):
     indices_2d = []                     #Indeksy ukladow kart figury
@@ -18,9 +19,14 @@ class HelperArrangement(object):
     def get_indices_1(self, cards):
         size = len(cards)
         #self.indices_2d = []
+        #print(cards)
 
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
+        if self.dim(cards) == 2:
+            cards = [item for sublist in cards for item in sublist]
+            print(cards)
 
+        
         for idx in range(0, size):
             indices = []
             for (index, card) in enumerate(cards):

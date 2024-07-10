@@ -41,11 +41,9 @@ class Arrangements(object):
                           self.straight, self.color, self.full, self.carriage, self.straight_royal_flush] 
                
 
-    def set_cards(self, cards):
-        self.cards = cards
-                
+    def set_cards(self, cards):                
         for x in self.arrangements:
-            x.set_cards(self.cards)
+            x.set_cards(cards)
 
     def set_weights(self):
         self.weights = []
@@ -82,7 +80,13 @@ class Arrangements(object):
     def set_data_frame_ml(self, data_frame_ml = DataFrameML()):
         self.data_frame_ml = data_frame_ml
 
-    def init_data_frame_ml_after_ex(self):          ###########copy()
+    def init_data_frame_ml_before_ex(self):          
+        self.data_frame_ml.set_id_arr_after(self.get_id())
+        self.data_frame_ml.set_weight_after_ex(self.get_weight())
+        self.data_frame_ml.set_which_cards(self.get_part_weight())
+        self.data_frame_ml.set_weight_ex(self.get_part_weight_sum(self.part_weights))
+
+    def init_data_frame_ml_after_ex(self):          
         self.data_frame_ml.set_id_arr_after(self.get_id())
         self.data_frame_ml.set_weight_after_ex(self.get_weight())
         self.data_frame_ml.set_which_cards(self.get_part_weight())
@@ -99,11 +103,14 @@ class Arrangements(object):
                 return part_weight
 
     def get_part_weight_sum(self, part_cards):
-        if not part_cards[self.get_id()]:
+        if not part_cards:
             return 0
 
-        part_weight = part_cards[self.get_id()].pop()
-
+        part_weight = part_cards.pop()
+        
+        if part_weight is None:
+            return 0
+        
         return part_weight + self.get_part_weight_sum(part_cards)
 
     def get_id(self):

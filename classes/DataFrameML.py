@@ -31,7 +31,7 @@ class DataFrameML(object):
         self.id_arr_after = id_arr_after
 
     def set_which_cards(self, which_cards):
-        self.which_cards = which_cards.copy()
+        self.which_cards = which_cards
 
     def print(self):
         print(self.id_arr, self.weight, self.exchange, self.id_arr_after, self.weight_after_ex, self.which_cards, self.win_or_not)

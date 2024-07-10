@@ -52,15 +52,14 @@ class Carriage(HelperArrangement):
 
     def arrangement_recogn(self):
         # Sprawdzanie czy uklad kart to kareta oraz przypisanie wagi do ukladu
-
         if self.example == True:
-            HelperArrangement().clear_indices_2d_1()
             self.c_idx6 = 0
-            self.cards_perm = [self.cards_perm]
-            HelperArrangement().get_indices_1(self.cards_perm[self.c_idx6])
-
-        else:
-            HelperArrangement().get_indices_1(self.cards_perm[self.c_idx6])
+            
+            if len(HelperArrangement().dim(self.cards_perm)) == 1:
+                self.cards_perm = [self.cards_perm]
+        
+        HelperArrangement().clear_indices_2d_1()
+        HelperArrangement().get_indices_1(self.cards_perm[self.c_idx6])
 
         # if self.if_perm_weights:
         #     self.cards_perm_weights = []

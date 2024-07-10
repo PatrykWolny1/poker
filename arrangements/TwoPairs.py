@@ -2,7 +2,7 @@ from classes.Card import Card
 from arrangements.HelperArrangement import HelperArrangement
 from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
-from itertools import permutations, combinations, chain
+from itertools import permutations, combinations
 
 class TwoPairs(HelperArrangement):
     cardmarkings = CardMarkings()  # Oznaczenia kart
@@ -98,10 +98,13 @@ class TwoPairs(HelperArrangement):
         self.two_pairs_sum = 0  # Zmienna zawierajaca sume wag tymczasowych
 
         if self.example == True:
-            self.perm = [self.perm]
             self.c_idx1 = 0
-            HelperArrangement().clear_indices_2d_1()
             
+            if len(HelperArrangement().dim(self.perm)) == 1:
+                self.perm = [self.perm]
+            
+        HelperArrangement().clear_indices_2d_1()    
+        #print(self.perm[self.c_idx1])
         HelperArrangement().get_indices_1(sorted(self.perm[self.c_idx1]))
 
         # Okreslenie czy uklad to dwie pary
