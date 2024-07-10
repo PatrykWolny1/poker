@@ -144,7 +144,7 @@ class Color(HelperArrangement):
             idx3 += 1
             len_iter += 1
 
-    def color(self):
+    def arrangement_recogn(self):
         #Obliczenia dla wyswietlenia ukladu losowego lub okreslonego (przykladowego)
 
         if self.example == True:
@@ -257,7 +257,7 @@ class Color(HelperArrangement):
                         self.file.write("\n")
 
                     self.c_idx2 = idx2
-                    self.color()
+                    self.arrangement_recogn()
                     
                     self.loading_bar_1.set_count_bar(self.count_1)
                     self.loading_bar_1.display_bar()

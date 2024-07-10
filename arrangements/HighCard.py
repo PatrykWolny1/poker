@@ -9,7 +9,7 @@ class HighCard(HelperArrangement):
     high_card_1 = Card()
     limit_rand = 1000               # Ograniczenie dla liczby obliczen
     one_iter = 120    
-    loading_bar = LoadingBar(limit_rand * one_iter - 1, 40, 40)   # ponad 200 milionow permutacji           
+    loading_bar = LoadingBar(limit_rand * one_iter - 1, 40, 40)   # ponad 150 milionow permutacji           
     file = open("high_card.txt", "w")
 
     perm = []                       # Lista na karty gracza
@@ -69,7 +69,7 @@ class HighCard(HelperArrangement):
         # Rekurencja (Dodanie poprzedniej wagi do nastepnej)
         return self.high_card_weight + self.card_max(perm_temp, pow_idx)
 
-    def high_card(self):
+    def arrangement_recogn(self):
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx1 = 0
@@ -216,7 +216,7 @@ class HighCard(HelperArrangement):
 
                 # Zapisanie indeksu uzywanego w funkcji high_card()
                 self.c_idx1 = idx5
-                self.high_card()
+                self.arrangement_recogn()
                 
                 self.loading_bar.set_count_bar(self.num_arr)
                 self.loading_bar.display_bar()

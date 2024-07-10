@@ -8,6 +8,7 @@ from arrangements.TwoPairs import TwoPairs
 from arrangements.OnePair import OnePair
 from arrangements.HighCard import HighCard
 from classes.DataFrameML import DataFrameML
+from arrangements.HelperArrangement import HelperArrangement
 
 import itertools
 class Arrangements(object):
@@ -15,7 +16,10 @@ class Arrangements(object):
     weights = []
     part_weights = []
     ids_arr = []
+    arrangements = []
     data_frame_ml = DataFrameML()
+    helper_arrangement = HelperArrangement()
+    
     
     rand_int = 0    
     def __init__(self, cards = []):
@@ -31,75 +35,38 @@ class Arrangements(object):
         self.color = Color()
         self.full = Full()
         self.carriage = Carriage()
-        self.straight_royal_flush = StraightRoyalFlush()        
+        self.straight_royal_flush = StraightRoyalFlush() 
+        
+        self.arrangements = [self.high_card, self.one_pair, self.two_pairs, self.three_of_a_kind,
+                          self.straight, self.color, self.full, self.carriage, self.straight_royal_flush] 
+               
 
     def set_cards(self, cards):
         self.cards = cards
-        self.straight_royal_flush.set_cards(self.cards)
-        self.carriage.set_cards(self.cards)
-        self.full.set_cards(self.cards)
-        self.color.set_cards(self.cards)
-        self.straight.set_cards(self.cards)
-        self.three_of_a_kind.set_cards(self.cards)
-        self.two_pairs.set_cards(self.cards)
-        self.one_pair.set_cards(self.cards)
-        self.high_card.set_cards(self.cards)
+                
+        for x in self.arrangements:
+            x.set_cards(self.cards)
 
     def set_weights(self):
         self.weights = []
-        self.weights.append(self.high_card.get_weight())
-        self.weights.append(self.one_pair.get_weight())
-        self.weights.append(self.two_pairs.get_weight())
-        self.weights.append(self.three_of_a_kind.get_weight())
-        self.weights.append(self.straight.get_weight())
-        self.weights.append(self.color.get_weight())
-        self.weights.append(self.full.get_weight())
-        self.weights.append(self.carriage.get_weight())
-        self.weights.append(self.straight_royal_flush.get_weight())
-
+        
+        for x in self.arrangements:
+            self.weights.append(x.get_weight())
 
         # Zwraca None, gdy niema potrzeby okreslania czesciowej wagi ukladu
         self.part_weights = []
-        self.part_weights.append(self.high_card.get_part_weight())
-        self.part_weights.append(self.one_pair.get_part_weight())
-        self.part_weights.append(self.two_pairs.get_part_weight())
-        self.part_weights.append(self.three_of_a_kind.get_part_weight())
-        self.part_weights.append(self.straight.get_part_weight())
-        self.part_weights.append(self.color.get_part_weight())
-        self.part_weights.append(self.full.get_part_weight())
-        self.part_weights.append(self.carriage.get_part_weight())
-        self.part_weights.append(self.straight_royal_flush.get_part_weight())
+        
+        for x in self.arrangements:
+            self.part_weights.append(x.get_weight())
+        
         print(self.part_weights)
-
+        
     def check_arrangement(self):
         self.ids_arr = []
         
-        self.high_card.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.high_card.high_card())
-        
-        self.one_pair.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.one_pair.one_pair())
-        
-        self.two_pairs.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.two_pairs.two_pairs())
-        
-        self.three_of_a_kind.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.three_of_a_kind.three_of_a_kind())
-        
-        self.straight.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.straight.straight())
-        
-        self.color.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.color.color())
-        
-        self.full.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.full.full())
-        
-        self.carriage.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.carriage.carriage())
-        
-        self.straight_royal_flush.set_rand_int(self.rand_int)
-        self.ids_arr.append(self.straight_royal_flush.straight_royal_flush())
+        for x in self.arrangements:
+            x.set_rand_int(self.rand_int)
+            self.ids_arr.append(x.arrangement_recogn()) 
         
         print(self.ids_arr)
 

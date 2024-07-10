@@ -68,7 +68,7 @@ class ThreeOfAKind(HelperArrangement):
 
         return False
 
-    def three_of_a_kind(self):
+    def arrangement_recogn(self):
         three_count_3 = 0       # Wiekszy o 1 gdy wystepuja 3 takie same karty
         three_count_1 = 0       # Wiekszy o 1 gdy wystepuje 1 taka sama karta
         once_2 = False          # Jesli prawda to procedura zostala wykonana (1 raz)
@@ -256,7 +256,7 @@ class ThreeOfAKind(HelperArrangement):
 
                         # Pomocnicza, indeks do petli for w funkcji three_of_a_kind() - do listy perm
                         self.c_idx1 = idx1
-                        self.three_of_a_kind()
+                        self.arrangement_recogn()
 
                         HelperArrangement().clear_indices_2d_1()
 

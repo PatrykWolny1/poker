@@ -6,7 +6,7 @@ import itertools
 
 class Straight(HelperArrangement):
     cardmarkings = CardMarkings()   #Oznaczenia kart
-    loading_bar = LoadingBar(1224000, 40, 40)
+    loading_bar = LoadingBar(1223999, 40, 39)
     file = open("straight.txt", "w")
 
     cards = []                      #Tablica na karty
@@ -66,7 +66,7 @@ class Straight(HelperArrangement):
 
         return False
 
-    def straight(self):
+    def arrangement_recogn(self):
         if len(HelperArrangement().dim(self.perm)) == 1:
             self.perm = [self.perm]
             self.c_idx6 = 0
@@ -250,7 +250,7 @@ class Straight(HelperArrangement):
                                     self.file.write("\n")
 
                                 self.c_idx6 = idx6
-                                self.straight()
+                                self.arrangement_recogn()
 
                                 HelperArrangement().clear_indices_2d_1()
 
