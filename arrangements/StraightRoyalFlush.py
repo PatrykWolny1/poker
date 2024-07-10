@@ -170,7 +170,7 @@ class StraightRoyalFlush(HelperArrangement):
             idx1 += 1
             idx2 += 1
 
-    def straight_royal_flush(self):
+    def arrangement_recogn(self):
         self.arrangement_recognition_weights()
 
         if self.example == True:
@@ -249,7 +249,7 @@ class StraightRoyalFlush(HelperArrangement):
                         self.file.write("\n")
 
                     self.c_idx2 = idx2
-                    self.straight_royal_flush()
+                    self.arrangement_recogn()
 
                     HelperArrangement().append_cards_all_permutations(self.perm[idx2])
                     
