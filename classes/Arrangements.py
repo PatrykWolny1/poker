@@ -55,7 +55,7 @@ class Arrangements(object):
         self.part_weights = []
         
         for x in self.arrangements:
-            self.part_weights.append(x.get_weight())
+            self.part_weights.append(x.get_part_weight())
         
         print(self.part_weights)
         
