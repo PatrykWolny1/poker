@@ -50,7 +50,7 @@ class Carriage(HelperArrangement):
         if self.random == False:
             print("Kareta: ", self.weight_arrangement, "Numer: ", self.rand_int)
 
-    def carriage(self):
+    def arrangement_recogn(self):
         # Sprawdzanie czy uklad kart to kareta oraz przypisanie wagi do ukladu
 
         if self.example == True:
@@ -167,7 +167,7 @@ class Carriage(HelperArrangement):
                         HelperArrangement().append_cards_all_permutations(self.cards_perm[idx6])
 
                         self.c_idx6 = idx6
-                        self.carriage()
+                        self.arrangement_recogn()
 
                         HelperArrangement().clear_indices_2d_1()
 

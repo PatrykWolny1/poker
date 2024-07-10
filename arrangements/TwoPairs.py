@@ -90,7 +90,7 @@ class TwoPairs(HelperArrangement):
             # if int(t3) > 4:
             return t1
 
-    def two_pairs(self):
+    def arrangement_recogn(self):
         count_one_pair = 0      # Zmienna potrzebna do okreslenie czy jest to para
         count_two_pairs = 0     # Zmienna okreslajaca czy sa to dwie pary
         c_two_pairs = False     # Zmienna tymczasowa (pomocnicza)
@@ -217,7 +217,7 @@ class TwoPairs(HelperArrangement):
                 
                 self.c_idx1 = idx1
                 
-                if_not_two_pairs = self.two_pairs()
+                if_not_two_pairs = self.arrangement_recogn()
                 if if_not_two_pairs:
                     return None
                 

@@ -73,7 +73,7 @@ class OnePair(HelperArrangement):
 
         return False
 
-    def one_pair(self):
+    def arrangement_recogn(self):
         one_count_1 = 0     # Licznik na uklad wysoka karta
         one_count_2 = 0     # Licznik na uklad para
         once_1 = False      # Zmienne ktore sluza do wykonania petli jeden raz
@@ -309,7 +309,7 @@ class OnePair(HelperArrangement):
                         self.file.write("\n")
                     # Zapisanie indeksu uzywanego w funkcji one_pair()
                     self.c_idx1 = idx2
-                    self.one_pair()
+                    self.arrangement_recogn()
 
                     self.loading_bar.set_count_bar(self.num_arr)
                     self.loading_bar.display_bar()

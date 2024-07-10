@@ -54,7 +54,7 @@ class Full(HelperArrangement):
                 return True
         return False
 
-    def full(self):
+    def arrangement_recogn(self):
         # Sprawdzanie czy uklad kart to full oraz przypisanie wagi do ukladu
         self.if_full = 0  # Sumowanie tych samych kart
         weight_1 = 0
@@ -264,7 +264,7 @@ class Full(HelperArrangement):
                                 self.loading_bar.display_bar()
 
                                 self.c_idx6 = idx6
-                                self.full()
+                                self.arrangement_recogn()
 
                                 HelperArrangement().clear_indices_2d_1()
 
