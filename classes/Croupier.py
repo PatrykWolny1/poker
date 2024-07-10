@@ -171,6 +171,7 @@ class Croupier(object):
 
         for self.player in self.players:
             self.player.get_arrangements().get_data_frame_ml().print()
+            self.player.get_arrangements().get_data_frame_ml().save_to_csv("poker_game.csv")
 
 
 

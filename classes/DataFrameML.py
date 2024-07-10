@@ -1,3 +1,6 @@
+import csv
+#import pandas as pd
+
 class DataFrameML(object):
     id_arr = 0
     weight = 0
@@ -34,4 +37,26 @@ class DataFrameML(object):
         self.which_cards = which_cards
 
     def print(self):
-        print(self.id_arr, self.weight, self.exchange, self.id_arr_after, self.weight_after_ex, self.which_cards, self.win_or_not)
+        print(self.id_arr, self.weight, self.exchange, self.id_arr_after, 
+              self.weight_after_ex, self.which_cards, self.win_or_not)
+        
+    def save_to_csv(self, filename):
+        data = { "Arrangement ID" : self.id_arr, 
+                "Weight" : self.weight ,
+                "Exchange" : self.exchange, 
+                "Arrangement ID (After)" : self.id_arr_after, 
+                "Weight (After)" : self.weight_after_ex, 
+                "Cards Exchanged" : self.which_cards, 
+                "Win" : self.win_or_not}
+        
+
+        # with open(csv_file_path, mode='w', newline='') as file:
+        #     writer = csv.writer(file)
+        #     writer.writerows(data)
+        
+        # df = pd.DataFrame(data)
+        # csv_file_path = filename
+        # df.to_csv(csv_file_path, index=True)
+        
+        
+
