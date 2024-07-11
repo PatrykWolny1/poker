@@ -58,9 +58,11 @@ class DataFrameML(object):
 
         df = pd.DataFrame([data])
         temp = df.pop("Win")
-        df.insert(10, "Win", temp)
+        df.insert(len(data) - 1, "Win", temp)
 
-        csv_file_path = filename #10
+        print(df)
+        
+        csv_file_path = filename #
         
         df.to_csv(csv_file_path, index=True, index_label= "Index")
     
