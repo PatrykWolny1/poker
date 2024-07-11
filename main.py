@@ -6,9 +6,10 @@ import pstats
 def main():
     start_time = time.time()
 
-    croupier = Croupier()
-
-    croupier.play()
+    
+    for i in range(0, 3):
+        croupier = Croupier()
+        croupier.play()
 
     end_time = time.time() - start_time
     with open("full.txt", "a") as file:

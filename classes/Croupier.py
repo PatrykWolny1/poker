@@ -6,23 +6,33 @@ from operator import itemgetter
 from random import choice
 
 class Croupier(object):
-    cards = []
-    players = []
-    weights = []
+    #cards = []
+    #players = []
+    #weights = []
 
-    player = None
-    data_frame_ml = DataFrameML()
-    deck = Deck()
+    #player = None
+    #data_frame_ml = DataFrameML()
+    #deck = Deck()
 
-    weight = 0
-    amount = 0
-    idx_players = 0
+    #weight = 0
+    #amount = 0
+    #idx_players = 0
 
-    exchange = ''
+    #exchange = ''
 
     def __init__(self):
-        pass
-
+        self.data_frame_ml = DataFrameML()
+        self.deck = Deck()
+        
+        self.cards = []
+        self.players = []
+        self.weights = []
+        
+        self.weight = 0
+        self.amount = 0
+        self.idx_players = 0
+        
+        self.exchange = ''
     def play(self):
         print()
         

@@ -62,9 +62,9 @@ class DataFrameML(object):
 
         print(df)
         
-        csv_file_path = filename #
-        
-        df.to_csv(csv_file_path, index=True, index_label= "Index")
+        csv_file_path = filename 
+                
+        df.to_csv(csv_file_path, mode = 'a', index=True, index_label= "Index", header = False)
     
         self.idx += 1
         
