@@ -95,7 +95,7 @@ class Croupier(object):
             #nick = str(input("Pseudonim gracza: "))
             if idx == 0:
                 nick = 'Nick'
-            if idx == 1:
+            if idx == 1:                                            #carriage lub full 
                 nick = 'Adam'
 
             self.players.append(Player(deck = self.deck, nick = nick, index = idx, if_deck = True))
@@ -152,7 +152,7 @@ class Croupier(object):
 
         self.player.print()
         self.player.get_arrangements().check_arrangement()
-
+        
         self.player.get_arrangements().set_weights()
         self.player.get_arrangements().get_data_frame_ml().set_exchange(self.exchange)
         self.player.get_arrangements().init_data_frame_ml_after_ex()
