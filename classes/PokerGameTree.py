@@ -40,27 +40,14 @@ class TwoThreeCardsProbability(ComputeObject):
     
 class ThreeCardsProbability(ComputeObject):
     
-    def __init__(self, name: str = '', result_var: float = 0, data = None, threshold: int = 0, p1: float = 0.01, p2: float = 0.2, p3: float = 0.5):
+    def __init__(self, name: str = '', result_var: float = 0, data = None, threshold: int = 0, p1: float = 0.01):
         super().__init__(name, result_var, data)
         self.threshold = threshold
         self.p1 = p1
-        self.p2 = p2
-        self.p3 = p3
         
     def computing(self):
-        count_1 = 0
-
-        for idx in range(0, len(self.data)):
-            if self.data[idx] < self.threshold:
-                self.data[idx] = None
-                count_1 += 1
-
-        if count_1 == 1:
+        if max(self.data) > self.threshold:
             self.result_var = self.p1
-        if count_1 == 2:
-            self.result_var = self.p2
-        if count_1 == 3:
-            self.result_var = self.p3
             
     def result(self):
         return self.result_var
@@ -94,46 +81,43 @@ class Node(object):
         self.leaf_nodes = []
             
     def __str__(self):
-        str_result = '\t\t\t' + self.name
+        
+        # ROOT
+        str_result = '\t\t\t\t\t' + self.name
         
         str_result += '\n\n'
         
-        str_result += '\t\t    ' + str(self.internal_nodes[0][0])
+        # ExchangeCards?
+        str_result += '\t\t\t\t    ' + str(self.internal_nodes[0][0])
 
         str_result += '\n\n'
         
+        # Branches p(x) 1   p(x) 2 
         for idx in range(0, len(self.internal_nodes[0][0].branches)):
-            str_result_1 = '\t\t' + str(self.internal_nodes[0][0].branches[idx])
+            str_result += '\t\t\t' + str(self.internal_nodes[0][0].branches[idx])
+        
+        str_result += '\n'
+        
+        # No 
+        str_result += '\t\t\t  ' + str(self.internal_nodes[0][0].leaf_nodes[0])
+        
+        # Yes
+        str_result += '\t\t\t\t   ' + str(self.internal_nodes[1][0])
+        
+        str_result += '\n'
+        
+        str_result += '\t\t\t\t\t' + str(self.internal_nodes[1][0].branches[0])
+        
+        str_result += '\t\t\t' + str(self.internal_nodes[1][0].branches[1])
+        
+        str_result += '\n'
+        
+        str_result += '\t\t\t\t\t' + str(self.internal_nodes[1][0].leaf_nodes[0])
+        str_result += '\t\t\t' + str(self.internal_nodes[1][0].leaf_nodes[1])
         
         
-        # str_result += '\t\t' + str(self.internal_nodes[0][0].branches[0])
-        
-        # str_result += '\t\t' + str(self.internal_nodes[0][0].branches[1])
-        
-        # str_result += '\t\t' 
-        
-        
-        
-        
-        # logic_more = False
-        # logic_less = False
-        
-        # for idx in range(0, len(self.branches)):
-        #     str_result += '\t\t' + str(self.branches[idx])
-        #     for idx1 in range(0, len(self.branches)):
-        #         if self.branches[idx].threshold > self.branches[idx1].threshold and logic_more == False:
-        #             str_result_1 = '\t\t\t\t  ' + str(self.leaf_nodes[self.leaf_nodes.index([x for x in self.leaf_nodes if x.result == True][0])])
-        #             logic_more = True
-                    
-        #         elif logic_less == False:
-        #             str_result_2 = '\t   ' + str(self.leaf_nodes[self.leaf_nodes.index([x for x in self.leaf_nodes if x.result == False][0])])
-        #             logic_less = True
-        
-        # str_result += '\n'
-        # str_result += str_result_2 + str_result_1
-           
-        # str_result += '\n' 
-        
+        str_result 
+     
         return str_result
             
 class InternalNode(object):
@@ -153,7 +137,7 @@ class Branch(object):
         self.threshold = threshold  
     
     def __str__(self):
-        return self.name + "(" + str(self.threshold) + ")"    
+        return self.name + "(" + str("{:.4f}".format(self.threshold)) + ")"    
           
 class LeafNode(object):
     
@@ -165,7 +149,9 @@ class LeafNode(object):
         return self.name
 
 
-cards = [1, 1, 13, 6, 5]
+cards = [1, 1, 12, 6, 5]
+
+# Probability of exchaning cards rises when high card value is less than x
 
 cards_rest = [13, 6, 5]
 
@@ -173,10 +159,13 @@ root = Node("ONE PAIR")
 
 nk = [[13, 1], [4, 2], [47, 2]]
 
+print(cards)
+
+
 computeobject_1 = OnePairProbability("One Pair Probability", data=cards_rest.copy(), nk=nk)
 computeobject_1.computing()
 
-computeobject_2 = ThreeCardsProbability("Three Cards Probability", data=cards_rest.copy(), threshold=8, p1=0.01, p2=0.2, p3=0.5)
+computeobject_2 = ThreeCardsProbability("Three Cards Probability", data=cards_rest.copy(), threshold=8, p1=0.128)
 computeobject_2.computing()
 
 computeobject = [ComputeObject(result_var=(computeobject_1 + computeobject_2)), ComputeObject(result_var=(1 - (computeobject_1 + computeobject_2)))]
