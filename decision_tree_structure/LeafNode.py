@@ -6,3 +6,6 @@ class LeafNode(object):
         
     def __str__(self):
         return self.name
+    
+    def __float__(self):
+        return self.result  

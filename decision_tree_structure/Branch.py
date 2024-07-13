@@ -5,5 +5,8 @@ class Branch(object):
         self.threshold = threshold  
     
     def __str__(self):
-        return self.name + "(" + str("{:.4f}".format(self.threshold)) + ")"    
+        return self.name + "(" + str("{:.4f}".format(self.threshold)) + ")" 
+    
+    def __float__(self):
+        return self.threshold   
           

@@ -61,12 +61,11 @@ class DataFrameML(object):
         df.insert(len(data) - 1, "Win", temp)
 
         print(df)
-        
-        csv_file_path = filename 
                 
-        df.to_csv(csv_file_path, mode = 'a', index=True, index_label= "Index", header = False)
+        csv_file_path = filename 
     
-        self.idx += 1
+        df.to_csv(csv_file_path, mode = 'a', index=False, header = False)
+    
         
                 
         

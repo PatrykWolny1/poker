@@ -30,6 +30,7 @@ class Player(object):
             self.arrangements.set_cards(self.cards)
         else:
             self.cards = cards
+            self.arrangements.set_cards(self.cards)
 
     def return_to_croupier(self, amount = 0):
         self.amount = amount

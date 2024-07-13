@@ -75,7 +75,7 @@ class HighCard(HelperArrangement):
 
             if len(HelperArrangement().dim(self.perm)) == 1:
                 self.perm = [self.perm]
-            
+
         straight_iter = 0
         self.weight_arrangement_part = []
 
