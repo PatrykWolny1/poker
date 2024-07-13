@@ -1,4 +1,4 @@
-import ComputeObject
+from decision_tree_strategies.ComputeObject import ComputeObject
 from scipy.special import binom
 
 class OnePairProbability(ComputeObject):

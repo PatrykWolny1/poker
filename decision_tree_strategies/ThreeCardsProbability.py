@@ -1,4 +1,4 @@
-import ComputeObject
+from decision_tree_strategies.ComputeObject import ComputeObject
 
 class ThreeCardsProbability(ComputeObject):
     
