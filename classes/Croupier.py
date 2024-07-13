@@ -2,34 +2,48 @@ from classes.Player import Player
 from classes.Deck import Deck
 from classes.Card import Card
 from classes.DataFrameML import DataFrameML
+from decision_tree_structure.Node import Node
+from decision_tree_structure.OnePairStructureStrategy import OnePairStructureStrategy
 from operator import itemgetter
 from random import choice
+import numpy as np
 
 class Croupier(object):
-    cards = []
-    players = []
-    weights = []
+    #cards = []
+    #players = []
+    #weights = []
 
-    player = None
-    data_frame_ml = DataFrameML()
-    deck = Deck()
+    #player = None
+    #data_frame_ml = DataFrameML()
+    #deck = Deck()
 
-    weight = 0
-    amount = 0
-    idx_players = 0
+    #weight = 0
+    #amount = 0
+    #idx_players = 0
 
-    exchange = ''
+    #exchange = ''
 
     def __init__(self):
-        pass
-
-    def play(self):
+        self.data_frame_ml = DataFrameML()
+        self.deck = Deck()
+        
+        self.cards = []
+        self.players = []
+        self.weights = []
+        
+        self.weight = 0
+        self.amount = 0
+        self.idx_players = 0
+        
+        self.exchange = ''
+    def play(self):        
         print()
         
+        self.set_cards()
         self.set_players_nicknames()
-        
+            
         print()
-
+        
         #########################################################
 
         # # Dla testowania wybranych uklaldow
@@ -53,6 +67,21 @@ class Croupier(object):
 
         #########################################################
         #########################################################
+        self.weights = []
+        for idx in range(0, len(self.cards)):
+            self.weights.append(self.cards[idx].weight)
+            
+            
+        #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
+        
+        self.root = OnePairStructureStrategy(cards=self.weights)
+        self.root.show_tree()
+        print(str(self.root.root_object))
+
+        #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
+         
+        
+        
         
         self.cards_check_exchange_add_weights()
         
@@ -65,15 +94,19 @@ class Croupier(object):
             self.player.print()
             self.player.get_arrangements().check_arrangement()
             self.player.get_arrangements().set_weights()
-            self.player.get_arrangements().init_data_frame_ml_after_ex()
+            #self.player.get_arrangements().init_data_frame_ml_after_ex()
         
         print("Wagi ukladow graczy: ", self.weights)
         self.compare_players_weights()
+        
+        print(self.amount, self.exchange)
+        self.root.show_tree(True, self.amount, self.exchange)
+        print(str(self.root.root_object))
 
     def set_cards(self):
         self.cards = [Card("2", "Ka"),
-                      Card("3", "Pi"),
-                      Card("4", "Ka"),
+                      Card("2", "Pi"),
+                      Card("9", "Ka"),
                       Card("5", "Tr"),
                       Card("7", "Ki")]
 
@@ -85,13 +118,12 @@ class Croupier(object):
             #nick = str(input("Pseudonim gracza: "))
             if idx == 0:
                 nick = 'Nick'
-            if idx == 1:
+            if idx == 1:                                            #carriage lub full 
                 nick = 'Adam'
+                
+            self.players.append(Player(deck=self.deck, nick=nick, index=idx, if_deck=False, cards=self.cards))
 
-            self.players.append(Player(deck = self.deck, nick = nick, index = idx, if_deck = True))
-
-        self.deck.print()
-
+        #self.deck.print()
 
     def cards_check_exchange_add_weights(self):
         for self.player in self.players:
@@ -106,12 +138,18 @@ class Croupier(object):
 
             #self.exchange = str(input("Wymiana kart [T/N]: ")).lower()
             #self.exchange = choice(['t', 'n'])
-            self.exchange = 't'
+            
+            
+            self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.root.root_object.internal_nodes[0][0].branches[0]),
+                                                                    float(self.root.root_object.internal_nodes[0][0].branches[1])])    
+            print(self.exchange)
+            #self.exchange = 't'
             print("Wymiana kart: ", self.exchange)
+            
             if self.exchange == 't':
                 self.cards_exchange()
             if self.exchange == 'n':
-                pass
+                self.player.get_arrangements().get_data_frame_ml().set_exchange(self.exchange)
 
             print()
             print("------------------------------------------------------------")
@@ -123,7 +161,12 @@ class Croupier(object):
 
     def cards_exchange(self):
         #self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-        self.amount = choice(list(range(0, 6)))
+        #self.amount = choice(list(range(0, 6)))
+        
+        self.amount = np.random.choice([2, 3], size=1, p=[float(self.root.root_object.internal_nodes[1][0].branches[0]),
+                                                          float(self.root.root_object.internal_nodes[1][0].branches[1])])    
+          
+        self.amount = int(self.amount)
         print("Ile kart do wymiany: ", self.amount)
         print()
 
@@ -142,7 +185,7 @@ class Croupier(object):
 
         self.player.print()
         self.player.get_arrangements().check_arrangement()
-
+        
         self.player.get_arrangements().set_weights()
         self.player.get_arrangements().get_data_frame_ml().set_exchange(self.exchange)
         self.player.get_arrangements().init_data_frame_ml_after_ex()
@@ -171,6 +214,7 @@ class Croupier(object):
 
         for self.player in self.players:
             self.player.get_arrangements().get_data_frame_ml().print()
+            self.player.get_arrangements().get_data_frame_ml().save_to_csv("poker_game.csv")
 
 
 

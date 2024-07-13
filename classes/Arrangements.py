@@ -55,7 +55,7 @@ class Arrangements(object):
         self.part_weights = []
         
         for x in self.arrangements:
-            self.part_weights.append(x.get_weight())
+            self.part_weights.append(x.get_part_weight())
         
         print(self.part_weights)
         
@@ -83,13 +83,13 @@ class Arrangements(object):
     def init_data_frame_ml_before_ex(self):          
         self.data_frame_ml.set_id_arr_after(self.get_id())
         self.data_frame_ml.set_weight_after_ex(self.get_weight())
-        self.data_frame_ml.set_which_cards(self.get_part_weight())
+        #[self.data_frame_ml.set_which_cards(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
         self.data_frame_ml.set_weight_ex(self.get_part_weight_sum(self.part_weights))
 
     def init_data_frame_ml_after_ex(self):          
         self.data_frame_ml.set_id_arr_after(self.get_id())
         self.data_frame_ml.set_weight_after_ex(self.get_weight())
-        self.data_frame_ml.set_which_cards(self.get_part_weight())
+        [self.data_frame_ml.set_which_cards(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
         self.data_frame_ml.set_weight_ex(self.get_part_weight_sum(self.part_weights))
 
     def get_weight(self):

@@ -7,9 +7,9 @@ from itertools import permutations, combinations
 class HighCard(HelperArrangement):
     cardmarkings = CardMarkings()   # Oznaczenia kart
     high_card_1 = Card()
-    limit_rand = 1000               # Ograniczenie dla liczby obliczen
+    limit_rand = 100000            # Liczba kombinacji kart -> pomnozone przez 120 daje liczbe permutacji
     one_iter = 120    
-    loading_bar = LoadingBar(limit_rand * one_iter - 1, 40, 40)   # ponad 150 milionow permutacji           
+    loading_bar = LoadingBar(limit_rand * one_iter - 1, 40, 40)   # 156 304 800 permutacji           
     file = open("high_card.txt", "w")
 
     perm = []                       # Lista na karty gracza
@@ -75,7 +75,7 @@ class HighCard(HelperArrangement):
 
             if len(HelperArrangement().dim(self.perm)) == 1:
                 self.perm = [self.perm]
-            
+
         straight_iter = 0
         self.weight_arrangement_part = []
 
@@ -116,8 +116,8 @@ class HighCard(HelperArrangement):
 
         if self.random == False:
             #self.print_arrengement()
-            self.file.write("Jedna para: " + str(self.weight_arrangement) +
-                            " Wysoka Karta: " + self.high_card_1.print_str() +
+            self.file.write("Wysoka karta: " + str(self.weight_arrangement) +
+                            " Wysoka karta: " + self.high_card_1.print_str() +
                             " Numer: " + str(self.num_arr) + "\n")
                                 
         self.num_arr += 1

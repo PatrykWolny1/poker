@@ -30,6 +30,7 @@ class Player(object):
             self.arrangements.set_cards(self.cards)
         else:
             self.cards = cards
+            self.arrangements.set_cards(self.cards)
 
     def return_to_croupier(self, amount = 0):
         self.amount = amount
@@ -93,7 +94,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "9"
+        arrangement = "5"
 
         if arrangement == "1":
             self.cards, self.rand_int = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
