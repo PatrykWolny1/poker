@@ -5,21 +5,23 @@ from arrangements.CardMarkings import CardMarkings
 import itertools
 
 class Straight(HelperArrangement):
-    cardmarkings = CardMarkings()   #Oznaczenia kart
-    loading_bar = LoadingBar(1223999, 40, 39)
-    file = open("straight.txt", "w")
+    
+    def __init__(self):
+        self.cardmarkings = CardMarkings()   #Oznaczenia kart
+        self.loading_bar = LoadingBar(1223999, 40, 39)
+        self.file = open("straight.txt", "w")
 
-    cards = []                      #Tablica na karty
-    perm = []                       #Tablica na permutacje do wag - posortowana
+        self.cards = []                      #Tablica na karty
+        self.perm = []                       #Tablica na permutacje do wag - posortowana
 
-    num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
-    weight_arrangement = 0          #Zmienna pomocnicza do sumowania wagi ukladu
-    straight_iter = 0               #Liczenie ile iteracji zostalo wykonanych
-    c_idx6 = 0
-    c_idx6_iter = 0
+        self.num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
+        self.weight_arrangement = 0          #Zmienna pomocnicza do sumowania wagi ukladu
+        self.straight_iter = 0               #Liczenie ile iteracji zostalo wykonanych
+        self.c_idx6 = 0
+        self.c_idx6_iter = 0
 
-    random = False                  #Jesli jest losowanie ukladu
-    example = False                 #Jesli jest recznie wpisany uklad
+        self.random = False                  #Jesli jest losowanie ukladu
+        self.example = False                 #Jesli jest recznie wpisany uklad
     
     def set_cards(self, cards):
         self.perm = cards

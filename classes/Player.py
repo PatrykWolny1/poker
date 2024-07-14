@@ -1,22 +1,12 @@
 from classes.Arrangements import Arrangements
 from classes.Deck import Deck
 from random import choice
+
 class Player(object):
-    nick = None
-    random = False
-    combs_perm = False
-    win_or_not = None
-
-    rand_int = 0
-    amount = 0
-    weight = 0
-    index = 0
-
-    cards = []
-    all_combs = []
-
+        
     def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
         deck.shuffling()
+        self.cards_exchanged = []
         self.nick = nick
         self.index = index
         self.arrangements = Arrangements()
@@ -54,7 +44,8 @@ class Player(object):
                 print()
                 which = int(which_card)
 
-                temp.pop(which - 1)
+                temp_card = temp.pop(which - 1)
+                self.cards_exchanged.append(temp_card)
             else:
                 temp.pop()
 
@@ -131,6 +122,10 @@ class Player(object):
     
     def get_rand_int(self):
         return self.rand_int
+    
+    # @property
+    # def cards_exchanged(self):
+    #     return self.cards_exchanged
 
     def set_cards(self, cards):
         self.cards = cards
@@ -138,8 +133,15 @@ class Player(object):
     def set_win_or_not(self, win_or_not):
         self.win_or_not = win_or_not
 
-    def print(self):
+    def print(self, all_part = False):
         print(self.nick)
-        for idx in self.cards:
-            idx.print()
-        print()
+        
+        if all_part == False:
+            for idx in self.cards:
+                idx.print()
+            print()
+        else:
+            for idx in self.cards_exchanged:
+                idx.print()
+            print()
+    

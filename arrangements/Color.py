@@ -7,27 +7,29 @@ from operator import itemgetter
 from itertools import chain
 
 class Color(HelperArrangement):
-    cardmarkings = CardMarkings()  #Oznaczenia kart
-    loading_bar_1 = LoadingBar(611519, 40, 39)
-    loading_bar_2 = LoadingBar(5095, 40, 39)
-    file = open("color.txt", "w")
+    
+    def __init__(self):
+        self.cardmarkings = CardMarkings()  #Oznaczenia kart
+        self.loading_bar_1 = LoadingBar(611519, 40, 39)
+        self.loading_bar_2 = LoadingBar(5095, 40, 39)
+        self.file = open("color.txt", "w")
 
-    cards_2d = []           # Przygotowanie listy do wstepnego przetwarzania
-    perm = []               # Lista na permutacje
-    perm_unsort = []        # Nieposortowana lista na permutacje
+        self.cards_2d = []           # Przygotowanie listy do wstepnego przetwarzania
+        self.perm = []               # Lista na permutacje
+        self.perm_unsort = []        # Nieposortowana lista na permutacje
 
-    high_card = None        # Zmienna na wysoka karte
+        self.high_card = None        # Zmienna na wysoka kself.arte
 
-    color_weight = 0        # Waga karty
-    color_sum = 0           # Suma ukladu
-    num_arr = 0             # Licznik
-    count = 0               # Licznik pomocniczy do funkcji temp_lambda()
-    count_1 = 0             # Licznik do loading_bar()
-    count_2 = 0             # Licznik do loading_bar()
-    c_idx2 = 0
+        self.color_weight = 0        # Waga karty
+        self.color_sum = 0           # Suma ukladu
+        self.num_arr = 0             # Licznik
+        self.count = 0               # Licznik pomocniczy do funkcji temp_lambda()
+        self.count_1 = 0             # Licznik do loading_bar()
+        self.count_2 = 0             # Licznik do loading_bar()
+        self.c_idx2 = 0
 
-    random = False
-    example = False
+        self.random = False
+        self.example = False
 
     def set_cards(self, cards):
         self.perm = cards
@@ -177,8 +179,8 @@ class Color(HelperArrangement):
                     #Dla kart innych niz najwyzsza policz czesciowo wage ukladu
                     if sorted(self.perm[self.c_idx2])[idx] != max(self.perm[self.c_idx2]):
                         #Potega od 1 do 4
-                        #self.file.write("IDX: " + str(idx+1) + "WEIGHT: " + str(sorted(self.perm[self.c_idx2])[idx].weight) + "\n")
-                        #print("IDX: ", idx+1, "WEIGHT: ", sorted(self.perm[self.c_idx2])[idx].weight)
+                        #self.file.write("IDX: " + str(idx+1) + "weight: " + str(sorted(self.perm[self.c_idx2])[idx].weight) + "\n")
+                        #print("IDX: ", idx+1, "weight: ", sorted(self.perm[self.c_idx2])[idx].weight)
                         
                         self.color_weight = pow(sorted(self.perm[self.c_idx2])[idx].weight, idx + 1)
                         self.color_sum += self.color_weight

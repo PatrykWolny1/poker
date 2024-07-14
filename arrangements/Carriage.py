@@ -5,27 +5,29 @@ from arrangements.CardMarkings import CardMarkings
 import itertools
 
 class Carriage(HelperArrangement):
-    cardmarkings = CardMarkings()   #Oznaczenia kart
-    loading_bar = LoadingBar(74880, 20, 19)
-    file = open("carriage.txt", "w")
     
-    cards = []                      #Tablica do wstepnego przetwarzania
-    cards_2d = []                   #Tablica do wstepnego przetwarzania
-    cards_5 = []                    #Tablca do wstepnego przetwarzania
-    cards_perm = []                 #Tablica na permutacje
-    combs = []                      #Tablica na kombinacje
-    cards_perm = []                 #Tablica do obliczania wag w funkcji carriage()
-    
-    rand_int = 0
-    num_arr = 0                     #Licznik ilosci ukladow
-    weight_arrangement_part = 0     #Waga ostatniej karty
-    weight_arrangement = 0          #Waga ukladu
-    c_idx6 = 0
+    def __init__(self):
+        self.cardmarkings = CardMarkings()   #Oznaczenia kart
+        self.loading_bar = LoadingBar(74880, 20, 19)
+        self.file = open("carriage.txt", "w")
+        
+        self.cards = []                      #Tablica do wstepnego przetwarzania
+        self.cards_2d = []                   #Tablica do wstepnego przetwarzania
+        self.cards_5 = []                    #Tablca do wstepnego przetwarzania
+        self.cards_perm = []                 #Tablica na permutacje
+        self.combs = []                      #Tablica na kombinacje
+        self.cards_perm = []                 #Tablica do obliczania wag w funkcji carriage()
+        
+        self.rand_int = 0
+        self.num_arr = 0                     #Licznik ilosci ukladow
+        self.weight_arrangement_part = 0     #Waga ostatniej karty
+        self.weight_arrangement = 0          #Waga ukladu
+        self.c_idx6 = 0
 
-    if_perm_weights = True
-    print_permutations = True       #Wyswietlanie wszystkich permutacji
-    example = False                 #Jesli jest recznie wpisany uklad
-    random = False                  #Jesli jest losowanie ukladu
+        self.if_perm_weights = True
+        self.print_permutations = True       #Wyswietlanie wszystkich permutacji
+        self.example = False                 #Jesli jest recznie wpisany uklad
+        self.random = False                  #Jesli jest losowanie ukladu
 
     #Funkcja dla przykladowego ukladu wpisanego recznie
     def set_cards(self, cards):

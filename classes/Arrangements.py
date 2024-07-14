@@ -12,16 +12,7 @@ from arrangements.HelperArrangement import HelperArrangement
 
 import itertools
 class Arrangements(object):
-    cards = []
-    weights = []
-    part_weights = []
-    ids_arr = []
-    arrangements = []
-    data_frame_ml = DataFrameML()
-    helper_arrangement = HelperArrangement()
     
-    
-    rand_int = 0    
     def __init__(self, cards = []):
         self.id_arr = 0
         self.data_frame_ml = DataFrameML()
@@ -39,7 +30,8 @@ class Arrangements(object):
         
         self.arrangements = [self.high_card, self.one_pair, self.two_pairs, self.three_of_a_kind,
                           self.straight, self.color, self.full, self.carriage, self.straight_royal_flush] 
-               
+        
+        self.rand_int = 0
 
     def set_cards(self, cards):                
         for x in self.arrangements:
@@ -77,19 +69,18 @@ class Arrangements(object):
     def get_data_frame_ml(self):
         return self.data_frame_ml
 
-    def set_data_frame_ml(self, data_frame_ml = DataFrameML()):
+    def set_data_frame_ml(self, data_frame_ml: DataFrameML = None):
         self.data_frame_ml = data_frame_ml
 
-    def init_data_frame_ml_before_ex(self):          
-        self.data_frame_ml.set_id_arr_after(self.get_id())
-        self.data_frame_ml.set_weight_after_ex(self.get_weight())
-        #[self.data_frame_ml.set_which_cards(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
-        self.data_frame_ml.set_weight_ex(self.get_part_weight_sum(self.part_weights))
+    def init_data_frame_ml_before_ex(self):   
+        self.data_frame_ml.id_arr = self.get_id()       
+        self.data_frame_ml.weight = self.get_weight()       
+        self.data_frame_ml.weight_ex = self.get_part_weight_sum(self.part_weights)    
 
-    def init_data_frame_ml_after_ex(self):          
-        self.data_frame_ml.set_id_arr_after(self.get_id())
-        self.data_frame_ml.set_weight_after_ex(self.get_weight())
-        [self.data_frame_ml.set_which_cards(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
+    def init_data_frame_ml_after_ex(self):      
+        self.data_frame_ml.id_arr = self.get_id()       
+        self.data_frame_ml.weight_after_ex = self.get_weight()       
+        [self.data_frame_ml.set_cards_after(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
         self.data_frame_ml.set_weight_ex(self.get_part_weight_sum(self.part_weights))
 
     def get_weight(self):
@@ -99,6 +90,7 @@ class Arrangements(object):
 
     def get_part_weight(self):
         for part_weight in self.part_weights:
+            print(part_weight)
             if part_weight is not None:
                 return part_weight
 

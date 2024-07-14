@@ -5,26 +5,27 @@ from classes.Card import Card
 from itertools import permutations, combinations
 
 class HighCard(HelperArrangement):
-    cardmarkings = CardMarkings()   # Oznaczenia kart
-    high_card_1 = Card()
-    limit_rand = 100000            # Liczba kombinacji kart -> pomnozone przez 120 daje liczbe permutacji
-    one_iter = 120    
-    loading_bar = LoadingBar(limit_rand * one_iter - 1, 40, 40)   # 156 304 800 permutacji           
-    file = open("high_card.txt", "w")
 
-    perm = []                       # Lista na karty gracza
-    weight_arrangement_part = []    # Lista na wagi wszystkich kart
-    
-    high_card_weight = 0            # Waga najwyzszej karty
-    idx_bar = 0
-    weight_arrangement = 0          # Waga ukladu
-    c_idx1 = 0                      # Zapisywanie aktualnego indeksu z petli for
-    num_arr = 0                     # Numer ukladu
-    iter_rand = 0                   # Ilosc wykonanych iteracji dla tworzenia permutacji ukladow
+    def __init__(self):
+        self.cardmarkings = CardMarkings()   # Oznaczenia kart
+        self.high_card_1 = Card()
+        self.limit_rand = 100000            # Liczba kombinacji kart -> pomnozone przez 120 daje liczbe permutacji
+        self.one_iter = 120    
+        self.loading_bar = LoadingBar(self.limit_rand * self.one_iter - 1, 40, 40)   # 156 304 800 permutacji           
+        self.file = open("high_card.txt", "w")
 
-    random = False
-    example = False
+        self.perm = []                       # Lista na karty gracza
+        self.weight_arrangement_part = []    # Lista na wagi wszystkich kart
+        
+        self.high_card_weight = 0            # Waga najwyzszej karty
+        self.idx_bar = 0
+        self.weight_arrangement = 0          # Waga ukladu
+        self.c_idx1 = 0                      # Zapisywanie aktualnego indeksu z petli for
+        self.num_arr = 0                     # Numer ukladu
+        self.iter_rand = 0                   # Ilosc wykonanych iteracji dla tworzenia permutacji ukladow
 
+        self.random = False
+        self.example = False
     
     def set_cards(self, cards):
         self.perm = cards

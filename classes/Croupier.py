@@ -26,7 +26,6 @@ class Croupier(object):
     def __init__(self):
         self.data_frame_ml = DataFrameML()
         self.deck = Deck()
-        
         self.cards = []
         self.players = []
         self.weights = []
@@ -67,21 +66,18 @@ class Croupier(object):
 
         #########################################################
         #########################################################
-        self.weights = []
+        self.weights_cards = []
         for idx in range(0, len(self.cards)):
-            self.weights.append(self.cards[idx].weight)
+            self.weights_cards.append(self.cards[idx].weight)
             
             
         #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
         
-        self.root = OnePairStructureStrategy(cards=self.weights)
+        self.root = OnePairStructureStrategy(cards=self.weights_cards)
         self.root.show_tree()
         print(str(self.root.root_object))
 
         #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
-         
-        
-        
         
         self.cards_check_exchange_add_weights()
         
@@ -91,7 +87,7 @@ class Croupier(object):
         print()
         
         for self.player in self.players:
-            self.player.print()
+            self.player.print(False)
             self.player.get_arrangements().check_arrangement()
             self.player.get_arrangements().set_weights()
             #self.player.get_arrangements().init_data_frame_ml_after_ex()
@@ -122,19 +118,20 @@ class Croupier(object):
                 nick = 'Adam'
                 
             self.players.append(Player(deck=self.deck, nick=nick, index=idx, if_deck=False, cards=self.cards))
-
-        #self.deck.print()
+            
+        # self.deck.print()
 
     def cards_check_exchange_add_weights(self):
         for self.player in self.players:
-            self.player.print()
+            self.player.print(False)
             self.player.get_arrangements().check_arrangement()
             self.player.get_arrangements().set_weights()
-            self.player.get_arrangements().set_data_frame_ml(DataFrameML(self.player.get_arrangements().get_id(), self.player.get_arrangements().get_weight()))
+            self.player.get_arrangements().set_data_frame_ml(DataFrameML(self.player.get_arrangements().get_id(), 
+                                                                         self.player.get_arrangements().get_weight()))
             print()
 
             self.weights.append(self.player.get_arrangements().get_weight())
-            print(self.player.get_arrangements().get_weight())
+            #print(self.player.get_arrangements().get_weight())
 
             #self.exchange = str(input("Wymiana kart [T/N]: ")).lower()
             #self.exchange = choice(['t', 'n'])
@@ -150,6 +147,8 @@ class Croupier(object):
                 self.cards_exchange()
             if self.exchange == 'n':
                 self.player.get_arrangements().get_data_frame_ml().set_exchange(self.exchange)
+
+            [self.player.get_arrangements().get_data_frame_ml().set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
 
             print()
             print("------------------------------------------------------------")
@@ -174,7 +173,7 @@ class Croupier(object):
             return
 
         self.amount = self.player.return_to_croupier(self.amount)
-
+        print(self.amount)
         self.deal_cards()
 
         self.player.get_arrangements().set_cards(self.player.get_cards())
@@ -183,7 +182,7 @@ class Croupier(object):
         print("------------------------------------------------------------")
         print()
 
-        self.player.print()
+        self.player.print(True)
         self.player.get_arrangements().check_arrangement()
         
         self.player.get_arrangements().set_weights()
@@ -205,7 +204,7 @@ class Croupier(object):
                 print("WYGRANA")
                 self.player.get_arrangements().set_cards(self.player.get_cards())
                 self.player.win_or_not = True
-                self.player.print()
+                self.player.print(False)
                 self.player.get_arrangements().check_arrangement()
             else:
                 self.player.win_or_not = False

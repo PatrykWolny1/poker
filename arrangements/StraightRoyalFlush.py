@@ -5,21 +5,23 @@ from arrangements.CardMarkings import CardMarkings
 from itertools import permutations
 
 class StraightRoyalFlush(HelperArrangement):
-    cardmarkings = CardMarkings()  #Oznaczenia kart
-    loading_bar = LoadingBar(4799, 39, 40)
-    file = open("straight_royal_flush.txt", "w")
-    cards = []                     #Tablica na karty
-    perm = []                      #Tablica na permutacje do wag
+    
+    def __init__(self):
+        self.cardmarkings = CardMarkings()  #Oznaczenia kart
+        self.loading_bar = LoadingBar(4799, 39, 40)
+        self.file = open("straight_royal_flush.txt", "w")
+        self.cards = []                     #Tablica na karty
+        self.perm = []                      #Tablica na permutacje do wag
 
-    weight_arrangement = 0         #Tablica na wage ukladu
-    num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
-    c_idx2 = 0
-    rand_int = 0
+        self.weight_arrangement = 0         #Tablica na wage ukladu
+        self.num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
+        self.c_idx2 = 0
+        self.rand_int = 0
 
-    random = False                 #Jesli jest losowanie ukladu
-    example = False                #Jesli jest recznie wpisany uklad
-    if_royal_flush = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
-    calc_weights = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
+        self.random = False                 #Jesli jest losowanie ukladu
+        self.example = False                #Jesli jest recznie wpisany uklad
+        self.if_royal_flush = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
+        self.calc_weights = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
 
     def set_cards(self, cards):
         self.perm = cards
