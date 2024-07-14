@@ -41,7 +41,7 @@ class DataFrameML(object):
     
     def set_cards_exchanged(self, cards):
         self.idx_ex += 1
-        self.cards_exchanged.update({"Cards Exchanged " +str(self.idx_ex) : cards})
+        self.cards_exchanged.update({"Cards Exchanged " + str(self.idx_ex) : cards})
     
     def clear_dict_idx(self):
         self.which_cards.clear()
@@ -72,10 +72,7 @@ class DataFrameML(object):
                 
         csv_file_path = filename 
     
-        df.to_csv(csv_file_path, mode = 'a', index=False, header = False)
-        
-        idx = 0
-        
+        df.to_csv(csv_file_path, mode = 'a', index=False, header = False)        
                 
         
 
