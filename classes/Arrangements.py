@@ -8,30 +8,28 @@ from arrangements.TwoPairs import TwoPairs
 from arrangements.OnePair import OnePair
 from arrangements.HighCard import HighCard
 from classes.DataFrameML import DataFrameML
-from arrangements.HelperArrangement import HelperArrangement
 
-import itertools
 class Arrangements(object):
     
     def __init__(self, cards = []):
-        self.id_arr = 0
-        self.data_frame_ml = DataFrameML()
-        self.cards = cards
+        self.id_arr:int = 0
+        self.data_frame_ml:DataFrameML = DataFrameML()
+        self.cards:list = cards
 
-        self.high_card = HighCard()
-        self.one_pair = OnePair()
-        self.two_pairs = TwoPairs()
-        self.three_of_a_kind = ThreeOfAKind()
-        self.straight = Straight()
-        self.color = Color()
-        self.full = Full()
-        self.carriage = Carriage()
-        self.straight_royal_flush = StraightRoyalFlush() 
+        self.high_card:HighCard = HighCard()
+        self.one_pair:OnePair = OnePair()
+        self.two_pairs:TwoPairs = TwoPairs()
+        self.three_of_a_kind:ThreeOfAKind = ThreeOfAKind()
+        self.straight:Straight = Straight()
+        self.color:Color = Color()
+        self.full:Full = Full()
+        self.carriage:Carriage = Carriage()
+        self.straight_royal_flush:StraightRoyalFlush = StraightRoyalFlush() 
         
-        self.arrangements = [self.high_card, self.one_pair, self.two_pairs, self.three_of_a_kind,
+        self.arrangements:list = [self.high_card, self.one_pair, self.two_pairs, self.three_of_a_kind,
                           self.straight, self.color, self.full, self.carriage, self.straight_royal_flush] 
         
-        self.rand_int = 0
+        self.rand_int:int = 0
 
     def set_cards(self, cards):                
         for x in self.arrangements:
@@ -81,7 +79,7 @@ class Arrangements(object):
         self.data_frame_ml.id_arr = self.get_id()       
         self.data_frame_ml.weight_after_ex = self.get_weight()       
         [self.data_frame_ml.set_cards_after(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
-        self.data_frame_ml.set_weight_ex(self.get_part_weight_sum(self.part_weights))
+        self.data_frame_ml.weight_ex = self.get_part_weight_sum(self.part_weights)
 
     def get_weight(self):
         for weight in self.weights:

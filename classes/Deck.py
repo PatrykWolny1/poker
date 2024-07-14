@@ -9,14 +9,14 @@ class Deck(object):
     # counter = 0
 
     def __init__(self):
-        self.markings = ('2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A')
-        self.colors = ('Ki', 'Tr', 'Ka', 'Pi')
-        self.weight = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
-        self.cards = []
+        self.markings:tuple = ('2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A')
+        self.colors:tuple = ('Ki', 'Tr', 'Ka', 'Pi')
+        self.weight:tuple = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)
+        self.cards:list = []
         for color in self.colors:
             for marking in self.markings:
                 self.cards.append(Card(marking, color))
-        self.counter = 0
+        self.counter:int = 0
     def print(self):
         for i in range(len(self.cards)):
             print(i + 1, self.cards[i].print_str())

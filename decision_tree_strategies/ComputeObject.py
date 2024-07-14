@@ -3,9 +3,9 @@ from abc import abstractmethod
 class ComputeObject(object):
     
     def __init__(self, name: str = '', result_var: float = 0, data = None):
-        self.name = name
-        self.data = data
-        self.result_var = result_var
+        self.name:str = name
+        self.data:None = data
+        self.result_var:float = result_var
     
     @abstractmethod
     def computing(self):

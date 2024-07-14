@@ -9,27 +9,27 @@ from itertools import chain
 class Color(HelperArrangement):
     
     def __init__(self):
-        self.cardmarkings = CardMarkings()  #Oznaczenia kart
-        self.loading_bar_1 = LoadingBar(611519, 40, 39)
-        self.loading_bar_2 = LoadingBar(5095, 40, 39)
+        self.cardmarkings:CardMarkings = CardMarkings()  #Oznaczenia kart
+        self.loading_bar_1:LoadingBar = LoadingBar(611519, 40, 39)
+        self.loading_bar_2:LoadingBar = LoadingBar(5095, 40, 39)
         self.file = open("color.txt", "w")
 
-        self.cards_2d = []           # Przygotowanie listy do wstepnego przetwarzania
-        self.perm = []               # Lista na permutacje
-        self.perm_unsort = []        # Nieposortowana lista na permutacje
+        self.cards_2d:list = []           # Przygotowanie listy do wstepnego przetwarzania
+        self.perm:list = []               # Lista na permutacje
+        self.perm_unsort:list = []        # Nieposortowana lista na permutacje
 
-        self.high_card = None        # Zmienna na wysoka kself.arte
+        self.high_card:Card = None        # Zmienna na wysoka kself.arte
 
-        self.color_weight = 0        # Waga karty
-        self.color_sum = 0           # Suma ukladu
-        self.num_arr = 0             # Licznik
-        self.count = 0               # Licznik pomocniczy do funkcji temp_lambda()
-        self.count_1 = 0             # Licznik do loading_bar()
-        self.count_2 = 0             # Licznik do loading_bar()
-        self.c_idx2 = 0
+        self.color_weight:int = 0        # Waga karty
+        self.color_sum:int = 0           # Suma ukladu
+        self.num_arr:int = 0             # Licznik
+        self.count:int = 0               # Licznik pomocniczy do funkcji temp_lambda()
+        self.count_1:int = 0             # Licznik do loading_bar()
+        self.count_2:int = 0             # Licznik do loading_bar()
+        self.c_idx2:int = 0
 
-        self.random = False
-        self.example = False
+        self.random:bool = False
+        self.example:bool = False
 
     def set_cards(self, cards):
         self.perm = cards

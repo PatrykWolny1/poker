@@ -2,12 +2,13 @@ import random
 from itertools import chain
 
 class HelperArrangement(object):
-    indices_2d = []                     #Indeksy ukladow kart figury
-    indices_2d_color = []               # kolory
-    rand_int = 0
-    cards_all_permutations = []         #Tablica na permutacje - losowy uklad
-    weight_gen = []                     #Tablica na wagi kart
-    perm = []
+    indices_2d:list = []                     #Indeksy ukladow kart figury
+    indices_2d_color:list = []               # kolory
+    cards_all_permutations:list = []         #Tablica na permutacje - losowy uklad
+    weight_gen:list = []                     #Tablica na wagi kart
+    perm:list = []
+    
+    rand_int:int = 0
     
     def dim(self, a):
         #Jesli to nie jest lista to zwroc pusty zbior

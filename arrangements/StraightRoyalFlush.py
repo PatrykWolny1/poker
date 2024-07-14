@@ -7,21 +7,21 @@ from itertools import permutations
 class StraightRoyalFlush(HelperArrangement):
     
     def __init__(self):
-        self.cardmarkings = CardMarkings()  #Oznaczenia kart
-        self.loading_bar = LoadingBar(4799, 39, 40)
+        self.cardmarkings:CardMarkings = CardMarkings()  #Oznaczenia kart
+        self.loading_bar:LoadingBar = LoadingBar(4799, 39, 40)
         self.file = open("straight_royal_flush.txt", "w")
-        self.cards = []                     #Tablica na karty
-        self.perm = []                      #Tablica na permutacje do wag
+        self.cards:list = []                     #Tablica na karty
+        self.perm:list = []                      #Tablica na permutacje do wag
 
-        self.weight_arrangement = 0         #Tablica na wage ukladu
-        self.num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
-        self.c_idx2 = 0
-        self.rand_int = 0
+        self.weight_arrangement:int = 0         #Tablica na wage ukladu
+        self.num_arr:int = 0                    #Liczenie ukladow kart w kolejnych iteracjach
+        self.c_idx2:int = 0
+        self.rand_int:int = 0
 
-        self.random = False                 #Jesli jest losowanie ukladu
-        self.example = False                #Jesli jest recznie wpisany uklad
-        self.if_royal_flush = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
-        self.calc_weights = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
+        self.random:bool = False                 #Jesli jest losowanie ukladu
+        self.example:bool = False                #Jesli jest recznie wpisany uklad
+        self.if_royal_flush:bool = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
+        self.calc_weights:bool = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
 
     def set_cards(self, cards):
         self.perm = cards

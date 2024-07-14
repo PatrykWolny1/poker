@@ -11,23 +11,23 @@ class Carriage(HelperArrangement):
         self.loading_bar = LoadingBar(74880, 20, 19)
         self.file = open("carriage.txt", "w")
         
-        self.cards = []                      #Tablica do wstepnego przetwarzania
-        self.cards_2d = []                   #Tablica do wstepnego przetwarzania
-        self.cards_5 = []                    #Tablca do wstepnego przetwarzania
-        self.cards_perm = []                 #Tablica na permutacje
-        self.combs = []                      #Tablica na kombinacje
-        self.cards_perm = []                 #Tablica do obliczania wag w funkcji carriage()
+        self.cards:list = []                      #Tablica do wstepnego przetwarzania
+        self.cards_2d:list = []                   #Tablica do wstepnego przetwarzania
+        self.cards_5:list = []                    #Tablca do wstepnego przetwarzania
+        self.cards_perm:list = []                 #Tablica na permutacje
+        self.combs:list = []                      #Tablica na kombinacje
+        self.cards_perm:list = []                 #Tablica do obliczania wag w funkcji carriage()
         
-        self.rand_int = 0
-        self.num_arr = 0                     #Licznik ilosci ukladow
-        self.weight_arrangement_part = 0     #Waga ostatniej karty
-        self.weight_arrangement = 0          #Waga ukladu
-        self.c_idx6 = 0
+        self.rand_int:int = 0
+        self.num_arr:int = 0                     #Licznik ilosci ukladow
+        self.weight_arrangement_part:int = 0     #Waga ostatniej karty
+        self.weight_arrangement:int = 0          #Waga ukladu
+        self.c_idx6:int = 0
 
-        self.if_perm_weights = True
-        self.print_permutations = True       #Wyswietlanie wszystkich permutacji
-        self.example = False                 #Jesli jest recznie wpisany uklad
-        self.random = False                  #Jesli jest losowanie ukladu
+        self.if_perm_weights:bool = True
+        self.print_permutations:bool = True       #Wyswietlanie wszystkich permutacji
+        self.example:bool = False                 #Jesli jest recznie wpisany uklad
+        self.random:bool = False                  #Jesli jest losowanie ukladu
 
     #Funkcja dla przykladowego ukladu wpisanego recznie
     def set_cards(self, cards):

@@ -9,32 +9,19 @@ from random import choice
 import numpy as np
 
 class Croupier(object):
-    #cards = []
-    #players = []
-    #weights = []
-
-    #player = None
-    #data_frame_ml = DataFrameML()
-    #deck = Deck()
-
-    #weight = 0
-    #amount = 0
-    #idx_players = 0
-
-    #exchange = ''
 
     def __init__(self):
-        self.data_frame_ml = DataFrameML()
-        self.deck = Deck()
-        self.cards = []
-        self.players = []
-        self.weights = []
+        self.data_frame_ml:DataFrameML = DataFrameML()
+        self.deck:Deck = Deck()
+        self.cards:list = []
+        self.players:list = []
+        self.weights:list = []
         
-        self.weight = 0
-        self.amount = 0
-        self.idx_players = 0
+        self.weight:int = 0
+        self.amount:int = 0
+        self.idx_players:int = 0
         
-        self.exchange = ''
+        self.exchange:str = ''
     def play(self):        
         print()
         
@@ -48,9 +35,9 @@ class Croupier(object):
         # # Dla testowania wybranych uklaldow
         # self.set_cards()
         # player1 = Player(self.deck, cards = self.cards)
-        # player1.get_arrangements().set_cards(self.cards)
+        # player1.arrangements.set_cards(self.cards)
         # player1.print()
-        # player1.get_arrangements().check_arrangement()
+        # player1.arrangements.check_arrangement()
 
         # player1 = Player(self.deck)
         # player1.cards_permutations()
@@ -60,9 +47,9 @@ class Croupier(object):
         # #         player1.all_combs[idx][idx1].print()
         # #     print()
 
-        # player1.get_arrangements().print()
+        # player1.arrangements.print()
         # print()
-        # player1.get_arrangements().check_arrangement()
+        # player1.arrangements.check_arrangement()
 
         #########################################################
         #########################################################
@@ -88,9 +75,9 @@ class Croupier(object):
         
         for self.player in self.players:
             self.player.print(False)
-            self.player.get_arrangements().check_arrangement()
-            self.player.get_arrangements().set_weights()
-            #self.player.get_arrangements().init_data_frame_ml_after_ex()
+            self.player.arrangements.check_arrangement()
+            self.player.arrangements.set_weights()
+            #self.player.arrangements.init_data_frame_ml_after_ex()
         
         print("Wagi ukladow graczy: ", self.weights)
         self.compare_players_weights()
@@ -124,14 +111,14 @@ class Croupier(object):
     def cards_check_exchange_add_weights(self):
         for self.player in self.players:
             self.player.print(False)
-            self.player.get_arrangements().check_arrangement()
-            self.player.get_arrangements().set_weights()
-            self.player.get_arrangements().set_data_frame_ml(DataFrameML(self.player.get_arrangements().get_id(), 
-                                                                         self.player.get_arrangements().get_weight()))
+            self.player.arrangements.check_arrangement()
+            self.player.arrangements.set_weights()
+            self.player.arrangements.data_frame_ml = DataFrameML(self.player.arrangements.get_id(), 
+                                                                 self.player.arrangements.get_weight())
             print()
 
-            self.weights.append(self.player.get_arrangements().get_weight())
-            #print(self.player.get_arrangements().get_weight())
+            self.weights.append(self.player.arrangements.get_weight())
+            #print(self.player.arrangements.get_weight())
 
             #self.exchange = str(input("Wymiana kart [T/N]: ")).lower()
             #self.exchange = choice(['t', 'n'])
@@ -146,9 +133,9 @@ class Croupier(object):
             if self.exchange == 't':
                 self.cards_exchange()
             if self.exchange == 'n':
-                self.player.get_arrangements().get_data_frame_ml().set_exchange(self.exchange)
+                self.player.arrangements.data_frame_ml.exchange = self.exchange
 
-            [self.player.get_arrangements().get_data_frame_ml().set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
+            [self.player.arrangements.data_frame_ml.set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
 
             print()
             print("------------------------------------------------------------")
@@ -176,18 +163,18 @@ class Croupier(object):
         print(self.amount)
         self.deal_cards()
 
-        self.player.get_arrangements().set_cards(self.player.get_cards())
+        self.player.arrangements.cards = self.player.cards
 
         print()
         print("------------------------------------------------------------")
         print()
 
         self.player.print(True)
-        self.player.get_arrangements().check_arrangement()
+        self.player.arrangements.check_arrangement()
         
-        self.player.get_arrangements().set_weights()
-        self.player.get_arrangements().get_data_frame_ml().set_exchange(self.exchange)
-        self.player.get_arrangements().init_data_frame_ml_after_ex()
+        self.player.arrangements.set_weights()
+        self.player.arrangements.data_frame_ml.exchange = self.exchange
+        self.player.arrangements.init_data_frame_ml_after_ex()
 
     def compare_players_weights(self):
         max_weight = list(max(enumerate(self.weights), key = itemgetter(1)))
@@ -202,18 +189,18 @@ class Croupier(object):
 
             if self.player.index == max_weight[0]:
                 print("WYGRANA")
-                self.player.get_arrangements().set_cards(self.player.get_cards())
+                self.player.arrangements.set_cards(self.player.get_cards())
                 self.player.win_or_not = True
                 self.player.print(False)
-                self.player.get_arrangements().check_arrangement()
+                self.player.arrangements.check_arrangement()
             else:
                 self.player.win_or_not = False
 
-            self.player.get_arrangements().get_data_frame_ml().set_win_or_not(self.player.win_or_not)
+            self.player.arrangements.data_frame_ml.win_or_not = self.player.win_or_not
 
         for self.player in self.players:
-            self.player.get_arrangements().get_data_frame_ml().print()
-            self.player.get_arrangements().get_data_frame_ml().save_to_csv("poker_game.csv")
+            self.player.arrangements.get_data_frame_ml().print()
+            self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
 
 
 

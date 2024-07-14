@@ -3,9 +3,9 @@ from scipy.special import binom
 
 class OnePairProbability(ComputeObject):
     
-    def __init__(self, name: str = '', result_var: float = 0, data = None, nk: int = None):
+    def __init__(self, name: str = '', result_var: float = 0, data = None, nk: list = None):
         super().__init__(name, result_var, data)
-        self.nk = nk
+        self.nk:list = nk
         
     def computing(self):
         binom_list = []

@@ -7,30 +7,30 @@ from itertools import permutations, combinations
 class TwoPairs(HelperArrangement):
     
     def __init__(self):
-        self.cardmarkings = CardMarkings()  # Oznaczenia kart
-        self.limit_rand = 2                 # Ograniczenie dla liczby obliczen 143 - pelne obliczenie
-        self.one_iter = 103680
-        self.loading_bar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 54)   #14826239
-        self.high_card = Card()             # Wysoka karta
+        self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
+        self.limit_rand:int = 2                 # Ograniczenie dla liczby obliczen 143 - pelne obliczenie
+        self.one_iter:int = 103680
+        self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 54)   #14826239
+        self.high_card:Card = Card()             # Wysoka karta
         self.file = open("two_pairs.txt", "w")
 
-        self.cards_2d = []                  # Przygotowanie listy pod kombinacje i permutacje
-        self.cards_2d_acc = []              # Lista pomocnicza
-        self.cards_begin = []               # Lista pomocnicza
-        self.cards_comb = []                # Lista na kombinacje
-        self.perm = []                      # Lista na permutacje
+        self.cards_2d:list = []                  # Przygotowanie listy pod kombinacje i permutacje
+        self.cards_2d_acc:list = []              # Lista pomocnicza
+        self.cards_begin:list = []               # Lista pomocnicza
+        self.cards_comb:list = []                # Lista na kombinacje
+        self.perm:list = []                      # Lista na permutacje
 
-        self.c_idx1 = 0
-        self.two_pairs_sum = 0              # Suma wag
-        self.two_pairs_part_sum = 0         # Waga wysokiej karty
-        self.count = 0                      # Licznik do funkcji temp_lambda()
-        self.count_bar = 0                  # Licznik do obiektu LoadingBar
-        self.num_arr = 0                    # Licznik ukladow
-        self.idx_high_c = 0                 # Zmienna pomocnicza do dodania kolumny z wysoka karta
-        self.rand_iter = 0                  # Ile iteracji zostalo wykonanych w celu ograniczenia liczby obliczen
+        self.c_idx1:int = 0
+        self.two_pairs_sum:int = 0              # Suma wag
+        self.two_pairs_part_sum:int = 0         # Waga wysokiej karty
+        self.count:int = 0                      # Licznik do funkcji temp_lambda()
+        self.count_bar:int = 0                  # Licznik do obiektu LoadingBar
+        self.num_arr:int = 0                    # Licznik ukladow
+        self.idx_high_c:int = 0                 # Zmienna pomocnicza do dodania kolumny z wysoka karta
+        self.rand_iter:int = 0                  # Ile iteracji zostalo wykonanych w celu ograniczenia liczby obliczen
 
-        self.random = False
-        self.example = False
+        self.random:bool = False
+        self.example:bool = False
 
     def set_cards(self, cards):
         self.perm = cards

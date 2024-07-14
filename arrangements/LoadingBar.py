@@ -1,19 +1,12 @@
 class LoadingBar(object):
-    # loading_bar()
-    step_p = True
-    str_1 = ""
-    n_bar = 0               # Ilosc ukladow (trzeba uruchomic program i policzyc)
-    step_bar = 0            # Ilosc punktow ladowania (40 - dzielnik)
-    step_bar_finished = 0   # Ilosc zaladowanych punktow (co jeden) [.####][..###]
-    count_bar = 0
 
     def __init__(self, n_bar, points_step, points_finished):
-        self.step_p = True
-        self.str_1 = ""
-        self.n_bar = n_bar
-        self.step_bar = int(self.n_bar / points_step)
-        self.step_bar_finished = int(self.n_bar / points_finished)
-        self.count_bar = 0
+        self.step_p:bool = True
+        self.str_1:str = ""
+        self.n_bar:int = n_bar                                          # Ilosc ukladow (trzeba uruchomic program i policzyc)
+        self.step_bar:int = int(self.n_bar / points_step)               # Ilosc punktow ladowania (40 - dzielnik)
+        self.step_bar_finished:int = int(self.n_bar / points_finished)  # Ilosc zaladowanych punktow (co jeden) [.####][..###]
+        self.count_bar:int = 0
 
     def set_count_bar(self, count_bar):
         self.count_bar = count_bar

@@ -7,21 +7,21 @@ from itertools import permutations, combinations
 class ThreeOfAKind(HelperArrangement):
     
     def __init__(self):
-        self.cardmarkings = CardMarkings()  # Oznaczenia kart
-        self.high_card = Card()             # Wysoka karta (Card)
-        self.loading_bar = LoadingBar(6589440, 40, 39)
+        self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
+        self.high_card:Card = Card()             # Wysoka karta (Card)
+        self.loading_bar:LoadingBar = LoadingBar(6589440, 40, 39)
         self.file = open("three_of_a_kind.txt", "w")
 
-        self.perm = []                      # Lista na permutacje
-        self.weight_arrangement_part = []   # Wagi wysokich kart
+        self.perm:list = []                      # Lista na permutacje
+        self.weight_arrangement_part:list = []   # Wagi wysokich kart
 
-        self.weight_arrangement = 0         # Waga ukladu
-        self.c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
-        self.num_arr = 0                    # Numer ukladu
-        self.rand_int = 0
+        self.weight_arrangement:int = 0         # Waga ukladu
+        self.c_idx1:int = 0                     # Zapisywanie aktualnego indeksu z petli for
+        self.num_arr:int = 0                    # Numer ukladu
+        self.rand_int:int = 0
 
-        self.random = False                 # Czy uklad ma byc wylosowany
-        self.example = False                # Czy ma byc pokazany przykladowy uklad
+        self.random:bool = False                 # Czy uklad ma byc wylosowany
+        self.example:bool = False                # Czy ma byc pokazany przykladowy uklad
     
     def set_cards(self, cards):
         self.perm = cards

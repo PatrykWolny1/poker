@@ -6,13 +6,13 @@ class Player(object):
         
     def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
         deck.shuffling()
-        self.cards_exchanged = []
-        self.nick = nick
-        self.index = index
-        self.arrangements = Arrangements()
+        self.cards_exchanged:list = []
+        self.nick:str = nick
+        self.index:int = index
+        self.arrangements:Arrangements = Arrangements()
 
         if if_deck == True:
-            self.cards = []
+            self.cards:list = []
 
             for idx in range(5):
                 self.cards.append(deck.deal())
@@ -122,10 +122,6 @@ class Player(object):
     
     def get_rand_int(self):
         return self.rand_int
-    
-    # @property
-    # def cards_exchanged(self):
-    #     return self.cards_exchanged
 
     def set_cards(self, cards):
         self.cards = cards

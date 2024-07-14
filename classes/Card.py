@@ -1,9 +1,9 @@
 class Card(object):
 
     def __init__(self, name:str = 'A', color:str = 'Ka'):
-        self.markings = (['2', 1], ['3', 2], ['4', 3], ['5', 4], ['6', 5], ['7', 6], ['8', 7],
+        self.markings:dict = (['2', 1], ['3', 2], ['4', 3], ['5', 4], ['6', 5], ['7', 6], ['8', 7],
                     ['9', 8], ['10', 9], ['J', 10], ['Q', 11], ['K', 12], ['A', 13])
-        self.weight = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)      
+        self.weight:tuple = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13)      
       
         #Dodawanie wag i nazw
 
@@ -12,8 +12,8 @@ class Card(object):
                 if name == self.markings[idx1][0]:
                     self.weight = self.markings[idx1][1]
                     #self.name_weight = self.markings[idx1][1] + 1
-        self.name = name
-        self.color = color
+        self.name:str = name
+        self.color:str = color
 
     def __lt__(self, other):
         return self.weight < other.weight

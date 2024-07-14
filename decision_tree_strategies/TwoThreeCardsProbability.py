@@ -4,8 +4,8 @@ class TwoThreeCardsProbability(ComputeObject):
     
     def __init__(self, name: str = '', threshold: float = 0, result_var: float = 0, data = None, p1: float = 0.2):
         super().__init__(name, result_var, data)
-        self.threshold = threshold
-        self.p1 = p1
+        self.threshold:int = threshold
+        self.p1:float = p1
     def computing(self):
         count_1 = 0
 

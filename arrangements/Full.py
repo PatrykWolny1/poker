@@ -8,24 +8,25 @@ import itertools
 class Full(HelperArrangement):
     
     def __init__(self):
-        self.cardmarkings = CardMarkings()   #Oznaczenia kart
-        self.loading_bar = LoadingBar(449279, 40, 39)
+        self.cardmarkings:CardMarkings = CardMarkings()   #Oznaczenia kart
+        self.loading_bar:LoadingBar = LoadingBar(449279, 40, 39)
         self.file = open('full.txt', 'w')
         
-        self.cards = []                      #Tablica na karty
-        self.cards_2d = []                   #Tablica do przetwarzania ukladow
-        self.cards_1d = []                   #Tablica do przetwarzania ukladow
-        self.cards_1d_comb = []              #Tablica do przetwarzania ukladow kombinacje
-        self.cards_2d_5 = []                 #Tablica do wyswietlania (testy)
-        self.num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
-        self.c_idx6 = 0
-        self.rand_int = 0
-        self.perm = []
+        self.cards:list = []                      #Tablica na karty
+        self.cards_2d:list = []                   #Tablica do przetwarzania ukladow
+        self.cards_1d:list = []                   #Tablica do przetwarzania ukladow
+        self.cards_1d_comb:list = []              #Tablica do przetwarzania ukladow kombinacje
+        self.cards_2d_5:list = []                 #Tablica do wyswietlania (testy)
+        self.perm:list = []
 
-        self.if_perm_weights = True
-        self.random = False                  #Jesli jest losowanie ukladu
-        self.example = False                 #Jesli jest recznie wpisany uklad
-        self.print_permutations = True       #Czy wyswietlic wszystkie permutacje
+        self.num_arr:int = 0                     #Liczenie ukladow kart w kolejnych iteracjach
+        self.c_idx6:int  = 0
+        self.rand_int:int  = 0
+
+        self.if_perm_weights:bool = True
+        self.random:bool = False                  #Jesli jest losowanie ukladu
+        self.example:bool = False                 #Jesli jest recznie wpisany uklad
+        self.print_permutations:bool = True       #Czy wyswietlic wszystkie permutacje
     
     #tabnine: document
     def set_cards(self, cards):

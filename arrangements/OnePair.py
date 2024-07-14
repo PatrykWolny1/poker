@@ -7,23 +7,23 @@ from itertools import permutations, combinations
 class OnePair(HelperArrangement):
     
     def __init__(self):
-        self.cardmarkings = CardMarkings()  # Oznaczenia kart
-        self.high_card = Card()             # Wysoka karta
-        self.limit_rand = 1000              # Ograniczenie dla liczby obliczen
-        self.one_iter = 120
-        self.loading_bar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
+        self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
+        self.high_card:Card = Card()             # Wysoka karta
+        self.limit_rand:int = 1000              # Ograniczenie dla liczby obliczen
+        self.one_iter:int = 120
+        self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
         self.file = open("one_pair.txt", "w")
 
-        self.perm = []                      # Lista na permutacje
-        self.weight_arrangement_part = []   # Lista na wagi pozostalych kart
+        self.perm:list = []                      # Lista na permutacje
+        self.weight_arrangement_part:list  = []   # Lista na wagi pozostalych kart
 
-        self.weight_arrangement = 0         # Waga ukladu
-        self.c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
-        self.num_arr = 0                    # Numer ukladu
-        self.rand_iter = 0
+        self.weight_arrangement:int = 0         # Waga ukladu
+        self.c_idx1:int = 0                     # Zapisywanie aktualnego indeksu z petli for
+        self.num_arr:int = 0                    # Numer ukladu
+        self.rand_iter:int = 0
 
-        self.random = False
-        self.example = False
+        self.random:bool = False
+        self.example:bool = False
 
     def set_cards(self, cards):
         self.perm = cards
