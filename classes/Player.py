@@ -36,7 +36,7 @@ class Player(object):
             if self.amount != 5:
                 #which_card = input("Ktora karta[1-5]: ")
                 which_card = choice(list(range(1, len(self.cards) + 1)))
-
+                #which_card = 
                 print()
 
                 print("Ktora karta: ", which_card)

@@ -11,8 +11,9 @@ class TwoThreeCardsProbability(ComputeObject):
 
         for idx in range(0, len(self.data)):
             if self.data[idx] < self.threshold:
-                self.data[idx] = None
                 count_1 += 1
+            else:
+                self.data[idx] = None
         
         if count_1 == 2 or count_1 == 1:
             self.p1 = 0
@@ -24,3 +25,6 @@ class TwoThreeCardsProbability(ComputeObject):
           
     def result(self):
         return self.result_var
+    
+    def cards_to_exchange(self, card):
+        return self.cards_to_exchange(self.data(next) is not None)

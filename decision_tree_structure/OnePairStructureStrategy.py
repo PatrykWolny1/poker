@@ -12,9 +12,11 @@ class OnePairStructureStrategy(object):
         self.cards = cards
         self.cards_rest = self.cards[2:6]
         self.nk = [[13, 1], [4, 2], [47, 2]]
-        
-    def show_tree(self, visited=False, amount=0, exchange=None): 
+
+    def set_root(self, visited=False, amount=None, exchange=None):
         self.root = Node(name="ONE PAIR", visited=visited, amount=amount, exchange=exchange)               
+
+    def build_tree(self): 
         
         computeobject_1 = OnePairProbability("One Pair Probability", 
                                              data=self.cards_rest.copy(), nk=self.nk)
@@ -51,7 +53,5 @@ class OnePairStructureStrategy(object):
         internal_nodes = [InternalNode("Yes (How many cards?)", branches, leaf_nodes)]
         
         self.root.internal_nodes.append(internal_nodes)
+        
     
-    @property
-    def root_object(self):
-        return self.root

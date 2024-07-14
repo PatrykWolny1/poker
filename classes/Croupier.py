@@ -25,8 +25,8 @@ class Croupier(object):
     def play(self):        
         print()
         
-        # self.set_cards()
-        # self.set_players_nicknames()
+        self.set_cards()
+        self.set_players_nicknames()
             
         print()
         
@@ -39,57 +39,59 @@ class Croupier(object):
         # player1.print()
         # player1.arrangements.check_arrangement()
 
-        player1 = Player(deck=self.deck, perm_logic=True)
-        player1.cards_permutations()
+        # player1 = Player(deck=self.deck, perm_logic=True)
+        # player1.cards_permutations()
 
-        # for idx in range(0, len(player1.all_combs)):
-        #     for idx1 in range(0, len(player1.all_combs[idx])):
-        #         player1.all_combs[idx][idx1].print()
-        #     print()
+        # # for idx in range(0, len(player1.all_combs)):
+        # #     for idx1 in range(0, len(player1.all_combs[idx])):
+        # #         player1.all_combs[idx][idx1].print()
+        # #     print()
 
-        player1.arrangements.print()
+        # player1.arrangements.print()
+        # print()
+        # player1.arrangements.check_arrangement()
+
+        #########################################################
+        #########################################################
+        self.weights_cards = []
+        for idx in range(0, len(self.cards)):
+            self.weights_cards.append(self.cards[idx].weight)
+            
+            
+        #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
+        
+        self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights_cards)
+        self.one_pair_strategy.set_root(visited=False)
+        self.one_pair_strategy.build_tree()
+        print(str(self.one_pair_strategy.root))
+
+        #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
+        
+        self.cards_check_exchange_add_weights()
+        
         print()
-        player1.arrangements.check_arrangement()
-
-        #########################################################
-        #########################################################
-        # self.weights_cards = []
-        # for idx in range(0, len(self.cards)):
-        #     self.weights_cards.append(self.cards[idx].weight)
-            
-            
-        # #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
+        print("------------------------------------------------------------")
+        print("------------------------------------------------------------")
+        print()
         
-        # self.root = OnePairStructureStrategy(cards=self.weights_cards)
-        # self.root.show_tree()
-        # print(str(self.root.root_object))
-
-        # #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
+        for self.player in self.players:
+            self.player.print(False)
+            self.player.arrangements.check_arrangement()
+            self.player.arrangements.set_weights()
         
-        # self.cards_check_exchange_add_weights()
+        print("Wagi ukladow graczy: ", self.weights)
+        self.compare_players_weights()
         
-        # print()
-        # print("------------------------------------------------------------")
-        # print("------------------------------------------------------------")
-        # print()
-        
-        # for self.player in self.players:
-        #     self.player.print(False)
-        #     self.player.arrangements.check_arrangement()
-        #     self.player.arrangements.set_weights()
-        
-        # print("Wagi ukladow graczy: ", self.weights)
-        # self.compare_players_weights()
-        
-        # print(self.amount, self.exchange)
-        # self.root.show_tree(True, self.amount, self.exchange)
-        # print(str(self.root.root_object))
+        print(self.amount, self.exchange)
+        self.one_pair_strategy.set_root(visited=True, amount=self.amount, exchange=self.exchange)
+        self.one_pair_strategy.build_tree()
+        print(str(self.one_pair_strategy.root))
 
     def set_cards(self):
         self.cards = [Card("2", "Ka"),
-                      Card("2", "Pi"),
+                      Card("5", "Pi"),
                       Card("9", "Ka"),
-                      Card("5", "Tr"),
+                      Card("2", "Tr"),
                       Card("7", "Ki")]
 
     def set_players_nicknames(self):
@@ -103,7 +105,8 @@ class Croupier(object):
             if idx == 1:                                            #carriage lub full 
                 nick = 'Adam'
                 
-            self.players.append(Player(deck=self.deck, nick=nick, index=idx, if_deck=False, cards=self.cards))
+            self.players.append(Player(deck=self.deck, nick=nick, index=idx, 
+                                       if_deck=False, cards=self.cards, perm_logic=False))
             
         # self.deck.print()
 
@@ -123,8 +126,8 @@ class Croupier(object):
             #self.exchange = choice(['t', 'n'])
             
             
-            self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.root.root_object.internal_nodes[0][0].branches[0]),
-                                                                    float(self.root.root_object.internal_nodes[0][0].branches[1])])    
+            self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.one_pair_strategy.root.internal_nodes[0][0].branches[0]),
+                                                                    float(self.one_pair_strategy.root.internal_nodes[0][0].branches[1])])    
             print(self.exchange)
             #self.exchange = 't'
             print("Wymiana kart: ", self.exchange)
@@ -148,8 +151,8 @@ class Croupier(object):
         #self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
         #self.amount = choice(list(range(0, 6)))
         
-        self.amount = np.random.choice([2, 3], size=1, p=[float(self.root.root_object.internal_nodes[1][0].branches[0]),
-                                                          float(self.root.root_object.internal_nodes[1][0].branches[1])])    
+        self.amount = np.random.choice([2, 3], size=1, p=[float(self.one_pair_strategy.root.internal_nodes[1][0].branches[0]),
+                                                          float(self.one_pair_strategy.root.internal_nodes[1][0].branches[1])])    
           
         self.amount = int(self.amount)
         print("Ile kart do wymiany: ", self.amount)
@@ -158,7 +161,7 @@ class Croupier(object):
         if self.amount == -1:
             return
 
-        self.amount = self.player.return_to_croupier(self.amount)
+        self.amount = self.player.return_to_croupier(self.amount, )
         print(self.amount)
         self.deal_cards()
 
