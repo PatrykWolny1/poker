@@ -12,7 +12,7 @@ class OnePair(HelperArrangement):
         self.limit_rand:int = 1000              # Ograniczenie dla liczby obliczen
         self.one_iter:int = 120
         self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
-        self.file = open("one_pair.txt", "w")
+        self.file = open("permutations_data/one_pair.txt", "w")
 
         self.perm:list = []                      # Lista na permutacje
         self.weight_arrangement_part:list  = []   # Lista na wagi pozostalych kart
@@ -171,13 +171,13 @@ class OnePair(HelperArrangement):
                 self.print_arrengement()
                 
                 for idx in range(0, len(self.perm[self.c_idx1])):
-                    with open("one_pair.txt", "a") as file:
+                    with open("permutations_data/one_pair.txt", "a") as file:
                         file.write(self.perm[self.c_idx1][idx].print_str() + " ")
                         
-                with open("one_pair.txt", "a") as file:
+                with open("permutations_data/one_pair.txt", "a") as file:
                     file.write("\n")
                 
-                with open("one_pair.txt", "a") as file:
+                with open("permutations_data/one_pair.txt", "a") as file:
                     file.write("Jedna Para: " + str(self.weight_arrangement) + " Wysoka karta: " +
                                     self.high_card.print_str() + " Numer: " + str(self.rand_int) + "\n")
                 

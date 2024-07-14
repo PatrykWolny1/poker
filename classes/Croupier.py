@@ -25,8 +25,8 @@ class Croupier(object):
     def play(self):        
         print()
         
-        self.set_cards()
-        self.set_players_nicknames()
+        # self.set_cards()
+        # self.set_players_nicknames()
             
         print()
         
@@ -39,52 +39,51 @@ class Croupier(object):
         # player1.print()
         # player1.arrangements.check_arrangement()
 
-        # player1 = Player(self.deck)
-        # player1.cards_permutations()
+        player1 = Player(deck=self.deck, perm_logic=True)
+        player1.cards_permutations()
 
-        # # for idx in range(0, len(player1.all_combs)):
-        # #     for idx1 in range(0, len(player1.all_combs[idx])):
-        # #         player1.all_combs[idx][idx1].print()
-        # #     print()
+        # for idx in range(0, len(player1.all_combs)):
+        #     for idx1 in range(0, len(player1.all_combs[idx])):
+        #         player1.all_combs[idx][idx1].print()
+        #     print()
 
-        # player1.arrangements.print()
+        player1.arrangements.print()
+        print()
+        player1.arrangements.check_arrangement()
+
+        #########################################################
+        #########################################################
+        # self.weights_cards = []
+        # for idx in range(0, len(self.cards)):
+        #     self.weights_cards.append(self.cards[idx].weight)
+            
+            
+        # #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
+        
+        # self.root = OnePairStructureStrategy(cards=self.weights_cards)
+        # self.root.show_tree()
+        # print(str(self.root.root_object))
+
+        # #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
+        
+        # self.cards_check_exchange_add_weights()
+        
         # print()
-        # player1.arrangements.check_arrangement()
-
-        #########################################################
-        #########################################################
-        self.weights_cards = []
-        for idx in range(0, len(self.cards)):
-            self.weights_cards.append(self.cards[idx].weight)
-            
-            
-        #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
+        # print("------------------------------------------------------------")
+        # print("------------------------------------------------------------")
+        # print()
         
-        self.root = OnePairStructureStrategy(cards=self.weights_cards)
-        self.root.show_tree()
-        print(str(self.root.root_object))
-
-        #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
+        # for self.player in self.players:
+        #     self.player.print(False)
+        #     self.player.arrangements.check_arrangement()
+        #     self.player.arrangements.set_weights()
         
-        self.cards_check_exchange_add_weights()
+        # print("Wagi ukladow graczy: ", self.weights)
+        # self.compare_players_weights()
         
-        print()
-        print("------------------------------------------------------------")
-        print("------------------------------------------------------------")
-        print()
-        
-        for self.player in self.players:
-            self.player.print(False)
-            self.player.arrangements.check_arrangement()
-            self.player.arrangements.set_weights()
-            #self.player.arrangements.init_data_frame_ml_after_ex()
-        
-        print("Wagi ukladow graczy: ", self.weights)
-        self.compare_players_weights()
-        
-        print(self.amount, self.exchange)
-        self.root.show_tree(True, self.amount, self.exchange)
-        print(str(self.root.root_object))
+        # print(self.amount, self.exchange)
+        # self.root.show_tree(True, self.amount, self.exchange)
+        # print(str(self.root.root_object))
 
     def set_cards(self):
         self.cards = [Card("2", "Ka"),

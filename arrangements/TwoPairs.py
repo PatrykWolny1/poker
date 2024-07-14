@@ -12,7 +12,7 @@ class TwoPairs(HelperArrangement):
         self.one_iter:int = 103680
         self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 54)   #14826239
         self.high_card:Card = Card()             # Wysoka karta
-        self.file = open("two_pairs.txt", "w")
+        self.file = open("permutations_data/two_pairs.txt", "w")
 
         self.cards_2d:list = []                  # Przygotowanie listy pod kombinacje i permutacje
         self.cards_2d_acc:list = []              # Lista pomocnicza
@@ -171,13 +171,13 @@ class TwoPairs(HelperArrangement):
             self.print_arrengement()
             
             for idx in range(0, len(self.perm[self.c_idx1])):
-                with open("two_pairs.txt", "a") as file:
+                with open("permutations_data/two_pairs.txt", "a") as file:
                     file.write(self.perm[self.c_idx1][idx].print_str() + " ")
                     
-            with open("two_pairs.txt", "a") as file:
+            with open("permutations_data/two_pairs.txt", "a") as file:
                 file.write("\n")
             
-            with open("two_pairs.txt", "a") as file:
+            with open("permutations_data/two_pairs.txt", "a") as file:
                 file.write("Dwie pary: " + str(self.two_pairs_sum) + 
                            " Wysoka Karta: " + self.high_card.print_str() + " " +
                            " Numer: " + str(self.rand_int) + "\n")

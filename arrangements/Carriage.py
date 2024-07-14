@@ -9,7 +9,7 @@ class Carriage(HelperArrangement):
     def __init__(self):
         self.cardmarkings = CardMarkings()   #Oznaczenia kart
         self.loading_bar = LoadingBar(74880, 20, 19)
-        self.file = open("carriage.txt", "w")
+        self.file = open("permutations_data/carriage.txt", "w")
         
         self.cards:list = []                      #Tablica do wstepnego przetwarzania
         self.cards_2d:list = []                   #Tablica do wstepnego przetwarzania
@@ -108,12 +108,12 @@ class Carriage(HelperArrangement):
                     self.print_arrengement()
                     
                     for idx in range(0, len(self.cards_perm[self.c_idx6])):
-                        with open("carriage.txt", "a") as file:
+                        with open("permutations_data/carriage.txt", "a") as file:
                             file.write(self.cards_perm[self.c_idx6][idx].print_str() + " ")
-                    with open("carriage.txt", "a") as file:
+                    with open("permutations_data/carriage.txt", "a") as file:
                         file.write("\n")
                     
-                    with open("carriage.txt", "a") as file:
+                    with open("permutations_data/carriage.txt", "a") as file:
                         file.write("Kareta: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                     
                 self.num_arr += 1

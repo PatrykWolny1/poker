@@ -4,24 +4,24 @@ from random import choice
 
 class Player(object):
         
-    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = []):
+    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = [], perm_logic = True):
         deck.shuffling()
         self.cards_exchanged:list = []
         self.nick:str = nick
         self.index:int = index
         self.arrangements:Arrangements = Arrangements()
 
-        if if_deck == True:
+        if if_deck == True and perm_logic == False:
             self.cards:list = []
 
             for idx in range(5):
                 self.cards.append(deck.deal())
 
             self.arrangements.set_cards(self.cards)
-        else:
+        elif perm_logic == False:
             self.cards = cards
             self.arrangements.set_cards(self.cards)
-
+        
     def return_to_croupier(self, amount = 0):
         self.amount = amount
         temp = self.cards.copy()

@@ -10,7 +10,7 @@ class ThreeOfAKind(HelperArrangement):
         self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
         self.high_card:Card = Card()             # Wysoka karta (Card)
         self.loading_bar:LoadingBar = LoadingBar(6589440, 40, 39)
-        self.file = open("three_of_a_kind.txt", "w")
+        self.file = open("permutations_data/three_of_a_kind.txt", "w")
 
         self.perm:list = []                      # Lista na permutacje
         self.weight_arrangement_part:list = []   # Wagi wysokich kart
@@ -139,12 +139,12 @@ class ThreeOfAKind(HelperArrangement):
                 self.print_arrengement()
                 
                 for idx in range(0, len(self.perm[self.c_idx1])):
-                    with open("three_of_a_kind.txt", "a") as file:
+                    with open("permutations_data/three_of_a_kind.txt", "a") as file:
                         file.write(self.perm[self.c_idx1][idx].print_str() + " ")
-                with open("three_of_a_kind.txt", "a") as file:
+                with open("permutations_data/three_of_a_kind.txt", "a") as file:
                     file.write("\n")
                 
-                with open("three_of_a_kind.txt", "a") as file:
+                with open("permutations_data/three_of_a_kind.txt", "a") as file:
                     file.write("Trojka: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
             self.num_arr += 1

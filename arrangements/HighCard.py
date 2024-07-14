@@ -12,7 +12,7 @@ class HighCard(HelperArrangement):
         self.limit_rand:int = 100000            # Liczba kombinacji kart -> pomnozone przez 120 daje liczbe permutacji
         self.one_iter:int = 120    
         self.loading_bar:LoadingBar = LoadingBar(self.limit_rand * self.one_iter - 1, 40, 40)   # 156 304 800 permutacji           
-        self.file = open("high_card.txt", "w")
+        self.file = open("permutations_data/high_card.txt", "w")
 
         self.perm:list = []                       # Lista na karty gracza
         self.weight_arrangement_part:list = []    # Lista na wagi wszystkich kart
@@ -127,13 +127,13 @@ class HighCard(HelperArrangement):
             self.print_arrengement()
             
             for idx in range(0, len(self.perm[self.c_idx1])):
-                with open("high_card.txt", "a") as file:
+                with open("permutations_data/high_card.txt", "a") as file:
                     file.write(self.perm[self.c_idx1][idx].print_str() + " ")
                     
-            with open("high_card.txt", "a") as file:
+            with open("permutations_data/high_card.txt", "a") as file:
                 file.write("\n")
             
-            with open("high_card.txt", "a") as file:
+            with open("permutations_data/high_card.txt", "a") as file:
                 file.write("Wysoka karta: " + str(self.weight_arrangement) + " Wysoka karta: " +
                             self.high_card_1.print_str() + " Numer: " + str(self.rand_int) + "\n")
                         

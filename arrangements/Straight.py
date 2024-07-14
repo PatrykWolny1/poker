@@ -9,7 +9,7 @@ class Straight(HelperArrangement):
     def __init__(self):
         self.cardmarkings:CardMarkings = CardMarkings()   #Oznaczenia kart
         self.loading_bar:LoadingBar = LoadingBar(1223999, 40, 39)
-        self.file = open("straight.txt", "w")
+        self.file = open("permutations_data/straight.txt", "w")
 
         self.cards:list = []                      #Tablica na karty
         self.perm:list  = []                       #Tablica na permutacje do wag - posortowana
@@ -146,15 +146,15 @@ class Straight(HelperArrangement):
                                                
                 
                     if self.example == True:
-                        self.print_arrengement()
-                
+                        #self.print_arrengement()
+
                         for idx in range(0, len(self.perm[self.c_idx6])):
-                            with open('straight.txt', 'a') as file:
+                            with open("permutations_data/straight.txt", 'a') as file:
                                 file.write(self.perm[self.c_idx6][idx].print_str() + " ")
-                        with open('straight.txt', 'a') as file:
+                        with open("permutations_data/straight.txt", 'a') as file:
                             file.write("\n")
                                         
-                        with open('straight.txt', 'a') as file:
+                        with open("permutations_data/straight.txt", 'a') as file:
                             file.write("Strit: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
 
                     self.num_arr += 1

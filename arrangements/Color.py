@@ -12,7 +12,7 @@ class Color(HelperArrangement):
         self.cardmarkings:CardMarkings = CardMarkings()  #Oznaczenia kart
         self.loading_bar_1:LoadingBar = LoadingBar(611519, 40, 39)
         self.loading_bar_2:LoadingBar = LoadingBar(5095, 40, 39)
-        self.file = open("color.txt", "w")
+        self.file = open("permutations_data/color.txt", "w")
 
         self.cards_2d:list = []           # Przygotowanie listy do wstepnego przetwarzania
         self.perm:list = []               # Lista na permutacje
@@ -200,12 +200,12 @@ class Color(HelperArrangement):
                 if self.example == True:
                     self.print_arrengement()
                     for idx in range(0, len(self.perm[self.c_idx2])):
-                        with open("color.txt", "a") as file:
+                        with open("permutations_data/color.txt", "a") as file:
                             file.write(self.perm[self.c_idx2][idx].print_str() + " ")
-                    with open("color.txt", "a") as file:
+                    with open("permutations_data/color.txt", "a") as file:
                         file.write("\n")
                     
-                    with open("color.txt", "a") as file:
+                    with open("permutations_data/color.txt", "a") as file:
                         file.write("Kareta: " + str(self.color_sum) + " Numer: " + str(self.rand_int) + "\n")
                     
                 

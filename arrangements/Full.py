@@ -10,7 +10,7 @@ class Full(HelperArrangement):
     def __init__(self):
         self.cardmarkings:CardMarkings = CardMarkings()   #Oznaczenia kart
         self.loading_bar:LoadingBar = LoadingBar(449279, 40, 39)
-        self.file = open('full.txt', 'w')
+        self.file = open("permutations_data/full.txt", 'w')
         
         self.cards:list = []                      #Tablica na karty
         self.cards_2d:list = []                   #Tablica do przetwarzania ukladow
@@ -102,12 +102,12 @@ class Full(HelperArrangement):
                 self.print_arrengement()
                 
                 for idx in range(0, len(self.perm[self.c_idx6])):
-                    with open('full.txt', 'a') as file:
+                    with open("permutations_data/full.txt", 'a') as file:
                         file.write(self.perm[self.c_idx6][idx].print_str() + " ")
-                with open('full.txt', 'a') as file:
+                with open("permutations_data/full.txt", 'a') as file:
                     file.write("\n")
                     
-                with open('full.txt', 'a') as file:
+                with open("permutations_data/full.txt", 'a') as file:
                     file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
             return 6
@@ -257,10 +257,10 @@ class Full(HelperArrangement):
                                 if self.random == False:
                                     for idx7 in range(0, len(self.perm[idx6])):
                                         #self.perm[idx6][idx7].print()
-                                        # with open("full.txt", "a") as f:
+                                        # with open("permutations_data/full.txt", "a") as f:
                                         self.file.write(self.perm[idx6][idx7].print_str() + " ")
                                     #print()
-                                    # with open("full.txt", "a") as f:
+                                    # with open("permutations_data/full.txt", "a") as f:
                                     self.file.write("\n")
             
                                 self.loading_bar.set_count_bar(self.num_arr)
