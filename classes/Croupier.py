@@ -55,18 +55,29 @@ class Croupier(object):
         #########################################################
         
         self.weights_cards = []
-   
+        
+        self.one_pair_strategy = []
+        self.num = 0
+        self.amount_list = []
+        self.exchange_list = []
+        
         for self.player in self.players:
             self.player.print(False)
             self.player.arrangements.check_arrangement()
             self.player.arrangements.set_weights()
 
-        self.weights_cards = self.players[0].arrangements.get_part_weight()
+            self.weights_cards.append(self.player.arrangements.get_part_weight())
+
+            self.one_pair_strategy.append(OnePairStructureStrategy(cards=self.weights_cards[self.num]))
+            
+            self.num += 1
         
-        self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights_cards)
-        self.one_pair_strategy.set_root(visited=False)
-        self.one_pair_strategy.build_tree()
-        print(str(self.one_pair_strategy.root))
+        self.num = 0
+        
+        for strategy in self.one_pair_strategy:
+            strategy.set_root(visited=False)
+            strategy.build_tree()
+            print(str(strategy.root))
 
         
         self.cards_check_exchange_add_weights()
@@ -84,10 +95,24 @@ class Croupier(object):
         print("Wagi ukladow graczy: ", self.weights)
         self.compare_players_weights()
         
-        print(self.amount, self.exchange)
-        self.one_pair_strategy.set_root(visited=True, amount=self.amount, exchange=self.exchange)
-        self.one_pair_strategy.build_tree()
-        print(str(self.one_pair_strategy.root))
+        # self.one_pair_strategy[self.num].set_root(visited=True, amount=self.amount, exchange=self.exchange)
+        # self.one_pair_strategy.build_tree()
+        # print(str(self.one_pair_strategy.root))
+        
+        num_1 = 0
+        
+        print("-"*100)
+        #for amount, exchange in self.amount_list, self.exchange_list:
+        for strategy in self.one_pair_strategy:
+            print("Liczba wymienionych kart: " + str(self.amount_list[num_1]) 
+                  + "\nCzy wymienic? " + str(self.exchange_list[num_1]))
+            print("\n")
+            strategy.set_root(visited=True, amount=self.amount_list[num_1], exchange=self.exchange_list[num_1])
+            strategy.build_tree()
+            print(str(strategy.root))
+            print("\n")
+            print("-"*100)
+            num_1 += 1
 
     def set_cards(self):
         self.cards = [Card("2", "Ka"),
@@ -127,20 +152,28 @@ class Croupier(object):
             #self.exchange = choice(['t', 'n'])
             
             
-            self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.one_pair_strategy.root.internal_nodes[0][0].branches[0]),
-                                                                    float(self.one_pair_strategy.root.internal_nodes[0][0].branches[1])])    
+            self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[0]),
+                                                                    float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[1])])    
+            
+            self.exchange_list.append(self.exchange)
+            
             print(self.exchange)
             #self.exchange = 't'
-            print("Wymiana kart: ", self.exchange)
+            print("Wymiana kart: ", self.exchange)  
             
+
             if self.exchange == 't':
                 self.cards_exchange()
             if self.exchange == 'n':
                 self.player.arrangements.data_frame_ml.exchange = self.exchange
+                self.amount_list.append(self.amount)
             
+            self.num += 1
+
             self.weights.append(self.player.arrangements.get_weight())
             [self.player.arrangements.data_frame_ml.set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
 
+            
             print()
             print("------------------------------------------------------------")
             print()
@@ -153,10 +186,12 @@ class Croupier(object):
         #self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
         #self.amount = choice(list(range(0, 6)))
         
-        self.amount = np.random.choice([2, 3], size=1, p=[float(self.one_pair_strategy.root.internal_nodes[1][0].branches[0]),
-                                                          float(self.one_pair_strategy.root.internal_nodes[1][0].branches[1])])    
+        self.amount = np.random.choice([2, 3], size=1, p=[float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[0]),
+                                                          float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])    
           
         self.amount = int(self.amount)
+        self.amount_list.append(self.amount)
+        
         print("Ile kart do wymiany: ", self.amount)
         print()
 
