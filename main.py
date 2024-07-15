@@ -12,7 +12,7 @@ def main():
         croupier.play()
     
     end_time = time.time() - start_time
-    with open("full.txt", "a") as file:
+    with open("time.txt", "w") as file:
         file.write(str(end_time) + " sec\n")
     
     print()    

@@ -46,9 +46,7 @@ class Arrangements(object):
         
         for x in self.arrangements:
             self.part_weights.append(x.get_part_weight())
-        
-        print(self.part_weights)
-        
+                    
     def check_arrangement(self):
         self.ids_arr = []
         
@@ -88,7 +86,6 @@ class Arrangements(object):
 
     def get_part_weight(self):
         for part_weight in self.part_weights:
-            print(part_weight)
             if part_weight is not None:
                 return part_weight
 

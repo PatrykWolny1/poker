@@ -13,7 +13,7 @@ class Node(object):
             
     def __str__(self) -> str:
         str_result = ''
-        print(self.visited)
+
         # ROOT
         str_result = '\t'*5 + self.name
         

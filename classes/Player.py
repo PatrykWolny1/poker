@@ -22,23 +22,34 @@ class Player(object):
             self.cards = cards
             self.arrangements.set_cards(self.cards)
         
-    def return_to_croupier(self, amount = 0):
+    def return_to_croupier(self, amount = 0, cards_to_exchange = []):
         self.amount = amount
         temp = self.cards.copy()
 
         if self.amount == 0:
             return self.amount
 
-        for idx in range(self.amount):
+        for idx in range(0, self.amount):
             if idx == 0:
                 self.print()
 
             if self.amount != 5:
                 #which_card = input("Ktora karta[1-5]: ")
-                which_card = choice(list(range(1, len(self.cards) + 1)))
-                #which_card = 
+                which_card = choice(list(range(1, len(self.cards) + 1)))            
+                
                 print()
-
+                if amount == 2:
+#                    which_card = self.cards.index(cards_to_exchange[idx]) + 1
+                    
+                    which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
+                    which_card = self.cards.index(which_card_card) + 1
+                
+                if amount == 3:
+                    #which_card = self.cards.index(cards_to_exchange[idx]) + 1
+                    
+                    which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
+                    which_card = self.cards.index(which_card_card) + 1
+                    
                 print("Ktora karta: ", which_card)
 
                 print()
@@ -46,6 +57,7 @@ class Player(object):
 
                 temp_card = temp.pop(which - 1)
                 self.cards_exchanged.append(temp_card)
+                
             else:
                 temp.pop()
 

@@ -14,17 +14,23 @@ class TwoThreeCardsProbability(ComputeObject):
                 count_1 += 1
             else:
                 self.data[idx] = None
+                
         
+
         if count_1 == 2 or count_1 == 1:
             self.p1 = 0
         if count_1 == 3:
             self.p1 = -self.p1
         
         
-        self.result_var = [1 - (count_1/len(self.data)) - self.p1, count_1/len(self.data) + self.p1]  
-          
+        self.result_var = [1 - (count_1/len(self.data)) - self.p1, count_1/len(self.data) + self.p1] 
+    
     def result(self):
         return self.result_var
     
-    def cards_to_exchange(self, card):
-        return self.cards_to_exchange(self.data(next) is not None)
+    def get_proc_data(self):
+        self.data = list(filter(None, self.data))
+        return self.data
+    
+    def get_all_data(self):
+        return self.data

@@ -53,19 +53,21 @@ class Croupier(object):
 
         #########################################################
         #########################################################
+        
         self.weights_cards = []
-        for idx in range(0, len(self.cards)):
-            self.weights_cards.append(self.cards[idx].weight)
-            
-            
-        #self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights)
+   
+        for self.player in self.players:
+            self.player.print(False)
+            self.player.arrangements.check_arrangement()
+            self.player.arrangements.set_weights()
+
+        self.weights_cards = self.players[0].arrangements.get_part_weight()
         
         self.one_pair_strategy = OnePairStructureStrategy(cards=self.weights_cards)
         self.one_pair_strategy.set_root(visited=False)
         self.one_pair_strategy.build_tree()
         print(str(self.one_pair_strategy.root))
 
-        #self.root_visited = OnePairStructureStrategy(cards=self.weights).root_object
         
         self.cards_check_exchange_add_weights()
         
@@ -78,7 +80,7 @@ class Croupier(object):
             self.player.print(False)
             self.player.arrangements.check_arrangement()
             self.player.arrangements.set_weights()
-        
+            
         print("Wagi ukladow graczy: ", self.weights)
         self.compare_players_weights()
         
@@ -119,7 +121,6 @@ class Croupier(object):
                                                                  self.player.arrangements.get_weight())
             print()
 
-            self.weights.append(self.player.arrangements.get_weight())
             #print(self.player.arrangements.get_weight())
 
             #self.exchange = str(input("Wymiana kart [T/N]: ")).lower()
@@ -136,7 +137,8 @@ class Croupier(object):
                 self.cards_exchange()
             if self.exchange == 'n':
                 self.player.arrangements.data_frame_ml.exchange = self.exchange
-
+            
+            self.weights.append(self.player.arrangements.get_weight())
             [self.player.arrangements.data_frame_ml.set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
 
             print()
@@ -161,20 +163,21 @@ class Croupier(object):
         if self.amount == -1:
             return
 
-        self.amount = self.player.return_to_croupier(self.amount, )
+        self.amount = self.player.return_to_croupier(self.amount, 
+                                                     self.player.arrangements.get_part_weight())
         print(self.amount)
         self.deal_cards()
 
-        self.player.arrangements.cards = self.player.cards
+        self.player.arrangements.set_cards(self.player.cards)
 
         print()
         print("------------------------------------------------------------")
         print()
 
-        self.player.print(True)
+        self.player.print(False)
         self.player.arrangements.check_arrangement()
-        
         self.player.arrangements.set_weights()
+        
         self.player.arrangements.data_frame_ml.exchange = self.exchange
         self.player.arrangements.init_data_frame_ml_after_ex()
 
@@ -191,7 +194,7 @@ class Croupier(object):
 
             if self.player.index == max_weight[0]:
                 print("WYGRANA")
-                self.player.arrangements.set_cards(self.player.get_cards())
+                self.player.arrangements.set_cards(self.player.cards)
                 self.player.win_or_not = True
                 self.player.print(False)
                 self.player.arrangements.check_arrangement()
