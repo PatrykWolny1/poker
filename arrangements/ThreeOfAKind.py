@@ -149,7 +149,7 @@ class ThreeOfAKind(HelperArrangement):
                 
             self.num_arr += 1
             
-            return 3
+            return 4
         else:
             self.weight_arrangement = 0
             self.weight_arrangement_part = []

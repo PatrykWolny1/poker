@@ -44,9 +44,6 @@ class Full(HelperArrangement):
     def get_part_weight(self):
         return 0
 
-    def get_part_weight(self):
-        return None
-
     def print_arrengement(self):
         if self.random == False:
             print("Full: ", self.weight_arrangement, "Numer: ", self.num_arr)
@@ -113,7 +110,7 @@ class Full(HelperArrangement):
                 with open("permutations_data/full.txt", 'a') as file:
                     file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
-            return 6
+            return 7
 
     def full_generating(self, random):
         self.cards_2d = []

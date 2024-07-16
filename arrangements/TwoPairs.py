@@ -182,7 +182,7 @@ class TwoPairs(HelperArrangement):
                            " Wysoka Karta: " + self.high_card.print_str() + " " +
                            " Numer: " + str(self.rand_int) + "\n")
             
-            return 2
+            return 3
         else:
             self.two_pairs_sum = 0
             self.two_pairs_part_sum = 0

@@ -23,7 +23,7 @@ class Arrangements(object):
         self.id_arr:int = 0
         self.data_frame_ml:DataFrameML = DataFrameML()
         self.cards:list = cards
-
+        self.cards_after:list = []
         self.high_card:HighCard = HighCard()
         self.one_pair:OnePair = OnePair()
         self.two_pairs:TwoPairs = TwoPairs()
@@ -39,9 +39,10 @@ class Arrangements(object):
         
         self.rand_int:int = 0
 
-    def set_cards(self, cards):                
+    def set_cards(self, cards):   
+        self.cards = cards             
         for x in self.arrangements:
-            x.set_cards(cards)
+            x.set_cards(self.cards)
 
     def set_weights(self):
         self.weights = []
@@ -82,16 +83,21 @@ class Arrangements(object):
         self.data_frame_ml.weight_ex = self.get_part_weight_sum(self.part_weights)    
 
     def init_data_frame_ml_after_ex(self):      
-        self.data_frame_ml.id_arr = self.get_id()       
+        #self.data_frame_ml.id_arr = self.get_id()  
         self.data_frame_ml.weight_after_ex = self.get_weight() 
-        [self.data_frame_ml.set_cards_after(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
+        #[self.data_frame_ml.set_cards_after(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
+        [self.data_frame_ml.set_cards_after(card.weight) for card in self.cards_after]
+
         self.data_frame_ml.weight_ex = self.get_part_weight_sum(self.part_weights)
 
+    def set_cards_after(self, cards):
+        self.cards_after = cards
+    
     def get_weight(self):
         for weight in self.weights:
             if weight is not None:
                 return weight
-
+    
     def get_part_weight(self):
         for part_weight in self.part_weights:
             if part_weight is not None:

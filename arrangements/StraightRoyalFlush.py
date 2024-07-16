@@ -36,7 +36,7 @@ class StraightRoyalFlush(HelperArrangement):
             return self.weight_arrangement
 
     def get_part_weight(self):
-        return None
+        return 0
 
     def print_arrengement(self):
         if self.random == False and self.if_royal_flush == False:
@@ -177,9 +177,9 @@ class StraightRoyalFlush(HelperArrangement):
 
         if self.example == True:
             if self.if_royal_flush == True and self.calc_weights == False:
-                return 9
+                return 10
             elif self.if_royal_flush == False and self.calc_weights == False:
-                return 8
+                return 9
 
     def straight_royal_flush_generating(self, random):
         self.random = random

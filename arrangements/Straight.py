@@ -36,7 +36,7 @@ class Straight(HelperArrangement):
             return self.weight_arrangement
 
     def get_part_weight(self):
-        return None
+        return 0
 
     def print_arrengement(self):
         if self.random == False:
@@ -161,7 +161,7 @@ class Straight(HelperArrangement):
                     
                     calc_weights = False
 
-                    return 4
+                    return 5
 
             idx1 += 1
             idx2 += 1

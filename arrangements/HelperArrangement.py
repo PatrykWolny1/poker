@@ -89,16 +89,17 @@ class HelperArrangement(object):
                         print(indices[idx])
                 print()
 
-    def random_arrangement(self):
+    def random_arrangement(self, if_combs=True):
         #Zerowanie pustych wierszy
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
 
-        #self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
-        self.rand_int = random.sample(range(0, 999), 2)
+        self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
         
-        cards = [self.cards_all_permutations[self.rand_int[0]],  
-                 self.cards_all_permutations[self.rand_int[1]]]
-        
+        if if_combs == True:
+            cards = [self.cards_all_permutations[self.rand_int[0]],  
+                    self.cards_all_permutations[self.rand_int[1]]]
+        else:
+            cards = self.cards_all_permutations[self.rand_int[0]]
         
         idx1 = 0
         idx2 = 0
@@ -107,7 +108,7 @@ class HelperArrangement(object):
         if_not_the_same = True
         repeat = 0
         
-        while(if_not_the_same):
+        while(if_not_the_same and if_combs):
             idx1 = 0
             
             while idx1 < len(cards[0]):

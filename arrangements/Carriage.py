@@ -118,7 +118,7 @@ class Carriage(HelperArrangement):
                     
                 self.num_arr += 1
                         
-                return 7
+                return 8
             else:
                 self.weight_arrangement = 0
                 self.weight_arrangement_part = 0

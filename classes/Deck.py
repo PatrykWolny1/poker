@@ -22,7 +22,7 @@ class Deck(object):
     def shuffling(self):
         random.shuffle(self.cards)
 
-    def deal(self, cards_list:list = []):   
+    def deal(self):   
 
         card = self.cards[self.counter]
         self.cards.pop(self.counter)

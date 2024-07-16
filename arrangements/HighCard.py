@@ -137,7 +137,7 @@ class HighCard(HelperArrangement):
                 file.write("Wysoka karta: " + str(self.weight_arrangement) + " Wysoka karta: " +
                             self.high_card_1.print_str() + " Numer: " + str(self.rand_int) + "\n")
                         
-        return 0
+        return 1
 
     def high_card_generating(self, random):
         self.random = random

@@ -1,5 +1,6 @@
 from classes.Arrangements import Arrangements
 from classes.Deck import Deck
+from classes.Card import Card
 from random import choice
 import sys
 import os
@@ -64,23 +65,31 @@ class Player(object):
                 #which_card = self.cards.index(cards_to_exchange[idx]) + 1
                     
                     which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
-                    which_card = self.cards.index(which_card_card) + 1
-                
+                    which_card = self.cards.index(which_card_card) + 1     
+                    which = int(which_card)
+                    temp_card = temp.pop(which - 1)
+                    self.cards_exchanged.append(temp_card)
+                    
                 if amount == 3:
                     #which_card = self.cards.index(cards_to_exchange[idx]) + 1
                     
                     which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
                     which_card = self.cards.index(which_card_card) + 1
+                    which = int(which_card)
+                    temp_card = temp.pop(which - 1)
+                    self.cards_exchanged.append(temp_card)
                 
                 if game_visible == True:    
                     print("Ktora karta: ", which_card)
 
                     print()
                 
-                which = int(which_card)
+                if amount == 2 and idx == 1:
+                    self.cards_exchanged.append(Card(empty=True))
 
-                temp_card = temp.pop(which - 1)
-                self.cards_exchanged.append(temp_card)
+                # which = int(which_card)
+                # temp_card = temp.pop(which - 1)
+                # self.cards_exchanged.append(temp_card)
                 
             else:
                 temp.pop()
@@ -97,8 +106,9 @@ class Player(object):
 
         return self.amount
 
-    def take_cards(self, deck, cards_list):
-        self.cards.append(deck.deal(cards_list))
+    def take_cards(self, deck):
+        self.cards.append(deck.deal())
+        self.arrangements.set_cards_after(self.cards)
 
     def cards_permutations(self):
         # print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")

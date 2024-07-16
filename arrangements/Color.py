@@ -44,7 +44,7 @@ class Color(HelperArrangement):
             return self.color_sum
 
     def get_part_weight(self):
-        return None
+        return 0
 
     def temp_lambda(self, t1):
         #Jesli koniec sekwencji wag i sumy [[Card int] [Card int] ... [Card int] sum][[Card int] ... [Card int] sum]
@@ -211,7 +211,7 @@ class Color(HelperArrangement):
                 
                 self.num_arr += 1
                     
-                return 5
+                return 6
 
     def color_generating(self, random):
         self.random = random

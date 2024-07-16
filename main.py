@@ -3,11 +3,12 @@ from decision_tree_structure.OnePairStructureStrategy import OnePairStructureStr
 import time
 import cProfile
 import pstats
+import pandas as pd
 
 def main():
     start_time = time.time()
 
-    for i in range(0, 1000):
+    for i in range(0, 10):
         croupier = Croupier()
         croupier.play()
     
@@ -17,6 +18,17 @@ def main():
     
     print()    
     print(end_time, " sec")
+    
+    df = pd.read_csv('poker_game.csv', on_bad_lines='skip', engine='python')
+    print(df)
+    
+    
+    
+    
+    
+    
+    
+    
 
 if __name__ == "__main__":
     #cProfile.run('main()', 'full_profiler.txt')

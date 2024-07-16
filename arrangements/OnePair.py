@@ -186,7 +186,7 @@ class OnePair(HelperArrangement):
                 self.weight_arrangement_part.append(min_card.weight)
                 self.weight_arrangement_part.append(mid_card.weight)
                 self.weight_arrangement_part.append(self.high_card.weight)
-                return 1
+                return 2
 
         else:
             self.weight_arrangement = 0
@@ -324,19 +324,20 @@ class OnePair(HelperArrangement):
                 # print()
                 
             for idx1 in range(0, len(cards_comb)):
-                cards_comb[idx1] = list(cards_comb[idx1])
                 self.perm = list(permutations(cards_comb[idx1], 5))
-                
+
                 len_comb += 1
-                
-                HelperArrangement().append_cards_all_permutations(cards_comb[idx1])
-                HelperArrangement().append_weight_gen(0)
-                
-                if len_comb == 100000:
-                    #print(len_comb)
-                    self.file.close()
+                if self.if_combs == True:
+                    cards_comb[idx1] = list(cards_comb[idx1])
+
+                    HelperArrangement().append_cards_all_permutations(cards_comb[idx1])
+                    HelperArrangement().append_weight_gen(0)
                     
-                    return HelperArrangement().random_arrangement()
+                    if len_comb == 100000:
+                        #print(len_comb)
+                        self.file.close()
+                        
+                        return HelperArrangement().random_arrangement(self.if_combs)
         
                 # for idx2 in range(0, len(cards_comb[idx1])):
                 #     cards_comb[idx1][idx2].print()
@@ -360,7 +361,7 @@ class OnePair(HelperArrangement):
                         self.loading_bar.set_count_bar(self.num_arr)
                         self.loading_bar.display_bar()
 
-                        #HelperArrangement().append_cards_all_permutations(self.perm[idx2])
+                        HelperArrangement().append_cards_all_permutations(self.perm[idx2])
             
                         self.rand_iter += 1
                         #print(self.rand_iter) 
