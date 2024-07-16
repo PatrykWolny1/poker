@@ -40,6 +40,9 @@ class Full(HelperArrangement):
     def get_weight(self):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
+        
+    def get_part_weight(self):
+        return 0
 
     def get_part_weight(self):
         return None

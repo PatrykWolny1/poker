@@ -17,15 +17,13 @@ class HelperArrangement(object):
         #Rekurencja. Dodawanie kolejno dlugosci kolejnych tablic np. [1 5 10 15] czyli 4-wymiarowa
         return [len(a)] + self.dim(a[0])
 
-    def get_indices_1(self, cards):
+    def get_indices_1(self, cards):        
         size = len(cards)
         #self.indices_2d = []
-        #print(cards)
-
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
         if self.dim(cards) == 2:
             cards = [item for sublist in cards for item in sublist]
-            print(cards)
+            #print(cards)
 
         
         for idx in range(0, size):

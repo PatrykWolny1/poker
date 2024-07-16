@@ -25,7 +25,7 @@ class Croupier(object):
     def play(self):        
         print()
         
-        self.set_cards()
+        #self.set_cards()
         self.set_players_nicknames()
             
         print()
@@ -39,7 +39,9 @@ class Croupier(object):
         # player1.print()
         # player1.arrangements.check_arrangement()
 
-        # player1 = Player(deck=self.deck, perm_logic=True)
+        #########################################################
+
+        # player1 = Player(deck=self.deck, if_show_perm=True)
         # player1.cards_permutations()
 
         # # for idx in range(0, len(player1.all_combs)):
@@ -64,8 +66,9 @@ class Croupier(object):
         for self.player in self.players:
             self.player.print(False)
             self.player.arrangements.check_arrangement()
-            self.player.arrangements.set_weights()
 
+            self.player.arrangements.set_weights()
+            
             self.weights_cards.append(self.player.arrangements.get_part_weight())
 
             self.one_pair_strategy.append(OnePairStructureStrategy(cards=self.weights_cards[self.num]))
@@ -115,12 +118,17 @@ class Croupier(object):
             num_1 += 1
 
     def set_cards(self):
-        self.cards = [Card("2", "Ka"),
+        self.cards = [[Card("2", "Ka"),
                       Card("5", "Pi"),
                       Card("9", "Ka"),
                       Card("2", "Tr"),
-                      Card("7", "Ki")]
-
+                      Card("7", "Ki")],
+                      [Card("8", "Ka"),
+                      Card("8", "Pi"),
+                      Card("9", "Tr"),
+                      Card("10", "Tr"),
+                      Card("6", "Ki")]]
+        
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
         self.idx_players = 2
@@ -129,13 +137,12 @@ class Croupier(object):
             #nick = str(input("Pseudonim gracza: "))
             if idx == 0:
                 nick = 'Nick'
-            if idx == 1:                                            #carriage lub full 
+            if idx == 1:                                           
                 nick = 'Adam'
                 
-            self.players.append(Player(deck=self.deck, nick=nick, index=idx, 
-                                       if_deck=False, cards=self.cards, perm_logic=False))
+            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, 
+                                       if_deck=False, if_show_perm=False))
             
-        # self.deck.print()
 
     def cards_check_exchange_add_weights(self):
         for self.player in self.players:
@@ -178,9 +185,9 @@ class Croupier(object):
             print("------------------------------------------------------------")
             print()
 
-    def deal_cards(self):
+    def deal_cards(self, cards_list:list = []):
         for idx in range(self.amount):
-            self.player.take_cards(self.deck)
+            self.player.take_cards(self.deck, cards_list)
 
     def cards_exchange(self):
         #self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))

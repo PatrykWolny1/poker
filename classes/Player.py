@@ -3,24 +3,30 @@ from classes.Deck import Deck
 from random import choice
 
 class Player(object):
-        
-    def __init__(self, deck, nick = "Nick", index = 0, if_deck = False, cards = [], perm_logic = True):
+    def __init__(self, deck, nick = "Nick", index = 0, perm = False, if_deck = False, cards = [], if_show_perm = True):
         deck.shuffling()
         self.cards_exchanged:list = []
         self.nick:str = nick
         self.index:int = index
         self.arrangements:Arrangements = Arrangements()
 
-        if if_deck == True and perm_logic == False:
+        if if_deck == True and if_show_perm == False:
             self.cards:list = []
 
             for idx in range(5):
                 self.cards.append(deck.deal())
 
             self.arrangements.set_cards(self.cards)
-        elif perm_logic == False:
+        elif if_show_perm == False and perm == False:
             self.cards = cards
+            deck.pop_from_deck(self.cards)
             self.arrangements.set_cards(self.cards)
+        elif if_show_perm == False and perm == True:
+            self.cards_permutations()
+            self.print()
+            deck.pop_from_deck(self.cards)
+            self.arrangements.set_cards(self.cards)
+        
         
     def return_to_croupier(self, amount = 0, cards_to_exchange = []):
         self.amount = amount
@@ -39,7 +45,7 @@ class Player(object):
                 
                 print()
                 if amount == 2:
-#                    which_card = self.cards.index(cards_to_exchange[idx]) + 1
+                #which_card = self.cards.index(cards_to_exchange[idx]) + 1
                     
                     which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
                     which_card = self.cards.index(which_card_card) + 1
@@ -71,14 +77,14 @@ class Player(object):
 
         return self.amount
 
-    def take_cards(self, deck):
-        self.cards.append(deck.deal())
+    def take_cards(self, deck, cards_list):
+        self.cards.append(deck.deal(cards_list))
 
     def cards_permutations(self):
         print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
 
         #if_all_perm = input()
-        if_rand = "1"
+        if_rand = "2"
 
         if if_rand == "1":
             self.random = False
@@ -97,7 +103,7 @@ class Player(object):
               "(9 - WYSOKA KARTA)\n")
 
         #arrangement = input()
-        arrangement = "5"
+        arrangement = "8"
 
         if arrangement == "1":
             self.cards, self.rand_int = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
@@ -122,7 +128,7 @@ class Player(object):
 
         self.arrangements.set_cards(self.cards)
         self.arrangements.set_rand_int(self.rand_int)
-
+        
     def get_arrangements(self):
         return self.arrangements
 
