@@ -93,13 +93,55 @@ class HelperArrangement(object):
         #Zerowanie pustych wierszy
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
 
-        self.rand_int = random.randint(0, len(self.weight_gen) - 1)
-
+        #self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
+        self.rand_int = random.sample(range(0, 999), 2)
+        
+        cards = [self.cards_all_permutations[self.rand_int[0]],  
+                 self.cards_all_permutations[self.rand_int[1]]]
+        
+        
+        idx1 = 0
+        idx2 = 0
+        
+        iter_idx = 0
+        if_not_the_same = True
+        repeat = 0
+        
+        while(if_not_the_same):
+            idx1 = 0
+            
+            while idx1 < len(cards[0]):
+                idx2 = 0
+                repeat = 0
+                while idx2 < len(cards[1]):
+                    if cards[0][idx1] == cards[1][idx2]:
+                        repeat += 1
+                        cards[1] = []
+                        #print(len(self.weight_gen))
+                        #print(len(self.cards_all_permutations))
+                        cards[1] = self.cards_all_permutations[random.sample(range(0, len(self.weight_gen) - 1), 1)[0]]
+                        
+                        iter_idx=0
+                        idx1 = 0
+                        break
+                    
+                    if iter_idx == 19 and repeat == 0:
+                        if_not_the_same = False
+                    iter_idx += 1
+                    idx2 += 1
+                if repeat == 0:
+                    idx1 += 1 
+                        
+                iter_idx += 1               
+                
+                
+    
+        print("Wylosowany uklad: ", self.rand_int)  
         print("Wylosowany uklad: ", self.rand_int)
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
         print()
-
-        return self.cards_all_permutations[self.rand_int], self.rand_int
+        
+        return cards, self.rand_int
 
     def get_indices_2d_1(self):
         return self.indices_2d

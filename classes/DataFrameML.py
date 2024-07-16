@@ -20,6 +20,7 @@ class DataFrameML(object):
 
     def set_cards_after(self, cards_after):
         self.idx += 1
+        #print(cards_after)
         self.cards_after.update({"Cards After " + str(self.idx) : cards_after})
     
     def set_cards_exchanged(self, cards):
@@ -28,7 +29,7 @@ class DataFrameML(object):
 
     def print(self):
         print(self.id_arr, self.weight, self.exchange, self.id_arr_after, 
-              self.weight_after_ex, self.cards_after, self.win_or_not)
+              self.weight_after_ex, self.cards_after, self.cards_exchanged, self.win_or_not)
         
     def save_to_csv(self, filename):
         data = {"Arrangement ID" : self.id_arr, 
@@ -47,7 +48,7 @@ class DataFrameML(object):
         
         pd.set_option('display.max_columns', 16)
 
-        print(df)
+        #print(df)
                 
         csv_file_path = filename 
     

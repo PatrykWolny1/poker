@@ -31,10 +31,14 @@ class Deck(object):
         return card
     
     def pop_from_deck(self, cards_list: list = []):
-        index = 0
+        idx = 0
         for num in range(0, len(cards_list)):
-            for idx, card in enumerate(self.cards):
-                    if cards_list[num].name == card.name and cards_list[num].color == card.color:
-                        self.cards.pop(idx)        
-                        #print(idx+1)
+            idx = 0
+            while (idx < len(self.cards)):
+                if cards_list[num].name == self.cards[idx].name and cards_list[num].color == self.cards[idx].color:
+                    self.cards.pop(idx)        
+                    #print(idx+1)
+                    idx -= 1
+                idx += 1
         #self.print()
+                

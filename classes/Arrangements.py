@@ -8,7 +8,15 @@ from arrangements.TwoPairs import TwoPairs
 from arrangements.OnePair import OnePair
 from arrangements.HighCard import HighCard
 from classes.DataFrameML import DataFrameML
+import sys
+import os
 
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+def enablePrint():
+    sys.stdout = sys.__stdout__
+    
 class Arrangements(object):
     
     def __init__(self, cards = []):
@@ -49,12 +57,12 @@ class Arrangements(object):
                     
     def check_arrangement(self):
         self.ids_arr = []
-        
+        blockPrint()
         for x in self.arrangements:
             x.set_rand_int(self.rand_int)
             self.ids_arr.append(x.arrangement_recogn()) 
-        
-        print(self.ids_arr)
+        enablePrint()
+        #print(self.ids_arr)
 
     def set_rand_int(self, rand_int):
         self.rand_int = rand_int
@@ -75,7 +83,7 @@ class Arrangements(object):
 
     def init_data_frame_ml_after_ex(self):      
         self.data_frame_ml.id_arr = self.get_id()       
-        self.data_frame_ml.weight_after_ex = self.get_weight()       
+        self.data_frame_ml.weight_after_ex = self.get_weight() 
         [self.data_frame_ml.set_cards_after(self.get_part_weight()[idx]) for idx in range(0, len(self.get_part_weight()))]
         self.data_frame_ml.weight_ex = self.get_part_weight_sum(self.part_weights)
 
@@ -87,6 +95,7 @@ class Arrangements(object):
     def get_part_weight(self):
         for part_weight in self.part_weights:
             if part_weight is not None:
+                #print(part_weight)
                 return part_weight
 
     def get_part_weight_sum(self, part_cards):

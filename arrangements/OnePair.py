@@ -10,7 +10,7 @@ class OnePair(HelperArrangement):
     def __init__(self):
         self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
         self.high_card:Card = Card()             # Wysoka karta
-        self.limit_rand:int = 10000             # Ograniczenie dla liczby obliczen 1 098 240
+        self.limit_rand:int = 1000             # Ograniczenie dla liczby obliczen 1 098 240
         self.one_iter:int = 120
         self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
         self.file = open("permutations_data/one_pair.txt", "w")
@@ -25,6 +25,7 @@ class OnePair(HelperArrangement):
 
         self.random:bool = False
         self.example:bool = False
+        self.if_combs:bool = True           # Combinations for testing strategies
 
     def set_cards(self, cards):
         self.perm = cards
@@ -194,7 +195,7 @@ class OnePair(HelperArrangement):
 
     def one_pair_generating(self, random):
         self.random = random
-
+        
         cards_2d = []
         cards_to_comb = []
         cards_to_comb_1 = []
@@ -317,19 +318,30 @@ class OnePair(HelperArrangement):
                 
             cards_comb = list(filter(None, cards_comb))                
             
-            for idx1 in range(0, len(cards_comb)):
+            #for idx1 in range(0, len(cards_comb)):
                 # for idx2 in range(0, len(cards_comb[idx1])):
                 #     cards_comb[idx1][idx2].print()
                 # print()
                 
-                for idx1 in range(0, len(cards_comb)):
-                    self.perm = list(permutations(cards_comb[idx1], 5))
+            for idx1 in range(0, len(cards_comb)):
+                cards_comb[idx1] = list(cards_comb[idx1])
+                self.perm = list(permutations(cards_comb[idx1], 5))
+                
+                len_comb += 1
+                
+                HelperArrangement().append_cards_all_permutations(cards_comb[idx1])
+                HelperArrangement().append_weight_gen(0)
+                
+                if len_comb == 100000:
+                    #print(len_comb)
+                    self.file.close()
                     
-            
-                    # for idx2 in range(0, len(cards_comb[idx1])):
-                    #     cards_comb[idx1][idx2].print()
-                    # print()
-
+                    return HelperArrangement().random_arrangement()
+        
+                # for idx2 in range(0, len(cards_comb[idx1])):
+                #     cards_comb[idx1][idx2].print()
+                # print()
+                if self.if_combs == False:
                     for idx2 in range(0, len(self.perm)):
                         self.perm[idx2] = list(self.perm[idx2])
                         idx_2 += 1
@@ -348,16 +360,16 @@ class OnePair(HelperArrangement):
                         self.loading_bar.set_count_bar(self.num_arr)
                         self.loading_bar.display_bar()
 
-                        HelperArrangement().append_cards_all_permutations(self.perm[idx2])
+                        #HelperArrangement().append_cards_all_permutations(self.perm[idx2])
             
                         self.rand_iter += 1
                         #print(self.rand_iter) 
             
                         if self.rand_iter == self.one_iter * self.limit_rand:
                             HelperArrangement().check_if_weights_larger(False)
-
+                            #print(len_comb)
                             self.file.close()
-
+                            
                             return HelperArrangement().random_arrangement()
 
 

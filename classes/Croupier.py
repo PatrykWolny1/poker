@@ -7,7 +7,11 @@ from decision_tree_structure.OnePairStructureStrategy import OnePairStructureStr
 from operator import itemgetter
 from random import choice
 import numpy as np
+import sys
+import os
 
+
+    
 class Croupier(object):
 
     def __init__(self):
@@ -22,9 +26,13 @@ class Croupier(object):
         self.idx_players:int = 0
         
         self.exchange:str = ''
+        self.game_visible:bool = False
+        self.tree_visible:bool = True
+            
     def play(self):        
         print()
         
+
         #self.set_cards()
         self.set_players_nicknames()
             
@@ -55,7 +63,7 @@ class Croupier(object):
 
         #########################################################
         #########################################################
-        
+        #enablePrint()
         self.weights_cards = []
         
         self.one_pair_strategy = []
@@ -64,7 +72,8 @@ class Croupier(object):
         self.exchange_list = []
         
         for self.player in self.players:
-            self.player.print(False)
+            if self.game_visible == True or self.game_visible == True:
+                self.player.print(False)    
             self.player.arrangements.check_arrangement()
 
             self.player.arrangements.set_weights()
@@ -80,22 +89,28 @@ class Croupier(object):
         for strategy in self.one_pair_strategy:
             strategy.set_root(visited=False)
             strategy.build_tree()
-            print(str(strategy.root))
+            
+            if self.game_visible == True:
+                print(str(strategy.root))
 
         
         self.cards_check_exchange_add_weights()
         
-        print()
-        print("------------------------------------------------------------")
-        print("------------------------------------------------------------")
-        print()
+        if self.game_visible == True:
+            print()
+            print("------------------------------------------------------------")
+            print("------------------------------------------------------------")
+            print()
         
         for self.player in self.players:
-            self.player.print(False)
+            if self.game_visible == True:
+                self.player.print(False)
             self.player.arrangements.check_arrangement()
             self.player.arrangements.set_weights()
+        
+        if self.game_visible == True:
+            print("Wagi ukladow graczy: ", self.weights)
             
-        print("Wagi ukladow graczy: ", self.weights)
         self.compare_players_weights()
         
         # self.one_pair_strategy[self.num].set_root(visited=True, amount=self.amount, exchange=self.exchange)
@@ -103,18 +118,25 @@ class Croupier(object):
         # print(str(self.one_pair_strategy.root))
         
         num_1 = 0
-        
-        print("-"*100)
+
+        if self.tree_visible == True:
+            print("-"*100)
         #for amount, exchange in self.amount_list, self.exchange_list:
         for strategy in self.one_pair_strategy:
-            print("Liczba wymienionych kart: " + str(self.amount_list[num_1]) 
-                  + "\nCzy wymienic? " + str(self.exchange_list[num_1]))
-            print("\n")
+            if self.tree_visible == True:
+                print("Liczba wymienionych kart: " + str(self.amount_list[num_1]) 
+                    + "\nCzy wymienic? " + str(self.exchange_list[num_1]))
+                print("\n")
+                
             strategy.set_root(visited=True, amount=self.amount_list[num_1], exchange=self.exchange_list[num_1])
             strategy.build_tree()
-            print(str(strategy.root))
-            print("\n")
-            print("-"*100)
+            
+            if self.tree_visible == True:
+                print(str(strategy.root))
+            
+            if self.tree_visible == True:
+                print("\n")
+                print("-"*100)
             num_1 += 1
 
     def set_cards(self):
@@ -132,6 +154,10 @@ class Croupier(object):
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
         self.idx_players = 2
+    
+        self.deck = Deck()
+        
+        cards, rand_int = Player().cards_permutations()
 
         for idx in range(int(self.idx_players)):
             #nick = str(input("Pseudonim gracza: "))
@@ -140,18 +166,21 @@ class Croupier(object):
             if idx == 1:                                           
                 nick = 'Adam'
                 
-            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, 
+            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=cards[idx],
                                        if_deck=False, if_show_perm=False))
-            
+            #self.deck.print()
 
     def cards_check_exchange_add_weights(self):
         for self.player in self.players:
-            self.player.print(False)
+            if self.game_visible == True:
+                self.player.print(False)
+                
             self.player.arrangements.check_arrangement()
             self.player.arrangements.set_weights()
             self.player.arrangements.data_frame_ml = DataFrameML(self.player.arrangements.get_id(), 
                                                                  self.player.arrangements.get_weight())
-            print()
+            if self.game_visible == True:
+                print()
 
             #print(self.player.arrangements.get_weight())
 
@@ -161,29 +190,29 @@ class Croupier(object):
             
             self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[0]),
                                                                     float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[1])])    
-            
-            self.exchange_list.append(self.exchange)
-            
-            print(self.exchange)
             #self.exchange = 't'
-            print("Wymiana kart: ", self.exchange)  
+            self.exchange_list.append(self.exchange)
+
+            if self.game_visible == True:
+                print(self.exchange)
+                print("Wymiana kart: ", self.exchange)  
             
 
             if self.exchange == 't':
                 self.cards_exchange()
             if self.exchange == 'n':
                 self.player.arrangements.data_frame_ml.exchange = self.exchange
-                self.amount_list.append(self.amount)
+                self.amount_list.append(None)
             
             self.num += 1
 
             self.weights.append(self.player.arrangements.get_weight())
             [self.player.arrangements.data_frame_ml.set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
 
-            
-            print()
-            print("------------------------------------------------------------")
-            print()
+            if self.game_visible == True:
+                print()
+                print("------------------------------------------------------------")
+                print()
 
     def deal_cards(self, cards_list:list = []):
         for idx in range(self.amount):
@@ -199,24 +228,28 @@ class Croupier(object):
         self.amount = int(self.amount)
         self.amount_list.append(self.amount)
         
-        print("Ile kart do wymiany: ", self.amount)
-        print()
+        if self.game_visible == True:
+            print("Ile kart do wymiany: ", self.amount)
+            print()
 
         if self.amount == -1:
             return
 
         self.amount = self.player.return_to_croupier(self.amount, 
-                                                     self.player.arrangements.get_part_weight())
-        print(self.amount)
+                                                     self.player.arrangements.get_part_weight(), game_visible=False)
+        if self.game_visible == True:
+            print(self.amount)
         self.deal_cards()
 
         self.player.arrangements.set_cards(self.player.cards)
+        
+        if self.game_visible == True:
+            print()
+            print("------------------------------------------------------------")
+            print()
 
-        print()
-        print("------------------------------------------------------------")
-        print()
-
-        self.player.print(False)
+            self.player.print(False)
+            
         self.player.arrangements.check_arrangement()
         self.player.arrangements.set_weights()
         
@@ -225,20 +258,27 @@ class Croupier(object):
 
     def compare_players_weights(self):
         max_weight = list(max(enumerate(self.weights), key = itemgetter(1)))
-        print("Wieksza waga: ", max_weight)
+        
+        if self.game_visible == True:
+            print("Wieksza waga: ", max_weight)
 
-        print()
-        print("------------------------------------------------------------")
-        print("------------------------------------------------------------")
-        print()
+            print()
+            print("------------------------------------------------------------")
+            print("------------------------------------------------------------")
+            print()
 
         for self.player in self.players:
 
             if self.player.index == max_weight[0]:
-                print("WYGRANA")
+                if self.game_visible == True:
+                    print("WYGRANA")
+                
                 self.player.arrangements.set_cards(self.player.cards)
                 self.player.win_or_not = True
-                self.player.print(False)
+                
+                if self.game_visible == True:
+                    self.player.print(False)
+                
                 self.player.arrangements.check_arrangement()
             else:
                 self.player.win_or_not = False
@@ -246,7 +286,8 @@ class Croupier(object):
             self.player.arrangements.data_frame_ml.win_or_not = self.player.win_or_not
 
         for self.player in self.players:
-            self.player.arrangements.get_data_frame_ml().print()
+            if self.game_visible == False or self.game_visible == True:
+                self.player.arrangements.get_data_frame_ml().print()
             self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
 
 

@@ -7,7 +7,7 @@ import pstats
 def main():
     start_time = time.time()
 
-    for i in range(0, 1):
+    for i in range(0, 1000):
         croupier = Croupier()
         croupier.play()
     
