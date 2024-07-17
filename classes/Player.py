@@ -22,6 +22,7 @@ class Player(object):
         self.index:int = index
         self.arrangements:Arrangements = Arrangements()
         self.cards:list = []
+        self.all_comb_perm:list = []
         
         if if_deck == True and if_show_perm == False:
 
@@ -152,7 +153,7 @@ class Player(object):
         if arrangement == "7":
             self.cards, self.rand_int = self.arrangements.two_pairs.two_pairs_generating(self.random)
         if arrangement == "8":
-            self.cards, self.rand_int = self.arrangements.one_pair.one_pair_generating(self.random)
+            self.cards, self.rand_int, self.all_comb_perm = self.arrangements.one_pair.one_pair_generating(self.random)
         if arrangement == "9":
             self.cards, self.rand_int = self.arrangements.high_card.high_card_generating(self.random)
 
@@ -165,7 +166,7 @@ class Player(object):
         
         enablePrint()
         
-        return self.cards, self.rand_int
+        return self.cards, self.rand_int, self.all_comb_perm
         
                 
     def get_arrangements(self):

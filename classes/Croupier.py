@@ -9,17 +9,19 @@ from random import choice
 import numpy as np
 import sys
 import os
+import random
 
 
     
 class Croupier(object):
 
-    def __init__(self):
+    def __init__(self, all_comb_perm):
         self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
         self.weights:list = []
-        
+        self.all_comb_perm:list = all_comb_perm
+                
         self.weight:int = 0
         self.amount:int = 0
         self.idx_players:int = 0
@@ -27,15 +29,15 @@ class Croupier(object):
         self.exchange:str = ''
         self.game_visible:bool = False
         self.tree_visible:bool = False
-            
+        
     def play(self):        
-        print()
+        # print()
         
 
         #self.set_cards()
         self.set_players_nicknames()
             
-        print()
+        # print()
         
         #########################################################
 
@@ -153,13 +155,66 @@ class Croupier(object):
                       Card("10", "Tr"),
                       Card("6", "Ki")]]
         
+    def random_arrangement(self, all_comb_perm):
+        #Zerowanie pustych wierszy
+
+        rand_int = random.sample(range(0, len(all_comb_perm)-1), 2)
+        
+        cards = [all_comb_perm[rand_int[0]],  
+                all_comb_perm[rand_int[1]]]
+
+        idx1 = 0
+        idx2 = 0
+        
+        iter_idx = 0
+        if_not_the_same = True
+        repeat = 0
+        
+        while(if_not_the_same):
+            idx1 = 0
+            
+            while idx1 < len(cards[0]):
+                idx2 = 0
+                repeat = 0
+                while idx2 < len(cards[1]):
+                    if cards[0][idx1] == cards[1][idx2]:
+                        repeat += 1
+                        cards[1] = []
+                        cards[1] = all_comb_perm[random.sample(range(0, len(all_comb_perm)-1), 1)[0]]
+                        
+                        iter_idx=0
+                        idx1 = 0
+                        break
+                    
+                    if iter_idx == 19 and repeat == 0:
+                        if_not_the_same = False
+                    iter_idx += 1
+                    idx2 += 1
+                if repeat == 0:
+                    idx1 += 1 
+                        
+                iter_idx += 1               
+                
+                
+        # print("Wylosowany uklad: ", rand_int)
+        # print("Ilosc ukladow: ", len(all_comb_perm))
+        # for idx in range(0, len(cards[0])):
+        #     cards[0][idx].print()
+        # print()
+        # for idx in range(0, len(cards[1])):
+        #     cards[1][idx].print()
+        # print()
+        # print()
+        
+        return cards
+    
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
         self.idx_players = 2
     
         self.deck = Deck()
         
-        cards, rand_int = Player().cards_permutations()
+        cards = self.random_arrangement(self.all_comb_perm)
 
         for idx in range(int(self.idx_players)):
             #nick = str(input("Pseudonim gracza: "))
@@ -168,6 +223,7 @@ class Croupier(object):
             if idx == 1:                                           
                 nick = 'Adam'
                 
+    
             self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=cards[idx],
                                        if_deck=False, if_show_perm=False))
         
