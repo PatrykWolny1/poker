@@ -214,11 +214,7 @@ class Croupier(object):
     
         self.deck = Deck()
         
-<<<<<<< HEAD
-        cards = self.random_arrangement(self.all_comb_perm)
-=======
         #cards, rand_int = Player().cards_permutations()
->>>>>>> feature
 
         for idx in range(int(self.idx_players)):
             #nick = str(input("Pseudonim gracza: "))
@@ -227,12 +223,7 @@ class Croupier(object):
             if idx == 1:                                           
                 nick = 'Adam'
                 
-<<<<<<< HEAD
-    
-            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=cards[idx],
-=======
             self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
->>>>>>> feature
                                        if_deck=False, if_show_perm=False))
         
             #self.deck.print()
