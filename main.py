@@ -5,6 +5,7 @@ import time
 import cProfile
 import pstats
 import pandas as pd
+import numpy as np
 
 def main():
     start_time = time.time()
@@ -23,6 +24,10 @@ def main():
     print(end_time, " sec")
     
     df = pd.read_csv('poker_game.csv', on_bad_lines='skip', engine='python')
+    pd.set_option('display.max_columns', 16)
+    
+    pd.options.display.float_format = '{:,.0f}'.format
+    df = df.fillna('0')
     print(df)
 
 if __name__ == "__main__":
