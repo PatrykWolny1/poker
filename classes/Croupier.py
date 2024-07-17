@@ -32,7 +32,7 @@ class Croupier(object):
         print()
         
 
-        #self.set_cards()
+        self.set_cards()
         self.set_players_nicknames()
             
         print()
@@ -159,7 +159,7 @@ class Croupier(object):
     
         self.deck = Deck()
         
-        cards, rand_int = Player().cards_permutations()
+        #cards, rand_int = Player().cards_permutations()
 
         for idx in range(int(self.idx_players)):
             #nick = str(input("Pseudonim gracza: "))
@@ -168,7 +168,7 @@ class Croupier(object):
             if idx == 1:                                           
                 nick = 'Adam'
                 
-            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=cards[idx],
+            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
                                        if_deck=False, if_show_perm=False))
         
             #self.deck.print()
@@ -295,7 +295,7 @@ class Croupier(object):
         for self.player in self.players:
             if self.tree_visible == True or self.game_visible == True:
                 self.player.arrangements.get_data_frame_ml().print()
-            self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
+            #self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
 
 
 
