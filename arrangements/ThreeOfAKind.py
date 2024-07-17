@@ -5,22 +5,24 @@ from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations
 
 class ThreeOfAKind(HelperArrangement):
-    cardmarkings = CardMarkings()  # Oznaczenia kart
-    high_card = Card()             # Wysoka karta (Card)
-    loading_bar = LoadingBar(6589440, 40, 39)
-    file = open("three_of_a_kind.txt", "w")
+    
+    def __init__(self):
+        self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
+        self.high_card:Card = Card()             # Wysoka karta (Card)
+        self.loading_bar:LoadingBar = LoadingBar(6589440, 40, 39)
+        self.file = open("permutations_data/three_of_a_kind.txt", "w")
 
-    perm = []                      # Lista na permutacje
-    weight_arrangement_part = []   # Wagi wysokich kart
+        self.perm:list = []                      # Lista na permutacje
+        self.weight_arrangement_part:list = []   # Wagi wysokich kart
 
-    weight_arrangement = 0         # Waga ukladu
-    c_idx1 = 0                     # Zapisywanie aktualnego indeksu z petli for
-    num_arr = 0                    # Numer ukladu
-    rand_int = 0
+        self.weight_arrangement:int = 0         # Waga ukladu
+        self.c_idx1:int = 0                     # Zapisywanie aktualnego indeksu z petli for
+        self.num_arr:int = 0                    # Numer ukladu
+        self.rand_int:int = 0
 
-    random = False                 # Czy uklad ma byc wylosowany
-    example = False                # Czy ma byc pokazany przykladowy uklad
-
+        self.random:bool = False                 # Czy uklad ma byc wylosowany
+        self.example:bool = False                # Czy ma byc pokazany przykladowy uklad
+    
     def set_cards(self, cards):
         self.perm = cards
         self.example = True
@@ -137,17 +139,17 @@ class ThreeOfAKind(HelperArrangement):
                 self.print_arrengement()
                 
                 for idx in range(0, len(self.perm[self.c_idx1])):
-                    with open("three_of_a_kind.txt", "a") as file:
+                    with open("permutations_data/three_of_a_kind.txt", "a") as file:
                         file.write(self.perm[self.c_idx1][idx].print_str() + " ")
-                with open("three_of_a_kind.txt", "a") as file:
+                with open("permutations_data/three_of_a_kind.txt", "a") as file:
                     file.write("\n")
                 
-                with open("three_of_a_kind.txt", "a") as file:
+                with open("permutations_data/three_of_a_kind.txt", "a") as file:
                     file.write("Trojka: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
             self.num_arr += 1
             
-            return 3
+            return 4
         else:
             self.weight_arrangement = 0
             self.weight_arrangement_part = []

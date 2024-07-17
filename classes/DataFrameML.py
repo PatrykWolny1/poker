@@ -2,71 +2,65 @@ import csv
 import pandas as pd
 
 class DataFrameML(object):
-    idx = 0
-    id_arr = 0
-    weight = 0
-    weight_ex = 0
-    weight_after_ex = 0
-    id_arr_after = 0
-
-    exchange = ''
-
-    which_cards = {}
-
-    win_or_not = None
     
-    def __init__(self, id_arr = 0, weight = 0, exchange = '', id_arr_after = -1, which_cards = [], win_or_not = None):
-        self.id_arr = id_arr
-        self.weight = weight
+    def __init__(self, id_arr = 0, weight = 0, exchange = '', id_arr_after = 0, which_cards = [], win_or_not = None):
+        self.id_arr:int = id_arr
+        self.weight:int = weight
+        self.idx:int = 0
+        self.idx_ex:int = 0
+        self.weight_ex:int = 0
+        self.weight_after_ex:int = 0
+        self.id_arr_after:int = 0
+        self.exchange_amount:int = 0
+        
+        self.cards_exchanged:dict = {}
+        self.cards_after:dict = {}
+        
+        self.exchange:str = ''
+        self.win_or_not:bool = None
 
-    def set_win_or_not(self, win_or_not):
-        self.win_or_not = win_or_not
-
-    def set_weight_after_ex(self, weight_after_ex):
-        self.weight_after_ex = weight_after_ex
-
-    def set_weight_ex(self, weight_ex):
-        self.weight_ex = weight_ex
-
-    def set_exchange(self, exchange):
-        self.exchange = exchange
+    def set_cards_after(self, cards_after):
+        self.idx += 1
+        #print(cards_after)
+        self.cards_after.update({"Card After " + str(self.idx) : cards_after})
+    
+    def set_cards_exchanged(self, cards):
+        self.idx_ex += 1
+        self.cards_exchanged.update({"Cards Exchanged " + str(self.idx_ex) : cards})
+        
+    def set_exchange_amount(self, amount):
+        self.exchange_amount = amount
 
     def set_id_arr_after(self, id_arr_after):
         self.id_arr_after = id_arr_after
-
-    def set_which_cards(self, which_cards):
-        self.idx += 1
-        self.which_cards.update({"Cards Exchanged " + str(self.idx) : which_cards})
-        
-    def clear_dict_idx(self):
-        self.which_cards.clear()
-        self.idx = 0
-
+    
     def print(self):
-        print(self.id_arr, self.weight, self.exchange, self.id_arr_after, 
-              self.weight_after_ex, self.which_cards, self.win_or_not)
+        print(self.id_arr, self.weight, self.exchange, self.exchange_amount, self.id_arr_after, 
+              self.weight_after_ex, self.cards_after, self.cards_exchanged, self.win_or_not)
         
     def save_to_csv(self, filename):
         data = {"Arrangement ID" : self.id_arr, 
                 "Weight" : self.weight,
-                "Exchange" : self.exchange, 
+                "Exchange" : self.exchange,
+                "Exchange Amount" : self.exchange_amount, 
                 "Arrangement ID (After)" : self.id_arr_after, 
                 "Weight (After)" : self.weight_after_ex, 
                 "Win" : self.win_or_not
                }
-        data.update(self.which_cards)
+        data.update(self.cards_after)
+        data.update(self.cards_exchanged)
 
         df = pd.DataFrame([data])
         temp = df.pop("Win")
         df.insert(len(data) - 1, "Win", temp)
+        
+        pd.set_option('display.max_columns', 16)
 
-        print(df)
+        #print(df)
                 
         csv_file_path = filename 
     
-        df.to_csv(csv_file_path, mode = 'a', index=False, header = False)
-    
-        
+        df.to_csv(csv_file_path, mode = 'a', index=False, header = False)        
                 
         
 

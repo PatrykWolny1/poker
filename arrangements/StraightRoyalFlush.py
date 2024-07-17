@@ -5,21 +5,23 @@ from arrangements.CardMarkings import CardMarkings
 from itertools import permutations
 
 class StraightRoyalFlush(HelperArrangement):
-    cardmarkings = CardMarkings()  #Oznaczenia kart
-    loading_bar = LoadingBar(4799, 39, 40)
-    file = open("straight_royal_flush.txt", "w")
-    cards = []                     #Tablica na karty
-    perm = []                      #Tablica na permutacje do wag
+    
+    def __init__(self):
+        self.cardmarkings:CardMarkings = CardMarkings()  #Oznaczenia kart
+        self.loading_bar:LoadingBar = LoadingBar(4799, 39, 40)
+        self.file = open("permutations_data/straight_royal_flush.txt", "w")
+        self.cards:list = []                     #Tablica na karty
+        self.perm:list = []                      #Tablica na permutacje do wag
 
-    weight_arrangement = 0         #Tablica na wage ukladu
-    num_arr = 0                    #Liczenie ukladow kart w kolejnych iteracjach
-    c_idx2 = 0
-    rand_int = 0
+        self.weight_arrangement:int = 0         #Tablica na wage ukladu
+        self.num_arr:int = 0                    #Liczenie ukladow kart w kolejnych iteracjach
+        self.c_idx2:int = 0
+        self.rand_int:int = 0
 
-    random = False                 #Jesli jest losowanie ukladu
-    example = False                #Jesli jest recznie wpisany uklad
-    if_royal_flush = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
-    calc_weights = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
+        self.random:bool = False                 #Jesli jest losowanie ukladu
+        self.example:bool = False                #Jesli jest recznie wpisany uklad
+        self.if_royal_flush:bool = False         #Jesli jest poker krolewski (prawda) lub poker (falsz)
+        self.calc_weights:bool = True            #Zakonczenie petli while oraz identyfikacja czy jest to poker lub poker krolewski
 
     def set_cards(self, cards):
         self.perm = cards
@@ -34,7 +36,7 @@ class StraightRoyalFlush(HelperArrangement):
             return self.weight_arrangement
 
     def get_part_weight(self):
-        return None
+        return 0
 
     def print_arrengement(self):
         if self.random == False and self.if_royal_flush == False:
@@ -151,16 +153,16 @@ class StraightRoyalFlush(HelperArrangement):
                         self.print_arrengement()
                 
                         for idx in range(0, len(self.perm[self.c_idx2])):
-                            with open('straight_royal_flush.txt', 'a') as file:
+                            with open("permutations_data/straight_royal_flush.txt", 'a') as file:
                                 file.write(self.perm[self.c_idx2][idx].print_str() + " ")
-                        with open('straight_royal_flush.txt', 'a') as file:
+                        with open("permutations_data/straight_royal_flush.txt", 'a') as file:
                             file.write("\n")
                                         
                         if self.if_royal_flush == False:
-                            with open('straight_royal_flush.txt', 'a') as file:
+                            with open("permutations_data/straight_royal_flush.txt", 'a') as file:
                                 file.write("Poker: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                         else:
-                            with open('straight_royal_flush.txt', 'a') as file:
+                            with open("permutations_data/straight_royal_flush.txt", 'a') as file:
                                 file.write("Poker Krolewski: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
 
                     self.num_arr += 1
@@ -175,9 +177,9 @@ class StraightRoyalFlush(HelperArrangement):
 
         if self.example == True:
             if self.if_royal_flush == True and self.calc_weights == False:
-                return 9
+                return 10
             elif self.if_royal_flush == False and self.calc_weights == False:
-                return 8
+                return 9
 
     def straight_royal_flush_generating(self, random):
         self.random = random

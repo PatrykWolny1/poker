@@ -2,12 +2,13 @@ import random
 from itertools import chain
 
 class HelperArrangement(object):
-    indices_2d = []                     #Indeksy ukladow kart figury
-    indices_2d_color = []               # kolory
-    rand_int = 0
-    cards_all_permutations = []         #Tablica na permutacje - losowy uklad
-    weight_gen = []                     #Tablica na wagi kart
-    perm = []
+    indices_2d:list = []                     #Indeksy ukladow kart figury
+    indices_2d_color:list = []               # kolory
+    cards_all_permutations:list = []         #Tablica na permutacje - losowy uklad
+    weight_gen:list = []                     #Tablica na wagi kart
+    perm:list = []
+    
+    rand_int:int = 0
     
     def dim(self, a):
         #Jesli to nie jest lista to zwroc pusty zbior
@@ -16,15 +17,13 @@ class HelperArrangement(object):
         #Rekurencja. Dodawanie kolejno dlugosci kolejnych tablic np. [1 5 10 15] czyli 4-wymiarowa
         return [len(a)] + self.dim(a[0])
 
-    def get_indices_1(self, cards):
+    def get_indices_1(self, cards):        
         size = len(cards)
         #self.indices_2d = []
-        #print(cards)
-
         # Sprawdzanie oraz zapisanie indeksow powtarzajacych sie kart
         if self.dim(cards) == 2:
             cards = [item for sublist in cards for item in sublist]
-            print(cards)
+            #print(cards)
 
         
         for idx in range(0, size):
@@ -90,17 +89,60 @@ class HelperArrangement(object):
                         print(indices[idx])
                 print()
 
-    def random_arrangement(self):
+    def random_arrangement(self, if_combs=True):
         #Zerowanie pustych wierszy
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
 
-        self.rand_int = random.randint(0, len(self.weight_gen) - 1)
-
+        self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
+        print("RAND_INT", self.rand_int[0], self.rand_int[1])
+        print("LEN WEIGHT_GEN", len(self.weight_gen))
+        print("LEN CARDS_ALL_PERMUTATIONS", len(self.cards_all_permutations))
+        if if_combs == True:
+            cards = [self.cards_all_permutations[self.rand_int[0]],  
+                    self.cards_all_permutations[self.rand_int[1]]]
+        else:
+            cards = self.cards_all_permutations[self.rand_int[0]]
+        
+        idx1 = 0
+        idx2 = 0
+        
+        iter_idx = 0
+        if_not_the_same = True
+        repeat = 0
+        
+        while(if_not_the_same and if_combs):
+            idx1 = 0
+            
+            while idx1 < len(cards[0]):
+                idx2 = 0
+                repeat = 0
+                while idx2 < len(cards[1]):
+                    if cards[0][idx1] == cards[1][idx2]:
+                        repeat += 1
+                        cards[1] = []
+                        #print(len(self.weight_gen))
+                        #print(len(self.cards_all_permutations))
+                        cards[1] = self.cards_all_permutations[random.sample(range(0, len(self.weight_gen) - 1), 1)[0]]
+                        
+                        iter_idx=0
+                        idx1 = 0
+                        break
+                    
+                    if iter_idx == 19 and repeat == 0:
+                        if_not_the_same = False
+                    iter_idx += 1
+                    idx2 += 1
+                if repeat == 0:
+                    idx1 += 1 
+                        
+                iter_idx += 1               
+                
+                
         print("Wylosowany uklad: ", self.rand_int)
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
         print()
-
-        return self.cards_all_permutations[self.rand_int], self.rand_int
+        
+        return cards, self.rand_int, self.cards_all_permutations
 
     def get_indices_2d_1(self):
         return self.indices_2d

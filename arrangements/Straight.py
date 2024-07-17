@@ -5,21 +5,23 @@ from arrangements.CardMarkings import CardMarkings
 import itertools
 
 class Straight(HelperArrangement):
-    cardmarkings = CardMarkings()   #Oznaczenia kart
-    loading_bar = LoadingBar(1223999, 40, 39)
-    file = open("straight.txt", "w")
+    
+    def __init__(self):
+        self.cardmarkings:CardMarkings = CardMarkings()   #Oznaczenia kart
+        self.loading_bar:LoadingBar = LoadingBar(1223999, 40, 39)
+        self.file = open("permutations_data/straight.txt", "w")
 
-    cards = []                      #Tablica na karty
-    perm = []                       #Tablica na permutacje do wag - posortowana
+        self.cards:list = []                      #Tablica na karty
+        self.perm:list  = []                       #Tablica na permutacje do wag - posortowana
 
-    num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
-    weight_arrangement = 0          #Zmienna pomocnicza do sumowania wagi ukladu
-    straight_iter = 0               #Liczenie ile iteracji zostalo wykonanych
-    c_idx6 = 0
-    c_idx6_iter = 0
+        self.num_arr:int = 0                     #Liczenie ukladow kart w kolejnych iteracjach
+        self.weight_arrangement:int = 0          #Zmienna pomocnicza do sumowania wagi ukladu
+        self.straight_iter:int = 0               #Liczenie ile iteracji zostalo wykonanych
+        self.c_idx6:int = 0
+        self.c_idx6_iter:int = 0
 
-    random = False                  #Jesli jest losowanie ukladu
-    example = False                 #Jesli jest recznie wpisany uklad
+        self.random:bool = False                  #Jesli jest losowanie ukladu
+        self.example:bool = False                 #Jesli jest recznie wpisany uklad
     
     def set_cards(self, cards):
         self.perm = cards
@@ -34,7 +36,7 @@ class Straight(HelperArrangement):
             return self.weight_arrangement
 
     def get_part_weight(self):
-        return None
+        return 0
 
     def print_arrengement(self):
         if self.random == False:
@@ -144,22 +146,22 @@ class Straight(HelperArrangement):
                                                
                 
                     if self.example == True:
-                        self.print_arrengement()
-                
+                        #self.print_arrengement()
+
                         for idx in range(0, len(self.perm[self.c_idx6])):
-                            with open('straight.txt', 'a') as file:
+                            with open("permutations_data/straight.txt", 'a') as file:
                                 file.write(self.perm[self.c_idx6][idx].print_str() + " ")
-                        with open('straight.txt', 'a') as file:
+                        with open("permutations_data/straight.txt", 'a') as file:
                             file.write("\n")
                                         
-                        with open('straight.txt', 'a') as file:
+                        with open("permutations_data/straight.txt", 'a') as file:
                             file.write("Strit: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
 
                     self.num_arr += 1
                     
                     calc_weights = False
 
-                    return 4
+                    return 5
 
             idx1 += 1
             idx2 += 1

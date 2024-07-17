@@ -6,24 +6,27 @@ from itertools import chain
 import itertools
 
 class Full(HelperArrangement):
-    cardmarkings = CardMarkings()   #Oznaczenia kart
-    loading_bar = LoadingBar(449279, 40, 39)
-    file = open('full.txt', 'w')
     
-    cards = []                      #Tablica na karty
-    cards_2d = []                   #Tablica do przetwarzania ukladow
-    cards_1d = []                   #Tablica do przetwarzania ukladow
-    cards_1d_comb = []              #Tablica do przetwarzania ukladow kombinacje
-    cards_2d_5 = []                 #Tablica do wyswietlania (testy)
-    num_arr = 0                     #Liczenie ukladow kart w kolejnych iteracjach
-    c_idx6 = 0
-    rand_int = 0
-    perm = []
+    def __init__(self):
+        self.cardmarkings:CardMarkings = CardMarkings()   #Oznaczenia kart
+        self.loading_bar:LoadingBar = LoadingBar(449279, 40, 39)
+        self.file = open("permutations_data/full.txt", 'w')
+        
+        self.cards:list = []                      #Tablica na karty
+        self.cards_2d:list = []                   #Tablica do przetwarzania ukladow
+        self.cards_1d:list = []                   #Tablica do przetwarzania ukladow
+        self.cards_1d_comb:list = []              #Tablica do przetwarzania ukladow kombinacje
+        self.cards_2d_5:list = []                 #Tablica do wyswietlania (testy)
+        self.perm:list = []
 
-    if_perm_weights = True
-    random = False                  #Jesli jest losowanie ukladu
-    example = False                 #Jesli jest recznie wpisany uklad
-    print_permutations = True       #Czy wyswietlic wszystkie permutacje
+        self.num_arr:int = 0                     #Liczenie ukladow kart w kolejnych iteracjach
+        self.c_idx6:int  = 0
+        self.rand_int:int  = 0
+
+        self.if_perm_weights:bool = True
+        self.random:bool = False                  #Jesli jest losowanie ukladu
+        self.example:bool = False                 #Jesli jest recznie wpisany uklad
+        self.print_permutations:bool = True       #Czy wyswietlic wszystkie permutacje
     
     #tabnine: document
     def set_cards(self, cards):
@@ -37,9 +40,9 @@ class Full(HelperArrangement):
     def get_weight(self):
         if self.weight_arrangement > 0:
             return self.weight_arrangement
-
+        
     def get_part_weight(self):
-        return None
+        return 0
 
     def print_arrengement(self):
         if self.random == False:
@@ -99,15 +102,15 @@ class Full(HelperArrangement):
                 self.print_arrengement()
                 
                 for idx in range(0, len(self.perm[self.c_idx6])):
-                    with open('full.txt', 'a') as file:
+                    with open("permutations_data/full.txt", 'a') as file:
                         file.write(self.perm[self.c_idx6][idx].print_str() + " ")
-                with open('full.txt', 'a') as file:
+                with open("permutations_data/full.txt", 'a') as file:
                     file.write("\n")
                     
-                with open('full.txt', 'a') as file:
+                with open("permutations_data/full.txt", 'a') as file:
                     file.write("Full: " + str(self.weight_arrangement) + " Numer: " + str(self.rand_int) + "\n")
                 
-            return 6
+            return 7
 
     def full_generating(self, random):
         self.cards_2d = []
@@ -254,10 +257,10 @@ class Full(HelperArrangement):
                                 if self.random == False:
                                     for idx7 in range(0, len(self.perm[idx6])):
                                         #self.perm[idx6][idx7].print()
-                                        # with open("full.txt", "a") as f:
+                                        # with open("permutations_data/full.txt", "a") as f:
                                         self.file.write(self.perm[idx6][idx7].print_str() + " ")
                                     #print()
-                                    # with open("full.txt", "a") as f:
+                                    # with open("permutations_data/full.txt", "a") as f:
                                     self.file.write("\n")
             
                                 self.loading_bar.set_count_bar(self.num_arr)

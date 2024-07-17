@@ -13,7 +13,7 @@ class Node(object):
             
     def __str__(self) -> str:
         str_result = ''
-        
+
         # ROOT
         str_result = '\t'*5 + self.name
         
@@ -32,11 +32,11 @@ class Node(object):
         
         # No 
         if self.exchange == 'n' or self.visited == False:
-            str_result += ('\t'*3) if self.visited == False else ('\t'*3) + ' '*2 + str(self.internal_nodes[0][0].leaf_nodes[0])
+            str_result += (('\t'*3) if self.visited == False else ('\t'*3)) + ' '*2 + str(self.internal_nodes[0][0].leaf_nodes[0])
         
         # Yes
         if self.exchange == 't' or self.visited == False:
-            str_result += ('\t'*3) if self.visited == False else ('\t'*6) + ' '*2 + str(self.internal_nodes[1][0])
+            str_result += (('\t'*3) if self.visited == False else ('\t'*6)) + ' '*2 + str(self.internal_nodes[1][0])
         
         str_result += '\n'
         
@@ -50,10 +50,10 @@ class Node(object):
         
         # Two Cards
         if self.amount == 2 or self.visited == False:
-            str_result += ('\t'*5) if self.visited == False else ('\t'*5) + str(self.internal_nodes[1][0].leaf_nodes[0])
+            str_result += (('\t'*5) if self.visited == False else ('\t'*5)) + str(self.internal_nodes[1][0].leaf_nodes[0])
         
         # Three Cards
         if self.amount == 3 or self.visited == False:
-            str_result += ('\t'*3) if self.visited == False else ('\t'*9) + str(self.internal_nodes[1][0].leaf_nodes[1])
+            str_result += (('\t'*3) if self.visited == False else ('\t'*9)) + str(self.internal_nodes[1][0].leaf_nodes[1])
              
         return str_result

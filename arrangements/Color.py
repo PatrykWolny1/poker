@@ -7,27 +7,29 @@ from operator import itemgetter
 from itertools import chain
 
 class Color(HelperArrangement):
-    cardmarkings = CardMarkings()  #Oznaczenia kart
-    loading_bar_1 = LoadingBar(611519, 40, 39)
-    loading_bar_2 = LoadingBar(5095, 40, 39)
-    file = open("color.txt", "w")
+    
+    def __init__(self):
+        self.cardmarkings:CardMarkings = CardMarkings()  #Oznaczenia kart
+        self.loading_bar_1:LoadingBar = LoadingBar(611519, 40, 39)
+        self.loading_bar_2:LoadingBar = LoadingBar(5095, 40, 39)
+        self.file = open("permutations_data/color.txt", "w")
 
-    cards_2d = []           # Przygotowanie listy do wstepnego przetwarzania
-    perm = []               # Lista na permutacje
-    perm_unsort = []        # Nieposortowana lista na permutacje
+        self.cards_2d:list = []           # Przygotowanie listy do wstepnego przetwarzania
+        self.perm:list = []               # Lista na permutacje
+        self.perm_unsort:list = []        # Nieposortowana lista na permutacje
 
-    high_card = None        # Zmienna na wysoka karte
+        self.high_card:Card = None        # Zmienna na wysoka kself.arte
 
-    color_weight = 0        # Waga karty
-    color_sum = 0           # Suma ukladu
-    num_arr = 0             # Licznik
-    count = 0               # Licznik pomocniczy do funkcji temp_lambda()
-    count_1 = 0             # Licznik do loading_bar()
-    count_2 = 0             # Licznik do loading_bar()
-    c_idx2 = 0
+        self.color_weight:int = 0        # Waga karty
+        self.color_sum:int = 0           # Suma ukladu
+        self.num_arr:int = 0             # Licznik
+        self.count:int = 0               # Licznik pomocniczy do funkcji temp_lambda()
+        self.count_1:int = 0             # Licznik do loading_bar()
+        self.count_2:int = 0             # Licznik do loading_bar()
+        self.c_idx2:int = 0
 
-    random = False
-    example = False
+        self.random:bool = False
+        self.example:bool = False
 
     def set_cards(self, cards):
         self.perm = cards
@@ -42,7 +44,7 @@ class Color(HelperArrangement):
             return self.color_sum
 
     def get_part_weight(self):
-        return None
+        return 0
 
     def temp_lambda(self, t1):
         #Jesli koniec sekwencji wag i sumy [[Card int] [Card int] ... [Card int] sum][[Card int] ... [Card int] sum]
@@ -177,8 +179,8 @@ class Color(HelperArrangement):
                     #Dla kart innych niz najwyzsza policz czesciowo wage ukladu
                     if sorted(self.perm[self.c_idx2])[idx] != max(self.perm[self.c_idx2]):
                         #Potega od 1 do 4
-                        #self.file.write("IDX: " + str(idx+1) + "WEIGHT: " + str(sorted(self.perm[self.c_idx2])[idx].weight) + "\n")
-                        #print("IDX: ", idx+1, "WEIGHT: ", sorted(self.perm[self.c_idx2])[idx].weight)
+                        #self.file.write("IDX: " + str(idx+1) + "weight: " + str(sorted(self.perm[self.c_idx2])[idx].weight) + "\n")
+                        #print("IDX: ", idx+1, "weight: ", sorted(self.perm[self.c_idx2])[idx].weight)
                         
                         self.color_weight = pow(sorted(self.perm[self.c_idx2])[idx].weight, idx + 1)
                         self.color_sum += self.color_weight
@@ -198,18 +200,18 @@ class Color(HelperArrangement):
                 if self.example == True:
                     self.print_arrengement()
                     for idx in range(0, len(self.perm[self.c_idx2])):
-                        with open("color.txt", "a") as file:
+                        with open("permutations_data/color.txt", "a") as file:
                             file.write(self.perm[self.c_idx2][idx].print_str() + " ")
-                    with open("color.txt", "a") as file:
+                    with open("permutations_data/color.txt", "a") as file:
                         file.write("\n")
                     
-                    with open("color.txt", "a") as file:
+                    with open("permutations_data/color.txt", "a") as file:
                         file.write("Kareta: " + str(self.color_sum) + " Numer: " + str(self.rand_int) + "\n")
                     
                 
                 self.num_arr += 1
                     
-                return 5
+                return 6
 
     def color_generating(self, random):
         self.random = random
