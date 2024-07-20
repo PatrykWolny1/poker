@@ -29,7 +29,7 @@ class Croupier(object):
         self.exchange:str = ''
         self.game_visible:bool = False
         self.tree_visible:bool = False
-        
+    
     def play(self):        
         # print()
         
@@ -81,7 +81,9 @@ class Croupier(object):
             self.player.arrangements.set_data_frame_ml(DataFrameML(self.player.arrangements.get_id(), 
                                                                  self.player.arrangements.get_weight()))
             self.weights_cards.append(self.player.arrangements.get_part_weight())
-
+            
+            [self.player.arrangements.data_frame_ml.set_cards_before(card.weight) for card in self.player.cards]
+            
             self.one_pair_strategy.append(OnePairStructureStrategy(cards=self.weights_cards[self.num]))
             
             self.num += 1
@@ -214,6 +216,13 @@ class Croupier(object):
     
         self.deck = Deck()
         
+        self.cards = self.random_arrangement(self.all_comb_perm)
+        
+        # for idx in range(0, len(self.cards)):
+        #     for idx1 in range(0, len(self.cards[idx])):
+        #         self.cards[idx][idx1].print()
+        #     print()
+        
         #cards, rand_int = Player().cards_permutations()
 
         for idx in range(int(self.idx_players)):
@@ -258,7 +267,7 @@ class Croupier(object):
             if self.exchange == 't':
                 self.cards_exchange()
             if self.exchange == 'n':
-                self.amount_list.append([0])
+                self.amount_list.append(0)
                 self.player.arrangements.data_frame_ml.exchange = self.exchange
                 [self.player.arrangements.data_frame_ml.set_cards_after(0) for i in range(0, 5)]
                 [self.player.arrangements.data_frame_ml.set_cards_exchanged(0) for i in range(0, 3)]
@@ -350,7 +359,7 @@ class Croupier(object):
         for self.player in self.players:
             if self.tree_visible == True or self.game_visible == True:
                 self.player.arrangements.get_data_frame_ml().print()
-            #self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
+            self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
 
 
 

@@ -4,6 +4,7 @@ from arrangements.LoadingBar import LoadingBar
 from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations
 import random
+import time
 
 class OnePair(HelperArrangement):
     
@@ -333,7 +334,21 @@ class OnePair(HelperArrangement):
                     HelperArrangement().append_cards_all_permutations(cards_comb[idx1])
                     HelperArrangement().append_weight_gen(0)
                     
-                    if len_comb == 100000:
+                    # Test if cards arrangement is one pair of 2s or 3s ... As
+                    # for idx2 in range(0, len(cards_comb[idx1])):
+                    #     with open("permutations_data/one_pair.txt", "a") as file:
+                    #         file.write(cards_comb[idx1][idx2].print_str() + " ")
+                    # with open("permutations_data/one_pair.txt", "a") as file:
+                    #     file.write("\n")
+                        # if cards_comb[idx1][0].weight == 2:
+                        #     with open("permutations_data/one_pair.txt", "a") as file:
+                        #         file.write(cards_comb[idx1][idx2].print_str() + " ")
+                        #     with open("permutations_data/one_pair.txt", "a") as file:
+                        #         file.write(str(len_comb))
+                        #     time.sleep(1000)
+
+                        
+                    if len_comb == 84480:           # One pair of 2s
                         #print(len_comb)
                         self.file.close()
                         
