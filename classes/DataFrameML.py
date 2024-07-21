@@ -13,6 +13,7 @@ class DataFrameML(object):
         self.weight_after_ex:int = 0
         self.id_arr_after:int = 0
         self.exchange_amount:int = 0
+        self.play
         
         self.cards_before:dict = {}
         self.cards_exchanged:dict = {}
@@ -47,6 +48,7 @@ class DataFrameML(object):
     def save_to_csv(self, filename):
         data = {# "Arrangement ID" : self.id_arr, 
                 # "Weight" : self.weight,
+                "Player ID" : self.player_id,
                 "Exchange" : self.exchange,
                 "Exchange Amount" : self.exchange_amount, 
                 # "Arrangement ID (After)" : self.id_arr_after, 
