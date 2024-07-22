@@ -15,7 +15,7 @@ from tensorflow.keras.layers import Dense, Input
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler 
 
 
 
@@ -81,12 +81,11 @@ def train_with_optimizer(X_train, y_train, optimizer, learning_rate, callbacks=[
     # Struktura modelu
     model=Sequential(
             [
-                Input([len(X_train.columns)]),
-                Dense(units=128, activation='relu', name='layer1'),
-                tf.keras.layers.Dropout(0.2),
-                Dense(units=64, activation='relu', name='layer2'),
-
-                Dense(units=1, activation='hard_sigmoid', name='layer7')
+                Input(shape=[len(X_train.columns),], name = 'input_layer'),
+                Dense(units=512, activation='relu', name='layer1'),
+                tf.keras.layers.Dropout(0.2),               
+                Dense(units=256, activation='leaky_relu', name='layer4'),
+                Dense(units=1, activation='sigmoid', name='layer5')
             ]
         )
    
@@ -98,9 +97,9 @@ def train_with_optimizer(X_train, y_train, optimizer, learning_rate, callbacks=[
     model.summary()
 #    np.argmax(predictions[0]),test_labels[0]
 
-    callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=100)
+    callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
 
-    history = model.fit(X_train, y_train, epochs = 1000, callbacks=[callbacks],
+    history = model.fit(X_train, y_train, batch_size = 512, epochs = 200, callbacks=[callbacks],
                           validation_split = 0.2)
 
     test_loss, test_acc = model.evaluate(X_train, y_train)
@@ -141,13 +140,12 @@ def main():
     df.drop(columns=['Card Before 1', 'Card Before 2'], 
                  axis=1, inplace=True)
     
-    df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
+    df.drop(columns=['Exchange', 'Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
                  axis=1, inplace=True)
     
     
-    
-    df = pd.get_dummies(df, drop_first=False, columns=['Exchange', 'Exchange Amount', 
-                                                      'Card Before 3', 'Card Before 4', 'Card Before 5'])
+    df = df.fillna(0)
+    df = pd.get_dummies(df, drop_first=False, columns=['Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
    
     print(df)
     # print(df['Win'])
@@ -171,18 +169,18 @@ def main():
     y = y.astype(np.int64)
     
     # create a scaler object
-    scaler = MinMaxScaler()
+    # scaler = StandardScaler()
     
-    # fit and transform the data
-    X_norm = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
-    print(X_norm)
-    X_norm.describe()
+    # # fit and transform the data
+    # X_norm = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
+    # print(X_norm)
+    # X_norm.describe()
     
-    X_train, X_test, y_train, y_test = train_test_split(X_norm, y, test_size=0.2, random_state=10)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
     
     # df = df.head().corr()
     # df.to_excel('corr.xlsx', index=False)
-
+    print(X_train)
     
     # # Create an empty list to store the accuracies
     accuracies = []
@@ -194,7 +192,7 @@ def main():
                   tf.keras.optimizers.Adadelta]
     
     # Try out different learning rates
-    learning_rates = [0.00001, 0.000001]
+    learning_rates = [0.00001]
     
     optimizer = tf.keras.optimizers.Adam
 
@@ -209,7 +207,7 @@ def main():
         losses.append(test_loss)
         visualize_model(history)
         plot_loss_accuracy(history)
-        model.save('model_' + str(idx) + '.keras')
+        model.save('model' + '_test_acc=' + str(test_acc) + 'test_loss=' + str(test_loss) + '.keras')
         idx += 1
 
     print(accuracies)
