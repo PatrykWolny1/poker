@@ -15,7 +15,7 @@ class TwoThreeCardsProbability(ComputeObject):
             else:
                 self.data[idx] = None
                 
-        
+
 
         if count_1 == 2 or count_1 == 1:
             self.p1 = 0
