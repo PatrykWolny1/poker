@@ -20,20 +20,25 @@ from machine_learning.M_learning import M_learning
 
 def main():
     start_time = time.time()
-    #cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
-    # for i in range(0, 1):
-    #     croupier = Croupier(all_comb_perm)
-    #     print(i)
-    #     croupier.play()
-    
-    model_ml = M_learning()
-    model_ml.pre_processing()
-    model_ml.ml_learning_and_prediction()
     
     
+   
+    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra)")):
+        if choice == '1':
+            cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
+            Player().arrangements.cards_all_permutations = 0
+
+        if choice == '2':
+            for i in range(0, 1):
+                croupier = Croupier(all_comb_perm)
+                #print(i)
+                croupier.play()
     
+    #model_ml = M_learning()
+    #model_ml.pre_processing()
+    #model_ml.ml_learning_and_prediction()
     
-    
+        
     end_time = time.time() - start_time
     with open("time.txt", "w") as file:
         file.write(str(end_time) + " sec\n")

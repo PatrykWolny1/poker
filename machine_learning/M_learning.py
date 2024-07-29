@@ -84,8 +84,8 @@ class M_learning(object):
                     Input(shape=[len(X_train.columns),], name = 'input_layer'),
                     Dense(units=512, activation='relu', name='layer1'),
                     tf.keras.layers.Dropout(0.2),               
-                    Dense(units=256, activation='leaky_relu', name='layer4'),
-                    Dense(units=1, activation='sigmoid', name='layer5')
+                    Dense(units=256, activation='leaky_relu', name='layer2'),
+                    Dense(units=1, activation='sigmoid', name='layer3')
                 ]
             )
     
@@ -137,7 +137,7 @@ class M_learning(object):
             losses.append(test_loss)
             self.visualize_model(history)
             self.plot_loss_accuracy(history)
-            model.save('models_prediction/model' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + 'test_loss=' + str("{:.3f}".format(test_loss)) + '.keras')
+            model.save('models_prediction/model' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '.keras')
             idx += 1
 
         print(accuracies)

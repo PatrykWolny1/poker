@@ -112,61 +112,68 @@ class Player(object):
         self.arrangements.set_cards_after(self.cards)
 
     def cards_permutations(self):
-        # print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM): ")
+            print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM | 3 - WYJSCIE: ")
 
-        #if_all_perm = input()
-        if_rand = "2"
+            if_rand = input()
+            #if_rand = "2"
 
-        if if_rand == "1":
-            self.random = False
-        elif if_rand == "2":
-            self.random = True
+            if if_rand == "1":
+                self.random = False
+                rand_arr = True
+            elif if_rand == "2":
+                self.random = True
+                rand_arr = True
+            elif if_rand == "3":
+                return 0
 
-        # print("Wybierz uklad do wygenerowania:\n"
-        #       "(1 - POKER/POKER KROLEWSKI)\n"
-        #       "(2 - KARETA)\n"
-        #       "(3 - FULL)\n"
-        #       "(4 - KOLOR)\n"
-        #       "(5 - STRIT)\n"
-        #       "(6 - TROJKA\n"
-        #       "(7 - DWIE PARY)\n"
-        #       "(8 - JEDNA PARA)\n"
-        #       "(9 - WYSOKA KARTA)\n")
+            print("Wybierz uklad do wygenerowania:\n"
+                "(1 - POKER/POKER KROLEWSKI)\n"
+                "(2 - KARETA)\n"
+                "(3 - FULL)\n"
+                "(4 - KOLOR)\n"
+                "(5 - STRIT)\n"
+                "(6 - TROJKA\n"
+                "(7 - DWIE PARY)\n"
+                "(8 - JEDNA PARA)\n"
+                "(9 - WYSOKA KARTA)\n")
 
-        #arrangement = input()
-        arrangement = "8"
-        
-        blockPrint()
-        
-        if arrangement == "1":
-            self.cards, self.rand_int = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
-        if arrangement == "2":
-            self.cards, self.rand_int = self.arrangements.carriage.carriage_generating(self.random)
-        if arrangement == "3":
-            self.cards, self.rand_int = self.arrangements.full.full_generating(self.random)
-        if arrangement == "4":
-            self.cards, self.rand_int = self.arrangements.color.color_generating(self.random)
-        if arrangement == "5":
-            self.cards, self.rand_int = self.arrangements.straight.straight_generating(self.random)
-        if arrangement == "6":
-            self.cards, self.rand_int = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
-        if arrangement == "7":
-            self.cards, self.rand_int = self.arrangements.two_pairs.two_pairs_generating(self.random)
-        if arrangement == "8":
-            self.cards, self.rand_int, self.all_comb_perm = self.arrangements.one_pair.one_pair_generating(self.random)
-        if arrangement == "9":
-            self.cards, self.rand_int = self.arrangements.high_card.high_card_generating(self.random)
+            arrangement = input()
+            #arrangement = "8"
+            
+            #blockPrint()
+            
+            if arrangement == "1":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.straight_royal_flush.straight_royal_flush_generating(self.random)
+            if arrangement == "2":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.carriage.carriage_generating(self.random)
+            if arrangement == "3":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.full.full_generating(self.random)
+            if arrangement == "4":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.color.color_generating(self.random)
+            if arrangement == "5":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.straight.straight_generating(self.random)
+            if arrangement == "6":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.three_of_a_kind.three_of_a_kind_generating(self.random)
+            if arrangement == "7":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.two_pairs.two_pairs_generating(self.random)
+            if arrangement == "8":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.one_pair.one_pair_generating(self.random)
+            if arrangement == "9":
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.high_card.high_card_generating(self.random)
 
-        #print(self.cards)
-        
-        self.cards = list(self.cards)
-
-        self.arrangements.set_cards(self.cards)
-        self.arrangements.set_rand_int(self.rand_int)
-        
-        enablePrint()
-        
-        return self.cards, self.rand_int, self.all_comb_perm
+            #print(self.cards)
+            
+            self.cards = list(self.cards)
+            
+            if rand_arr:
+                self.arrangements.set_cards(self.cards[0])
+                self.arrangements.set_rand_int(self.rand_int)
+                self.arrangements.print()
+                self.arrangements.check_arrangement()
+            
+            #enablePrint()
+            
+            return self.cards, self.rand_int, self.all_comb_perm
         
                 
     def get_arrangements(self):

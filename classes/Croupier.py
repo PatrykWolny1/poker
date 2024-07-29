@@ -35,7 +35,14 @@ class Croupier(object):
         
 
         self.set_cards()
+        
         self.set_players_nicknames()
+        
+        # for self.player in self.players:
+        #     self.player.arrangements.print()
+        #     self.player.arrangements.set_rand_int()
+        #     self.player.arrangements.check_arrangement()
+        
             
         # print()
         
@@ -218,19 +225,15 @@ class Croupier(object):
         
         self.cards = self.random_arrangement(self.all_comb_perm)
         
-        # for idx in range(0, len(self.cards)):
-        #     for idx1 in range(0, len(self.cards[idx])):
-        #         self.cards[idx][idx1].print()
-        #     print()
         
         #cards, rand_int = Player().cards_permutations()
 
         for idx in range(int(self.idx_players)):
-            #nick = str(input("Pseudonim gracza: "))
-            if idx == 0:
-                nick = 'Nick'
-            if idx == 1:                                           
-                nick = 'Adam'
+            nick = str(input("Pseudonim gracza: "))
+            # if idx == 0:
+            #     nick = 'Nick'
+            # if idx == 1:                                           
+            #     nick = 'Adam'
                 
             self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
                                        if_deck=False, if_show_perm=False))

@@ -13,7 +13,6 @@ class DataFrameML(object):
         self.weight_after_ex:int = 0
         self.id_arr_after:int = 0
         self.exchange_amount:int = 0
-        self.play
         
         self.cards_before:dict = {}
         self.cards_exchanged:dict = {}

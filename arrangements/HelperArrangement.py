@@ -94,9 +94,7 @@ class HelperArrangement(object):
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
 
         self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
-        print("RAND_INT", self.rand_int[0], self.rand_int[1])
-        print("LEN WEIGHT_GEN", len(self.weight_gen))
-        print("LEN CARDS_ALL_PERMUTATIONS", len(self.cards_all_permutations))
+     
         if if_combs == True:
             cards = [self.cards_all_permutations[self.rand_int[0]],  
                     self.cards_all_permutations[self.rand_int[1]]]
@@ -137,11 +135,13 @@ class HelperArrangement(object):
                         
                 iter_idx += 1               
                 
-                
         print("Wylosowany uklad: ", self.rand_int)
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
         print()
         
+        HelperArrangement.weight_gen.clear()
+        HelperArrangement.cards_all_permutations.clear()
+
         return cards, self.rand_int, self.cards_all_permutations
 
     def get_indices_2d_1(self):

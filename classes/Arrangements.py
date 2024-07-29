@@ -58,11 +58,11 @@ class Arrangements(object):
                     
     def check_arrangement(self):
         self.ids_arr = []
-        blockPrint()
+        #blockPrint()
         for x in self.arrangements:
             x.set_rand_int(self.rand_int)
             self.ids_arr.append(x.arrangement_recogn()) 
-        enablePrint()
+        #enablePrint()
         #print(self.ids_arr)
 
     def set_rand_int(self, rand_int):
