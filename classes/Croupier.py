@@ -4,18 +4,21 @@ from classes.Card import Card
 from classes.DataFrameML import DataFrameML
 from decision_tree_structure.Node import Node
 from decision_tree_structure.OnePairStructureStrategy import OnePairStructureStrategy
+from sklearn.model_selection import train_test_split
 from operator import itemgetter
 from random import choice
 import numpy as np
 import sys
 import os
 import random
+import pandas as pd
+import tensorflow as tf
 
 
     
 class Croupier(object):
 
-    def __init__(self, all_comb_perm):
+    def __init__(self, all_comb_perm = []):
         self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
@@ -27,14 +30,14 @@ class Croupier(object):
         self.idx_players:int = 0
         
         self.exchange:str = ''
-        self.game_visible:bool = False
+        self.game_visible:bool = True
         self.tree_visible:bool = False
     
     def play(self):        
         # print()
         
 
-        self.set_cards()
+        #self.set_cards()
         
         self.set_players_nicknames()
         
@@ -134,7 +137,7 @@ class Croupier(object):
 
         if self.tree_visible == True:
             print("-"*100)
-        #for amount, exchange in self.amount_list, self.exchange_list:
+
         for strategy in self.one_pair_strategy:
             if self.tree_visible == True:
                 print("Liczba wymienionych kart: " + str(self.amount_list[num_1]) 
@@ -223,21 +226,24 @@ class Croupier(object):
     
         self.deck = Deck()
         
-        self.cards = self.random_arrangement(self.all_comb_perm)
+        if len(self.all_comb_perm) != 0:
+            self.cards = self.random_arrangement(self.all_comb_perm)
         
         
         #cards, rand_int = Player().cards_permutations()
 
         for idx in range(int(self.idx_players)):
-            nick = str(input("Pseudonim gracza: "))
-            # if idx == 0:
-            #     nick = 'Nick'
-            # if idx == 1:                                           
-            #     nick = 'Adam'
-                
-            self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
-                                       if_deck=False, if_show_perm=False))
+            #nick = str(input("Pseudonim gracza: "))
+            if idx == 0:
+                nick = 'Nick'
+                self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
+                                        if_deck=False, if_show_perm=False))
         
+            if idx == 1:                                           
+                nick = 'Adam'
+                self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
+                                        if_deck=False, if_show_perm=False, si_boolean=True))
+            
             #self.deck.print()
 
     def cards_check_exchange_add_weights(self):
@@ -252,14 +258,14 @@ class Croupier(object):
                 print()
 
             #print(self.player.arrangements.get_weight())
-
-            #self.exchange = str(input("Wymiana kart [T/N]: ")).lower()
-            #self.exchange = choice(['t', 'n'])
             
+            if self.player.si_boolean == True:
+                self.exchange = np.random.choice(['n', 't'], size=1, 
+                                    p=[float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[0]),
+                                       float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[1])])    
+            else:
+                self.exchange = str(input("Wymiana kart [T/N]: ")).lower()            
             
-            self.exchange = np.random.choice(['n', 't'], size=1, p=[float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[0]),
-                                                                    float(self.one_pair_strategy[self.num].root.internal_nodes[0][0].branches[1])])    
-            #self.exchange = 't'
             self.exchange_list.append(self.exchange)
 
             if self.game_visible == True:
@@ -292,13 +298,65 @@ class Croupier(object):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        #self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-        #self.amount = choice(list(range(0, 6)))
-        
-        self.amount = np.random.choice([2, 3], size=1, p=[float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[0]),
-                                                          float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])    
-          
-        self.amount = int(self.amount)
+        saved_model = tf.keras.models.load_model('models_prediction/model_Adam_00001_test_acc=0.608_test_loss=0.162.keras')
+
+        if self.player.si_boolean == True:
+            self.amount = np.random.choice([2, 3], size=1, 
+                                    p=[float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[0]),
+                                       float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])
+            self.amount = int(self.amount)
+            
+            cards_player_sorted = sorted(self.player.cards)
+
+            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+                                'Exchange Amount' : [self.amount],
+                                'Card Before 1' : [cards_player_sorted[0].weight],
+                                'Card Before 2' : [cards_player_sorted[1].weight],
+                                'Card Before 3' : [cards_player_sorted[2].weight],
+                                'Card Before 4' : [cards_player_sorted[3].weight],
+                                'Card Before 5' : [cards_player_sorted[4].weight]
+                                })
+            
+            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            
+            X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
+                                axis=1, inplace=True)
+            
+            X_game = X_game.astype(np.int64)
+                        
+            y_preds = saved_model.predict(X_game).flatten()
+
+            print(y_preds)
+
+
+        else:
+            self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
+            saved_model = tf.keras.models.load_model('models_prediction/model_Adam_00001_test_acc=0.608_test_loss=0.162.keras')
+            
+            cards_player_sorted = sorted(self.player.cards)
+
+            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+                                'Exchange Amount' : [self.amount],
+                                'Card Before 1' : [cards_player_sorted[0].weight],
+                                'Card Before 2' : [cards_player_sorted[1].weight],
+                                'Card Before 3' : [cards_player_sorted[2].weight],
+                                'Card Before 4' : [cards_player_sorted[3].weight],
+                                'Card Before 5' : [cards_player_sorted[4].weight]
+                                })
+            
+            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            
+            X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
+                                axis=1, inplace=True)
+
+            X_game = X_game.astype(np.int64)
+
+            y_preds = saved_model.predict(X_game).flatten()
+
+            print(y_preds)
+    
         self.amount_list.append(self.amount)
         
         if self.game_visible == True:
@@ -309,7 +367,8 @@ class Croupier(object):
             return
 
         self.amount = self.player.return_to_croupier(self.amount, 
-                                                     self.player.arrangements.get_part_weight(), game_visible=False)
+                                                     self.player.arrangements.get_part_weight(), game_visible=False,
+                                                     si_boolean=self.player.si_boolean)
         if self.game_visible == True:
             print(self.amount)
         self.deal_cards()
@@ -361,7 +420,8 @@ class Croupier(object):
 
         for self.player in self.players:
             if self.tree_visible == True or self.game_visible == True:
-                self.player.arrangements.get_data_frame_ml().print()
+                #self.player.arrangements.get_data_frame_ml().print()
+                pass
             self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
 
 

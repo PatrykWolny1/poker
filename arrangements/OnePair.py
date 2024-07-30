@@ -14,6 +14,8 @@ class OnePair(HelperArrangement):
         self.limit_rand:int = 1000             # Ograniczenie dla liczby obliczen 1 098 240
         self.one_iter:int = 120
         self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
+        self.loading_bar_combs:LoadingBar = LoadingBar(84480 - 1, 40, 40)          #Kombinacje: 
+
         self.file = open("permutations_data/one_pair.txt", "w")
 
         self.perm:list = []                      # Lista na permutacje
@@ -328,24 +330,29 @@ class OnePair(HelperArrangement):
                 self.perm = list(permutations(cards_comb[idx1], 5))
 
                 len_comb += 1
+                
+                self.loading_bar_combs.set_count_bar(len_comb)
+                self.loading_bar_combs.display_bar()
+                
                 if self.if_combs == True:
                     cards_comb[idx1] = list(cards_comb[idx1])
 
                     HelperArrangement().append_cards_all_permutations(cards_comb[idx1])
                     HelperArrangement().append_weight_gen(0)
                     
-                    # Test if cards arrangement is one pair of 2s or 3s ... As
+                    # # Test if cards arrangement is one pair of 2s or 3s ... As
                     # for idx2 in range(0, len(cards_comb[idx1])):
                     #     with open("permutations_data/one_pair.txt", "a") as file:
                     #         file.write(cards_comb[idx1][idx2].print_str() + " ")
                     # with open("permutations_data/one_pair.txt", "a") as file:
                     #     file.write("\n")
-                        # if cards_comb[idx1][0].weight == 2:
-                        #     with open("permutations_data/one_pair.txt", "a") as file:
-                        #         file.write(cards_comb[idx1][idx2].print_str() + " ")
-                        #     with open("permutations_data/one_pair.txt", "a") as file:
-                        #         file.write(str(len_comb))
-                        #     time.sleep(1000)
+                    #     if cards_comb[idx1][0].weight == 2:
+                    #         with open("permutations_data/one_pair.txt", "a") as file:
+                    #             file.write(cards_comb[idx1][idx2].print_str() + " ")
+                    #         with open("permutations_data/one_pair.txt", "a") as file:
+                    #             file.write(str(len_comb))
+                    #         print("END")
+                    #         time.sleep(1000)
 
                         
                     if len_comb == 84480:           # One pair of 2s

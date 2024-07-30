@@ -3,15 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, LSTM
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns
 
 class M_learning(object):
     
     def __init__(self):
-        self.df = pd.read_csv('poker_game.csv', on_bad_lines='skip', engine='python')
-        pd.set_option('display.max_columns', 25)
-        pd.options.display.float_format = '{:,.0f}'.format
+        self.df = pd.read_csv('ml_data/poker_game_one_pair_2s.csv', on_bad_lines='skip', engine='python')
+        pd.set_option('display.max_columns', 35)
+        pd.options.display.float_format = '{:,.3f}'.format
         self.X = None
         self.y = None
         self.X_train = None 
@@ -19,39 +21,73 @@ class M_learning(object):
         self.y_train = None 
         self.y_test = None
         self.y_preds = None
+        self.model_no = None
     
-    def pre_processing(self):
+    def pre_processing(self):        
         self.df.loc[self.df['Exchange'] == '[\'t\']', 'Exchange'] = True
         self.df.loc[self.df['Exchange'] == '[\'n\']', 'Exchange'] = False
         
         self.df.loc[self.df['Win'] == True, 'Win'] = True
         self.df.loc[self.df['Win'] == False, 'Win'] = False
-        
+      
         self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
                     axis=1, inplace=True)
         
         self.df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
                     axis=1, inplace=True)
-        
-        self.df = self.df.fillna(0)
-        self.df = pd.get_dummies(self.df, drop_first=False, columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
-        
+            
+        # elif model_no == 2:
+        #     self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
+        #                 axis=1, inplace=True)
+            
+        #     self.df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
+        #                 axis=1, inplace=True)      
+            
+        #     self.df.drop(columns=['Exchange'], 
+        #                 axis=1, inplace=True)   
+
+        #self.df = self.df.fillna(0)
+        # self.df = pd.get_dummies(self.df, drop_first=False, 
+        #                 columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
+    
         #fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(17, 5))
-        # ax1.hist(df['Card Before 3'], label='Card Before 3')
-        # ax2.hist(df['Card Before 4'], label='Card Before 4')
-        # ax3.hist(df['Card Before 5'], label='Card Before 5')
-        # ax4.hist(df['Win'], label='Win')
+        # ax1.hist(self.df['Card Before 3'], label='Card Before 3')
+        # ax2.hist(self.df['Card Before 4'], label='Card Before 4')
+        # ax3.hist(self.df['Card Before 5'], label='Card Before 5')
+        # ax4.hist(self.df['Win'], label='Win')
         #plt.show()
         
+        # ----------------------------------------------------------------------
+        # self.df.loc[self.df['Exchange_True'] == True, 'Exchange_True'] = 1
+        # self.df.loc[self.df['Exchange_True'] == False, 'Exchange_True'] = 0
+        # self.df.loc[self.df['Exchange_False'] == True, 'Exchange_False'] = 1
+        # self.df.loc[self.df['Exchange_False'] == False, 'Exchange_False'] = 0
+        
+        # print(self.df)
+        # fig, (ax1) = plt.subplots(1, 1, figsize=(17, 5))
+        # ax1.hist(self.df['Exchange_False'], label='Exchange')
+        # plt.show()
+
+        # sns.set_theme(style="darkgrid")
+        # tdc =sns.scatterplot(x = 'Exchange_False', y = self.df.index[:500], 
+        # data = self.df[:500], hue = 'Win')
+        # tdc.legend(loc='center left',
+        # bbox_to_anchor=(1.0, 0.5), ncol=1)
+        # plt.show()
+        # ----------------------------------------------------------------------
+
         #df.to_excel('poker_game_out.xlsx', index=True)
         #df.to_csv('poker_game_out.csv', index=True)
-            
         self.X = self.df.drop("Win", axis=1)
         self.y = self.df["Win"]
         print(self.y)
         
         self.X = self.X.astype(np.int64)
         self.y = self.y.astype(np.int64)
+        print(self.X)
+        print(self.y)
+        # scaler = MinMaxScaler()
+        # X_norm = pd.DataFrame(scaler.fit_transform(self.X), columns=self.X.columns)
         
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=10)
 
@@ -79,6 +115,7 @@ class M_learning(object):
 
     def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):     
         # Struktura modelu
+
         model=Sequential(
                 [
                     Input(shape=[len(X_train.columns),], name = 'input_layer'),
@@ -91,14 +128,15 @@ class M_learning(object):
     
         model.compile(optimizer=optimizer(
                     learning_rate=learning_rate),
-                    loss="binary_focal_crossentropy",        
+                    loss="binary_focal_crossentropy",                
                     metrics=["accuracy"])
 
         model.summary()
+         
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
 
-        history = model.fit(X_train, y_train, batch_size = 512, epochs = 200, callbacks=[callbacks],
+        history = model.fit(X_train, y_train, epochs = 200, callbacks=[callbacks],
                             validation_split = 0.2)
 
         test_loss, test_acc = model.evaluate(X_train, y_train)
@@ -143,15 +181,16 @@ class M_learning(object):
         print(accuracies)
         print(losses)
         
-        self.y_preds = model.predict(self.X_test).flatten()
-        self.y_preds = (self.y_preds > 0.5).astype(int)
+        self.y_preds = model.predict(self.X_test).flatten() 
+        print(self.y_preds)
         
-        df_predictions = pd.DataFrame({'Ground_Truth': self.y_test, 'Model_prediction': self.y_preds}, 
-                                    columns=['Ground_Truth','Model_prediction']) 
-        df_predictions['Model_prediction'] = df_predictions['Model_prediction'].astype(np.float64)
+        #self.y_preds = (self.y_preds > 0.5).astype(int)        
         
+        df_predictions = pd.DataFrame({'Ground_Truth (Win)': self.y_test, 'Model_prediction (Win)': self.y_preds}, 
+                                       columns=['Ground_Truth (Win)', 'Model_prediction (Win)'])
+
         print(df_predictions) 
-        
+                
         df_predictions.to_excel('models_prediction/predictions.xlsx')
         
     def plot_loss_accuracy(self, history_1):

@@ -15,7 +15,8 @@ class Player(object):
     it_cards:int = 0
     cards_2d:list = []
     
-    def __init__(self, deck = Deck(), nick = "Nick", index = None, perm = None, if_deck = None, cards = [], if_show_perm = None):
+    def __init__(self, deck = Deck(), nick = "Nick", index = None, perm = None, if_deck = None, 
+                 cards = [], if_show_perm = None, si_boolean = None):
         deck.shuffling()
         self.cards_exchanged:list = []
         self.nick:str = nick
@@ -23,6 +24,7 @@ class Player(object):
         self.arrangements:Arrangements = Arrangements()
         self.cards:list = []
         self.all_comb_perm:list = []
+        self.si_boolean:bool = si_boolean
         
         if if_deck == True and if_show_perm == False:
 
@@ -43,7 +45,7 @@ class Player(object):
             #deck.print()
         
         
-    def return_to_croupier(self, amount = 0, cards_to_exchange = [], game_visible = True):
+    def return_to_croupier(self, amount = 0, cards_to_exchange = [], game_visible = True, si_boolean = None):
         self.amount = amount
         temp = self.cards.copy()
 
@@ -56,41 +58,43 @@ class Player(object):
                     self.print()
 
             if self.amount != 5:
-                #which_card = input("Ktora karta[1-5]: ")
-                which_card = choice(list(range(1, len(self.cards) + 1)))            
-                
-                if game_visible == True:
-                    print()
-                
-                if amount == 2:
-                #which_card = self.cards.index(cards_to_exchange[idx]) + 1
+                if si_boolean == True:
+                    which_card = choice(list(range(1, len(self.cards) + 1)))            
                     
-                    which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
-                    which_card = self.cards.index(which_card_card) + 1     
-                    which = int(which_card)
-                    temp_card = temp.pop(which - 1)
-                    self.cards_exchanged.append(temp_card)
+                    if game_visible == True:
+                        print()
                     
-                if amount == 3:
+                    if amount == 2 and si_boolean == True:
                     #which_card = self.cards.index(cards_to_exchange[idx]) + 1
+                        
+                        which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
+                        which_card = self.cards.index(which_card_card) + 1     
+                        which = int(which_card)
+                        temp_card = temp.pop(which - 1)
+                        self.cards_exchanged.append(temp_card)
+                        
+                    if amount == 3 and si_boolean == True:
+                        #which_card = self.cards.index(cards_to_exchange[idx]) + 1
+                        
+                        which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
+                        which_card = self.cards.index(which_card_card) + 1
+                        which = int(which_card)
+                        temp_card = temp.pop(which - 1)
+                        self.cards_exchanged.append(temp_card)
                     
-                    which_card_card = next((card for card in self.cards if card.weight == cards_to_exchange[idx]), None)
-                    which_card = self.cards.index(which_card_card) + 1
+                    if game_visible == True:    
+                        print("Ktora karta: ", which_card)
+
+                        print()
+                    
+                    if amount == 2 and idx == 1 and si_boolean == True:
+                        self.cards_exchanged.append(Card(empty=True))
+                else:
+                    self.print()
+                    which_card = input("Ktora karta[1-5]: ")
                     which = int(which_card)
                     temp_card = temp.pop(which - 1)
                     self.cards_exchanged.append(temp_card)
-                
-                if game_visible == True:    
-                    print("Ktora karta: ", which_card)
-
-                    print()
-                
-                if amount == 2 and idx == 1:
-                    self.cards_exchanged.append(Card(empty=True))
-
-                # which = int(which_card)
-                # temp_card = temp.pop(which - 1)
-                # self.cards_exchanged.append(temp_card)
                 
             else:
                 temp.pop()

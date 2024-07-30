@@ -3,7 +3,7 @@ import pandas as pd
 
 class DataFrameML(object):
     
-    def __init__(self, id_arr = 0, weight = 0, exchange = '', id_arr_after = 0, which_cards = [], win_or_not = None):
+    def __init__(self, id_arr = 0, weight = 0, nick = '', exchange = '', id_arr_after = 0, which_cards = [], win_or_not = None):
         self.id_arr:int = id_arr
         self.weight:int = weight
         self.idx:int = 0
@@ -13,6 +13,7 @@ class DataFrameML(object):
         self.weight_after_ex:int = 0
         self.id_arr_after:int = 0
         self.exchange_amount:int = 0
+        self.nick = nick
         
         self.cards_before:dict = {}
         self.cards_exchanged:dict = {}
@@ -47,7 +48,7 @@ class DataFrameML(object):
     def save_to_csv(self, filename):
         data = {# "Arrangement ID" : self.id_arr, 
                 # "Weight" : self.weight,
-                "Player ID" : self.player_id,
+                "Player ID" : self.nick,
                 "Exchange" : self.exchange,
                 "Exchange Amount" : self.exchange_amount, 
                 # "Arrangement ID (After)" : self.id_arr_after, 

@@ -22,21 +22,30 @@ def main():
     start_time = time.time()
     
     
-   
-    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra)")):
+    cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
+
+    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra | 3 - Uczenie Maszynowe)")):
         if choice == '1':
             cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
-            Player().arrangements.cards_all_permutations = 0
 
+        #----------------------------------- ZAPIS LOSOWYCH GIER DO PLIKU -----------------------------------
+        # if choice == '2':
+        #     cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
+        # for i in range(0, 1):
+        #     croupier = Croupier(all_comb_perm)
+        #     #print(i)
+        #     croupier.play()
+        
         if choice == '2':
             for i in range(0, 1):
                 croupier = Croupier(all_comb_perm)
                 #print(i)
                 croupier.play()
     
-    #model_ml = M_learning()
-    #model_ml.pre_processing()
-    #model_ml.ml_learning_and_prediction()
+        if choice == '3':
+            model_ml = M_learning()
+            model_ml.pre_processing()
+            model_ml.ml_learning_and_prediction()
     
         
     end_time = time.time() - start_time
