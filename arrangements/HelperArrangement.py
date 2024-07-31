@@ -95,11 +95,11 @@ class HelperArrangement(object):
 
         self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
      
-        if if_combs == True:
-            cards = [self.cards_all_permutations[self.rand_int[0]],  
-                    self.cards_all_permutations[self.rand_int[1]]]
-        else:
-            cards = self.cards_all_permutations[self.rand_int[0]]
+        #if if_combs == True:
+        cards = [self.cards_all_permutations[self.rand_int[0]],  
+                self.cards_all_permutations[self.rand_int[1]]]
+        #else:
+         #   cards = self.cards_all_permutations[self.rand_int[0]]
         
         idx1 = 0
         idx2 = 0
@@ -110,7 +110,7 @@ class HelperArrangement(object):
         
         while(if_not_the_same and if_combs):
             idx1 = 0
-            
+
             while idx1 < len(cards[0]):
                 idx2 = 0
                 repeat = 0

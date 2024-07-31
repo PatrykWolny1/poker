@@ -41,6 +41,9 @@ class DataFrameML(object):
     def set_id_arr_after(self, id_arr_after):
         self.id_arr_after = id_arr_after
     
+    def set_nick(self, nick):
+        self.nick = nick
+    
     def print(self):
         print(self.id_arr, self.weight, self.cards_before, self.exchange, self.exchange_amount, self.id_arr_after, 
               self.weight_after_ex, self.cards_after, self.cards_exchanged, self.win_or_not)

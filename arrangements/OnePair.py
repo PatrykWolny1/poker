@@ -5,18 +5,20 @@ from arrangements.CardMarkings import CardMarkings
 from itertools import permutations, combinations
 import random
 import time
+import pickle
 
 class OnePair(HelperArrangement):
     
     def __init__(self):
         self.cardmarkings:CardMarkings = CardMarkings()  # Oznaczenia kart
         self.high_card:Card = Card()             # Wysoka karta
-        self.limit_rand:int = 1000             # Ograniczenie dla liczby obliczen 1 098 240
+        self.limit_rand:int = 1000             # Ograniczenie dla liczby obliczen  
         self.one_iter:int = 120
         self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
-        self.loading_bar_combs:LoadingBar = LoadingBar(84480 - 1, 40, 40)          #Kombinacje: 
+        self.loading_bar_combs:LoadingBar = LoadingBar(1098240 - 1, 40, 40)          #Kombinacje: 1 098 240 2s -> 84480
 
         self.file = open("permutations_data/one_pair.txt", "w")
+        self.pickle_data = open("permutations_data/one_pair_data.pkl", "wb")
 
         self.perm:list = []                      # Lista na permutacje
         self.weight_arrangement_part:list  = []   # Lista na wagi pozostalych kart   
@@ -28,7 +30,7 @@ class OnePair(HelperArrangement):
 
         self.random:bool = False
         self.example:bool = False
-        self.if_combs:bool = True           # Combinations for testing strategies
+        self.if_combs:bool = False           # Combinations for testing strategies
 
     def set_cards(self, cards):
         self.perm = cards
@@ -196,8 +198,9 @@ class OnePair(HelperArrangement):
             self.weight_arrangement_part = []
 
 
-    def one_pair_generating(self, random):
+    def one_pair_generating(self, random, if_combs):
         self.random = random
+        self.if_combs = if_combs
         
         cards_2d = []
         cards_to_comb = []
@@ -331,12 +334,10 @@ class OnePair(HelperArrangement):
 
                 len_comb += 1
                 
-                self.loading_bar_combs.set_count_bar(len_comb)
-                self.loading_bar_combs.display_bar()
-                
                 if self.if_combs == True:
+                    self.loading_bar_combs.set_count_bar(len_comb)
+                    self.loading_bar_combs.display_bar()
                     cards_comb[idx1] = list(cards_comb[idx1])
-
                     HelperArrangement().append_cards_all_permutations(cards_comb[idx1])
                     HelperArrangement().append_weight_gen(0)
                     
@@ -354,9 +355,19 @@ class OnePair(HelperArrangement):
                     #         print("END")
                     #         time.sleep(1000)
 
-                        
-                    if len_comb == 84480:           # One pair of 2s
-                        #print(len_comb)
+                    # Test if cards arrangement is one pair of 2s or 3s ... As
+                    # pickle.dump(cards_comb[idx1], self.pickle_data, pickle.HIGHEST_PROTOCOL)
+
+                    # for idx2 in range(0, len(cards_comb[idx1])):
+                    #     self.file_data.write(cards_comb[idx1][idx2].print_str() + " ")
+                    # self.file_data.write("\n")
+                    
+                       
+                    if len_comb == 1098240:                #84480    One pair of 2s
+                        print("END")
+                        # print(len_comb)
+                        # self.file.write(str(len_comb))
+                        # self.file_data.close()
                         self.file.close()
                         
                         return HelperArrangement().random_arrangement(self.if_combs)
@@ -371,10 +382,10 @@ class OnePair(HelperArrangement):
                         if self.random == False:
                             for idx3 in range(0, len(self.perm[idx2])):
                                 #self.perm[idx2][idx3].print()
-                                #self.file.write(self.perm[idx2][idx3].print_str() + " ")
+                                self.file.write(self.perm[idx2][idx3].print_str() + " ")
                                 pass
                             #print()
-                            #self.file.write("\n")
+                            self.file.write("\n")
                             pass
                         # Zapisanie indeksu uzywanego w funkcji one_pair()
                         self.c_idx1 = idx2
@@ -393,7 +404,7 @@ class OnePair(HelperArrangement):
                             #print(len_comb)
                             self.file.close()
                             
-                            return HelperArrangement().random_arrangement()
+                            return HelperArrangement().random_arrangement(False)
 
 
         HelperArrangement().check_if_weights_larger(False)

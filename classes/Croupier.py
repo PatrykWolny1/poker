@@ -13,12 +13,12 @@ import os
 import random
 import pandas as pd
 import tensorflow as tf
-
+import pickle
 
     
 class Croupier(object):
 
-    def __init__(self, all_comb_perm = []):
+    def __init__(self, all_comb_perm = [], game_visible = True, tree_visible = False):
         self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
@@ -30,8 +30,10 @@ class Croupier(object):
         self.idx_players:int = 0
         
         self.exchange:str = ''
-        self.game_visible:bool = True
-        self.tree_visible:bool = False
+        self.game_visible:bool = game_visible
+        self.tree_visible:bool = tree_visible
+        
+        
     
     def play(self):        
         # print()
@@ -44,7 +46,7 @@ class Croupier(object):
         # for self.player in self.players:
         #     self.player.arrangements.print()
         #     self.player.arrangements.set_rand_int()
-        #     self.player.arrangements.check_arrangement()
+        #     self.player.arrangements.check_arrangement(game_visible=self.game_visible)
         
             
         # print()
@@ -56,7 +58,7 @@ class Croupier(object):
         # player1 = Player(self.deck, cards = self.cards)
         # player1.arrangements.set_cards(self.cards)
         # player1.print()
-        # player1.arrangements.check_arrangement()
+        # player1.arrangements.check_arrangement(game_visible=self.game_visible)
 
         #########################################################
 
@@ -70,7 +72,7 @@ class Croupier(object):
 
         # player1.arrangements.print()
         # print()
-        # player1.arrangements.check_arrangement()
+        # player1.arrangements.check_arrangement(game_visible=self.game_visible)
 
         #########################################################
         #########################################################
@@ -83,13 +85,13 @@ class Croupier(object):
         self.exchange_list = []
         
         for self.player in self.players:
-            if self.game_visible == True or self.game_visible == True:
+            if self.game_visible == True:
                 self.player.print(False) 
                 
-            self.player.arrangements.check_arrangement()
+            self.player.arrangements.check_arrangement(game_visible=self.game_visible)
             self.player.arrangements.set_weights()
-            self.player.arrangements.set_data_frame_ml(DataFrameML(self.player.arrangements.get_id(), 
-                                                                 self.player.arrangements.get_weight()))
+            self.player.arrangements.set_data_frame_ml(DataFrameML(nick=self.player.nick, id_arr=self.player.arrangements.get_id(), 
+                                                                 weight=self.player.arrangements.get_weight()))
             self.weights_cards.append(self.player.arrangements.get_part_weight())
             
             [self.player.arrangements.data_frame_ml.set_cards_before(card.weight) for card in self.player.cards]
@@ -119,7 +121,7 @@ class Croupier(object):
         for self.player in self.players:
             if self.game_visible == True:
                 self.player.print(False)
-            self.player.arrangements.check_arrangement()
+            self.player.arrangements.check_arrangement(game_visible=self.game_visible)
             self.player.arrangements.set_weights()
             self.player.arrangements.data_frame_ml.set_id_arr_after(self.player.arrangements.get_id())
 
@@ -219,16 +221,29 @@ class Croupier(object):
         # print()
         
         return cards
-    
+    def pickle_loader(self, filename):
+        """ Deserialize a file of pickled objects. """
+        with open(filename, "rb") as f:
+            while True:
+                try:
+                    yield pickle.load(f)
+                except EOFError:
+                    break
+                
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
         self.idx_players = 2
     
         self.deck = Deck()
         
+        # for one_pair in self.pickle_loader('permutations_data/one_pair_data.pkl'):
+        #     self.all_comb_perm.append(one_pair)
+            
         if len(self.all_comb_perm) != 0:
             self.cards = self.random_arrangement(self.all_comb_perm)
         
+        #with open('permutations_data/one_pair_data.pkl', 'rb') as inp:
+     
         
         #cards, rand_int = Player().cards_permutations()
 
@@ -237,7 +252,7 @@ class Croupier(object):
             if idx == 0:
                 nick = 'Nick'
                 self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
-                                        if_deck=False, if_show_perm=False))
+                                        if_deck=False, if_show_perm=False, si_boolean=True))
         
             if idx == 1:                                           
                 nick = 'Adam'
@@ -251,7 +266,7 @@ class Croupier(object):
             if self.game_visible == True:
                 self.player.print(False)
                 
-            self.player.arrangements.check_arrangement()
+            self.player.arrangements.check_arrangement(game_visible=self.game_visible)
             self.player.arrangements.set_weights()
            
             if self.game_visible == True:
@@ -306,56 +321,56 @@ class Croupier(object):
                                        float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])
             self.amount = int(self.amount)
             
-            cards_player_sorted = sorted(self.player.cards)
+            # cards_player_sorted = sorted(self.player.cards)
 
-            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                'Exchange Amount' : [self.amount],
-                                'Card Before 1' : [cards_player_sorted[0].weight],
-                                'Card Before 2' : [cards_player_sorted[1].weight],
-                                'Card Before 3' : [cards_player_sorted[2].weight],
-                                'Card Before 4' : [cards_player_sorted[3].weight],
-                                'Card Before 5' : [cards_player_sorted[4].weight]
-                                })
+            # X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+            #                     'Exchange Amount' : [self.amount],
+            #                     'Card Before 1' : [cards_player_sorted[0].weight],
+            #                     'Card Before 2' : [cards_player_sorted[1].weight],
+            #                     'Card Before 3' : [cards_player_sorted[2].weight],
+            #                     'Card Before 4' : [cards_player_sorted[3].weight],
+            #                     'Card Before 5' : [cards_player_sorted[4].weight]
+            #                     })
             
-            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            # X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            # X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
             
-            X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
-                                axis=1, inplace=True)
+            # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
+            #                     axis=1, inplace=True)
             
-            X_game = X_game.astype(np.int64)
+            # X_game = X_game.astype(np.int64)
                         
-            y_preds = saved_model.predict(X_game).flatten()
+            # y_preds = saved_model.predict(X_game).flatten()
 
-            print(y_preds)
+            # print(y_preds)
 
 
         else:
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-            saved_model = tf.keras.models.load_model('models_prediction/model_Adam_00001_test_acc=0.608_test_loss=0.162.keras')
+            # saved_model = tf.keras.models.load_model('models_prediction/model_Adam_00001_test_acc=0.608_test_loss=0.162.keras')
             
-            cards_player_sorted = sorted(self.player.cards)
+            # cards_player_sorted = sorted(self.player.cards)
 
-            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                'Exchange Amount' : [self.amount],
-                                'Card Before 1' : [cards_player_sorted[0].weight],
-                                'Card Before 2' : [cards_player_sorted[1].weight],
-                                'Card Before 3' : [cards_player_sorted[2].weight],
-                                'Card Before 4' : [cards_player_sorted[3].weight],
-                                'Card Before 5' : [cards_player_sorted[4].weight]
-                                })
+            # X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+            #                     'Exchange Amount' : [self.amount],
+            #                     'Card Before 1' : [cards_player_sorted[0].weight],
+            #                     'Card Before 2' : [cards_player_sorted[1].weight],
+            #                     'Card Before 3' : [cards_player_sorted[2].weight],
+            #                     'Card Before 4' : [cards_player_sorted[3].weight],
+            #                     'Card Before 5' : [cards_player_sorted[4].weight]
+            #                     })
             
-            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            # X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            # X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
             
-            X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
-                                axis=1, inplace=True)
+            # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
+            #                     axis=1, inplace=True)
 
-            X_game = X_game.astype(np.int64)
+            # X_game = X_game.astype(np.int64)
 
-            y_preds = saved_model.predict(X_game).flatten()
+            # y_preds = saved_model.predict(X_game).flatten()
 
-            print(y_preds)
+            # print(y_preds)
     
         self.amount_list.append(self.amount)
         
@@ -382,7 +397,7 @@ class Croupier(object):
 
             self.player.print(False)
             
-        self.player.arrangements.check_arrangement()
+        self.player.arrangements.check_arrangement(game_visible=self.game_visible)
         self.player.arrangements.set_weights()
         
         self.player.arrangements.data_frame_ml.exchange = self.exchange
@@ -411,7 +426,7 @@ class Croupier(object):
                 if self.game_visible == True:
                     self.player.print(False)
                 
-                self.player.arrangements.check_arrangement()
+                self.player.arrangements.check_arrangement(game_visible=self.game_visible)
 
             else:
                 self.player.win_or_not = False

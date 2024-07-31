@@ -115,15 +115,18 @@ class Player(object):
         self.cards.append(deck.deal())
         self.arrangements.set_cards_after(self.cards)
 
-    def cards_permutations(self):
-            print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM | 3 - WYJSCIE: ")
-
-            if_rand = input()
-            #if_rand = "2"
-
+    def cards_permutations(self, rand_arr = False, combs_gen = False):
+            if combs_gen == False:
+                print("Wybierz rodzaj permutacji (1 - ALL | 2 - RANDOM | 3 - WYJSCIE: ")
+                if_rand = input()
+                if_combs = False
+            else:
+                if_rand = "1"
+                if_combs = True
+                
+            
             if if_rand == "1":
                 self.random = False
-                rand_arr = True
             elif if_rand == "2":
                 self.random = True
                 rand_arr = True
@@ -144,6 +147,10 @@ class Player(object):
             arrangement = input()
             #arrangement = "8"
             
+            # Gra jednym ukladem kart
+            if combs_gen == True:
+                print("Generowanie kombinacji kart...")
+
             #blockPrint()
             
             if arrangement == "1":
@@ -161,7 +168,7 @@ class Player(object):
             if arrangement == "7":
                 self.cards, self.rand_int, self.all_comb_perm = self.arrangements.two_pairs.two_pairs_generating(self.random)
             if arrangement == "8":
-                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.one_pair.one_pair_generating(self.random)
+                self.cards, self.rand_int, self.all_comb_perm = self.arrangements.one_pair.one_pair_generating(self.random, if_combs)
             if arrangement == "9":
                 self.cards, self.rand_int, self.all_comb_perm = self.arrangements.high_card.high_card_generating(self.random)
 

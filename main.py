@@ -21,12 +21,12 @@ from machine_learning.M_learning import M_learning
 def main():
     start_time = time.time()
     
-    
-    cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
+    cards_1, rand_int_1, all_comb_perm = Player().cards_permutations(combs_gen=True)
 
-    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra | 3 - Uczenie Maszynowe)")):
+    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra" +
+                          "| 3 - Zbieranie rozgrywek do pliku | 4 - Uczenie Maszynowe)")):
         if choice == '1':
-            cards_1, rand_int_1, all_comb_perm = Player().cards_permutations()
+            Player().cards_permutations()
 
         #----------------------------------- ZAPIS LOSOWYCH GIER DO PLIKU -----------------------------------
         # if choice == '2':
@@ -38,11 +38,19 @@ def main():
         
         if choice == '2':
             for i in range(0, 1):
-                croupier = Croupier(all_comb_perm)
+                croupier = Croupier(all_comb_perm, game_visible=True, tree_visible=False)
                 #print(i)
                 croupier.play()
-    
+                
         if choice == '3':
+            n = input("Podaj ilosc rozgrywek do zapisu: ")
+            #n = 1
+            for i in range(0, n):
+                croupier = Croupier(all_comb_perm=all_comb_perm, game_visible=False, tree_visible=False)
+                print(i)
+                croupier.play()
+                
+        if choice == '4':
             model_ml = M_learning()
             model_ml.pre_processing()
             model_ml.ml_learning_and_prediction()

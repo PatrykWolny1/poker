@@ -56,13 +56,17 @@ class Arrangements(object):
         for x in self.arrangements:
             self.part_weights.append(x.get_part_weight())
                     
-    def check_arrangement(self):
+    def check_arrangement(self, game_visible=True):
         self.ids_arr = []
-        #blockPrint()
+        if game_visible == False:
+            blockPrint()
+        
         for x in self.arrangements:
             x.set_rand_int(self.rand_int)
             self.ids_arr.append(x.arrangement_recogn()) 
-        #enablePrint()
+        
+        if game_visible == False:
+            enablePrint()
         #print(self.ids_arr)
 
     def set_rand_int(self, rand_int):

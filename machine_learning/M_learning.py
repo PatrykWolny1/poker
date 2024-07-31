@@ -11,7 +11,7 @@ import seaborn as sns
 class M_learning(object):
     
     def __init__(self):
-        self.df = pd.read_csv('ml_data/poker_game_one_pair_2s.csv', on_bad_lines='skip', engine='python')
+        self.df = pd.read_csv('ml_data/poker_game_one_pair_combs_all.csv', on_bad_lines='skip', engine='python')
         pd.set_option('display.max_columns', 35)
         pd.options.display.float_format = '{:,.3f}'.format
         self.X = None
@@ -29,9 +29,11 @@ class M_learning(object):
         
         self.df.loc[self.df['Win'] == True, 'Win'] = True
         self.df.loc[self.df['Win'] == False, 'Win'] = False
-      
-        self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
-                    axis=1, inplace=True)
+
+        self.df.drop(columns=['Player ID'], axis=1, inplace=True)
+        
+        # self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
+        #             axis=1, inplace=True)
         
         self.df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
                     axis=1, inplace=True)
@@ -175,7 +177,7 @@ class M_learning(object):
             losses.append(test_loss)
             self.visualize_model(history)
             self.plot_loss_accuracy(history)
-            model.save('models_prediction/model' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '.keras')
+            model.save('models_prediction/model_new_data' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '.keras')
             idx += 1
 
         print(accuracies)
