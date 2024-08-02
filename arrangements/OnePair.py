@@ -14,9 +14,9 @@ class OnePair(HelperArrangement):
         self.high_card:Card = Card()             # Wysoka karta
         self.limit_rand:int = 1000             # Ograniczenie dla liczby obliczen  
         self.one_iter:int = 120
+        self.n_combs = 100000
         self.loading_bar:LoadingBar = LoadingBar(self.one_iter * self.limit_rand - 1, 40, 40)          #Permutacje: 131 788 800
-        self.loading_bar_combs:LoadingBar = LoadingBar(1098240 - 1, 40, 40)          #Kombinacje: 1 098 240 2s -> 84480
-
+        self.loading_bar_combs:LoadingBar = LoadingBar(self.n_combs - 1, 40, 40)          #Kombinacje: 1 098 240 2s -> 84480
         self.file = open("permutations_data/one_pair.txt", "w")
 
         self.perm:list = []                      # Lista na permutacje
@@ -362,7 +362,7 @@ class OnePair(HelperArrangement):
                     # self.file_data.write("\n")
                     
                        
-                    if len_comb == 1098240:                #84480    One pair of 2s
+                    if len_comb == self.n_combs:                #84480    One pair of 2s
                         print("END")
                         # print(len_comb)
                         # self.file.write(str(len_comb))

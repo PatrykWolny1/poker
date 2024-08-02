@@ -4,9 +4,11 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Input, LSTM
+from keras.models import Model
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
+from keras.utils import to_categorical
 
 class M_learning(object):
     
@@ -21,7 +23,6 @@ class M_learning(object):
         self.y_train = None 
         self.y_test = None
         self.y_preds = None
-        self.model_no = None
     
     def pre_processing(self):        
         self.df.loc[self.df['Exchange'] == '[\'t\']', 'Exchange'] = True
@@ -37,18 +38,10 @@ class M_learning(object):
         
         self.df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
                     axis=1, inplace=True)
-            
-        # elif model_no == 2:
-        #     self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
-        #                 axis=1, inplace=True)
-            
-        #     self.df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
-        #                 axis=1, inplace=True)      
-            
-        #     self.df.drop(columns=['Exchange'], 
-        #                 axis=1, inplace=True)   
+        
+        # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
+        #self.df.drop(columns=['Win'], axis=1, inplace=True)
 
-        #self.df = self.df.fillna(0)
         # self.df = pd.get_dummies(self.df, drop_first=False, 
         #                 columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
     
@@ -58,12 +51,6 @@ class M_learning(object):
         # ax3.hist(self.df['Card Before 5'], label='Card Before 5')
         # ax4.hist(self.df['Win'], label='Win')
         #plt.show()
-        
-        # ----------------------------------------------------------------------
-        # self.df.loc[self.df['Exchange_True'] == True, 'Exchange_True'] = 1
-        # self.df.loc[self.df['Exchange_True'] == False, 'Exchange_True'] = 0
-        # self.df.loc[self.df['Exchange_False'] == True, 'Exchange_False'] = 1
-        # self.df.loc[self.df['Exchange_False'] == False, 'Exchange_False'] = 0
         
         # print(self.df)
         # fig, (ax1) = plt.subplots(1, 1, figsize=(17, 5))
@@ -77,22 +64,29 @@ class M_learning(object):
         # bbox_to_anchor=(1.0, 0.5), ncol=1)
         # plt.show()
         # ----------------------------------------------------------------------
-
-        #df.to_excel('poker_game_out.xlsx', index=True)
-        #df.to_csv('poker_game_out.csv', index=True)
-        self.X = self.df.drop("Win", axis=1)
-        self.y = self.df["Win"]
-        print(self.y)
         
+        self.X = self.df.drop(columns=["Win"], axis=1)
+        self.y = self.df["Win"]
+        
+        # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
+        
+        # self.X = self.df.drop(columns=["Exchange Amount"], axis=1)
+        # self.y = self.df["Exchange Amount"]
+       
+        self.X = pd.get_dummies(self.X, columns=["Exchange Amount"], drop_first=False)
         self.X = self.X.astype(np.int64)
         self.y = self.y.astype(np.int64)
+
         print(self.X)
         print(self.y)
 
         # scaler = MinMaxScaler()
         # X_norm = pd.DataFrame(scaler.fit_transform(self.X), columns=self.X.columns)
         
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=10)
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, 
+                                                                                self.y, 
+                                                                                test_size=0.2, 
+                                                                                random_state=10)
 
 # def learning_rate_test(learning_rate, X_train, y_train):
 #     #Step 1: Model configuration
@@ -117,36 +111,32 @@ class M_learning(object):
 #     return score[1]
 
     def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):     
-        # Struktura modelu
-
         model=Sequential(
                 [
                     Input(shape=[len(X_train.columns),], name = 'input_layer'),
                     Dense(units=512, activation='relu', name='layer1'),
                     tf.keras.layers.Dropout(0.2),               
-                    Dense(units=256, activation='leaky_relu', name='layer2'),
-                    Dense(units=1, activation='sigmoid', name='layer3')
+                    Dense(units=256, activation='relu', name='layer2'),
+                    Dense(units=1, activation='sigmoid', name='binary_output'),
                 ]
             )
-    
+        
         model.compile(optimizer=optimizer(
                     learning_rate=learning_rate),
-                    loss="binary_focal_crossentropy",                
+                    loss=["binary_focal_crossentropy"],                
                     metrics=["accuracy"])
-
+        
         model.summary()
-         
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
-
-        history = model.fit(X_train, y_train, batch_size=512, epochs = 200, callbacks=[callbacks],
-                            validation_split = 0.2)
-
-        test_loss, test_acc = model.evaluate(X_train, y_train)
+                
+        history = model.fit(X_train, y_train, batch_size=512, epochs = 200, callbacks=[callbacks], validation_split = 0.2)
         
+        test_loss, test_acc = model.evaluate(X_train, y_train)
+
         print('Test Accuracy: ', test_acc)
         print('Test Loss: ', test_loss)
-
+        
         return model, history, test_acc, test_loss
 
     def ml_learning_and_prediction(self):        
@@ -184,14 +174,41 @@ class M_learning(object):
         print(accuracies)
         print(losses)
         
-        self.y_preds = model.predict(self.X_test).flatten() 
-        print(self.y_preds)
+        self.y_preds = model.predict(self.X_test).flatten()
+
+        # y1 = pd.DataFrame()
+        # y1 = self.y_test[0].transpose()
+        # y2 = pd.DataFrame()
+        # y2 = self.y_test[2].transpose()  
         
         #self.y_preds = (self.y_preds > 0.5).astype(int)        
         
         df_predictions = pd.DataFrame({'Ground_Truth (Win)': self.y_test, 'Model_prediction (Win)': self.y_preds}, 
                                        columns=['Ground_Truth (Win)', 'Model_prediction (Win)'])
+        
+        # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------     
+        
+        # self.y_preds = model.predict(self.X_test)
 
+        # y1 = pd.DataFrame()
+        # y1 = self.y_test[0].transpose()
+        # y2 = pd.DataFrame()
+        # y2 = self.y_test[2].transpose()       
+        # y3 = pd.DataFrame()
+        # y3 = self.y_test[3].transpose()
+        
+        # df_predictions = pd.DataFrame({'Ground_Truth (0)': y1,
+        #                                'Ground_Truth (2)': y2,
+        #                                'Ground_Truth (3)': y3, 
+        #                                'Model_prediction (0)': [self.y_preds[idx][0] for idx in range(len(self.y_preds))],
+        #                                'Model_prediction (2)': [self.y_preds[idx][1] for idx in range(len(self.y_preds))],
+        #                                'Model_prediction (3)': [self.y_preds[idx][2] for idx in range(len(self.y_preds))]
+        #                                }, 
+        #                                columns=['Ground_Truth (0)', 'Ground_Truth (2)',
+        #                                         'Ground_Truth (3)',
+        #                                         'Model_prediction (0)', 'Model_prediction (2)',
+        #                                         'Model_prediction (3)'])
+        
         print(df_predictions) 
                 
         df_predictions.to_excel('models_prediction/predictions.xlsx')

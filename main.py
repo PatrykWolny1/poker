@@ -21,9 +21,9 @@ from machine_learning.M_learning import M_learning
 import time
 def main():
     start_time = time.time()
-
+    
     # Line used when gather data or play game with AI; Better performance in case of games gathering; OnePair so far
-    cards_1, rand_int_1, all_comb_perm = Player().cards_permutations(combs_gen=True)
+    #cards_1, rand_int_1, all_comb_perm = Player().cards_permutations(combs_gen=True)
 
     while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra " +
                           "| 3 - Zbieranie rozgrywek do pliku | 4 - Uczenie Maszynowe)")):
