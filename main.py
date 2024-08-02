@@ -3,6 +3,7 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 from classes.Croupier import Croupier
 from classes.Player import Player
+from classes.Card import Card
 from decision_tree_structure.OnePairStructureStrategy import OnePairStructureStrategy
 import time
 import cProfile
@@ -17,13 +18,14 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from machine_learning.M_learning import M_learning 
-
+import time
 def main():
     start_time = time.time()
-    
+
+    # Line used when gather data or play game with AI; Better performance in case of games gathering; OnePair so far
     cards_1, rand_int_1, all_comb_perm = Player().cards_permutations(combs_gen=True)
 
-    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra" +
+    while(choice := input("Wybierz opcje (1 - Permutacje Kart | 2 - Gra " +
                           "| 3 - Zbieranie rozgrywek do pliku | 4 - Uczenie Maszynowe)")):
         if choice == '1':
             Player().cards_permutations()
@@ -38,7 +40,7 @@ def main():
         
         if choice == '2':
             for i in range(0, 1):
-                croupier = Croupier(all_comb_perm, game_visible=True, tree_visible=False)
+                croupier = Croupier(game_visible=True, tree_visible=False)
                 #print(i)
                 croupier.play()
                 
@@ -46,7 +48,7 @@ def main():
             n = input("Podaj ilosc rozgrywek do zapisu: ")
             #n = 1
             for i in range(0, n):
-                croupier = Croupier(all_comb_perm=all_comb_perm, game_visible=False, tree_visible=False)
+                croupier = Croupier(game_visible=False, tree_visible=False)
                 print(i)
                 croupier.play()
                 

@@ -73,7 +73,7 @@ class HighCard(HelperArrangement):
     def arrangement_recogn(self):
         if self.example == True:
             self.c_idx1 = 0
-
+            
             if len(HelperArrangement().dim(self.perm)) == 1:
                 self.perm = [self.perm]
 

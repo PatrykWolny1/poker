@@ -250,7 +250,7 @@ class Full(HelperArrangement):
                             #     print()
 
                             self.perm = list(itertools.permutations(self.cards_2d_5[idx5], 5))
-                            self.file = open("full.txt", "a")
+                            self.file = open("permutations_data/full.txt", "a")
                             for idx6 in range(0, len(self.perm)):
                                 HelperArrangement().get_indices_1(self.perm[idx6])
 

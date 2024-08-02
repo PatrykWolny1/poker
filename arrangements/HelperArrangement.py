@@ -1,5 +1,6 @@
 import random
 from itertools import chain
+import pickle
 
 class HelperArrangement(object):
     indices_2d:list = []                     #Indeksy ukladow kart figury
@@ -9,7 +10,7 @@ class HelperArrangement(object):
     perm:list = []
     
     rand_int:int = 0
-    
+
     def dim(self, a):
         #Jesli to nie jest lista to zwroc pusty zbior
         if not type(a) == list:
@@ -138,6 +139,9 @@ class HelperArrangement(object):
         print("Wylosowany uklad: ", self.rand_int)
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
         print()
+        
+        with open("permutations_data/one_pair_combs_list.pkl", "wb") as fp:
+            pickle.dump(self.cards_all_permutations, fp)
         
         HelperArrangement.weight_gen.clear()
         HelperArrangement.cards_all_permutations.clear()

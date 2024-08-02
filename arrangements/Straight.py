@@ -146,7 +146,7 @@ class Straight(HelperArrangement):
                                                
                 
                     if self.example == True:
-                        #self.print_arrengement()
+                        self.print_arrengement()
 
                         for idx in range(0, len(self.perm[self.c_idx6])):
                             with open("permutations_data/straight.txt", 'a') as file:

@@ -88,6 +88,7 @@ class M_learning(object):
         self.y = self.y.astype(np.int64)
         print(self.X)
         print(self.y)
+
         # scaler = MinMaxScaler()
         # X_norm = pd.DataFrame(scaler.fit_transform(self.X), columns=self.X.columns)
         
@@ -138,7 +139,7 @@ class M_learning(object):
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
 
-        history = model.fit(X_train, y_train, epochs = 200, callbacks=[callbacks],
+        history = model.fit(X_train, y_train, batch_size=512, epochs = 200, callbacks=[callbacks],
                             validation_split = 0.2)
 
         test_loss, test_acc = model.evaluate(X_train, y_train)

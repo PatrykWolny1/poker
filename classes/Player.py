@@ -177,7 +177,7 @@ class Player(object):
             self.cards = list(self.cards)
             
             if rand_arr:
-                self.arrangements.set_cards(self.cards[0])
+                self.arrangements.set_cards(list(self.cards[0]))
                 self.arrangements.set_rand_int(self.rand_int)
                 self.arrangements.print()
                 self.arrangements.check_arrangement()

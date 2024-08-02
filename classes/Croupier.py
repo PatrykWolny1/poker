@@ -221,14 +221,6 @@ class Croupier(object):
         # print()
         
         return cards
-    def pickle_loader(self, filename):
-        """ Deserialize a file of pickled objects. """
-        with open(filename, "rb") as f:
-            while True:
-                try:
-                    yield pickle.load(f)
-                except EOFError:
-                    break
                 
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
@@ -236,9 +228,9 @@ class Croupier(object):
     
         self.deck = Deck()
         
-        # for one_pair in self.pickle_loader('permutations_data/one_pair_data.pkl'):
-        #     self.all_comb_perm.append(one_pair)
-            
+        with open("permutations_data/one_pair_combs_list.pkl", "rb") as fp:   
+            self.all_comb_perm = pickle.load(fp)
+        
         if len(self.all_comb_perm) != 0:
             self.cards = self.random_arrangement(self.all_comb_perm)
         
@@ -313,7 +305,7 @@ class Croupier(object):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        saved_model = tf.keras.models.load_model('models_prediction/model_Adam_00001_test_acc=0.608_test_loss=0.162.keras')
+        saved_model = tf.keras.models.load_model('models_prediction/model_new_data_Adam_00001_test_acc=0.663_test_loss=0.156.keras')
 
         if self.player.si_boolean == True:
             self.amount = np.random.choice([2, 3], size=1, 
@@ -321,56 +313,56 @@ class Croupier(object):
                                        float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])
             self.amount = int(self.amount)
             
-            # cards_player_sorted = sorted(self.player.cards)
+            cards_player_sorted = sorted(self.player.cards)
 
-            # X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-            #                     'Exchange Amount' : [self.amount],
-            #                     'Card Before 1' : [cards_player_sorted[0].weight],
-            #                     'Card Before 2' : [cards_player_sorted[1].weight],
-            #                     'Card Before 3' : [cards_player_sorted[2].weight],
-            #                     'Card Before 4' : [cards_player_sorted[3].weight],
-            #                     'Card Before 5' : [cards_player_sorted[4].weight]
-            #                     })
+            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+                                'Exchange Amount' : [self.amount],
+                                'Card Before 1' : [cards_player_sorted[0].weight],
+                                'Card Before 2' : [cards_player_sorted[1].weight],
+                                'Card Before 3' : [cards_player_sorted[2].weight],
+                                'Card Before 4' : [cards_player_sorted[3].weight],
+                                'Card Before 5' : [cards_player_sorted[4].weight]
+                                })
             
-            # X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            # X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
             
             # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
             #                     axis=1, inplace=True)
             
-            # X_game = X_game.astype(np.int64)
+            X_game = X_game.astype(np.int64)
                         
-            # y_preds = saved_model.predict(X_game).flatten()
+            y_preds = saved_model.predict(X_game).flatten()
 
-            # print(y_preds)
+            print("Szansa na wygrana przy wymianie " + str(self.amount) + " kart: ", y_preds * 100)
 
 
         else:
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-            # saved_model = tf.keras.models.load_model('models_prediction/model_Adam_00001_test_acc=0.608_test_loss=0.162.keras')
+            saved_model = tf.keras.models.load_model('models_prediction/model_new_data_Adam_00001_test_acc=0.663_test_loss=0.156.keras')
             
-            # cards_player_sorted = sorted(self.player.cards)
+            cards_player_sorted = sorted(self.player.cards)
 
-            # X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-            #                     'Exchange Amount' : [self.amount],
-            #                     'Card Before 1' : [cards_player_sorted[0].weight],
-            #                     'Card Before 2' : [cards_player_sorted[1].weight],
-            #                     'Card Before 3' : [cards_player_sorted[2].weight],
-            #                     'Card Before 4' : [cards_player_sorted[3].weight],
-            #                     'Card Before 5' : [cards_player_sorted[4].weight]
-            #                     })
+            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+                                'Exchange Amount' : [self.amount],
+                                'Card Before 1' : [cards_player_sorted[0].weight],
+                                'Card Before 2' : [cards_player_sorted[1].weight],
+                                'Card Before 3' : [cards_player_sorted[2].weight],
+                                'Card Before 4' : [cards_player_sorted[3].weight],
+                                'Card Before 5' : [cards_player_sorted[4].weight]
+                                })
             
-            # X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            # X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
             
             # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
             #                     axis=1, inplace=True)
 
-            # X_game = X_game.astype(np.int64)
+            X_game = X_game.astype(np.int64)
 
-            # y_preds = saved_model.predict(X_game).flatten()
+            y_preds = saved_model.predict(X_game).flatten()
 
-            # print(y_preds)
+            print("Szansa na wygrana przy wymianie " + str(self.amount) + " kart: ", y_preds * 100)
     
         self.amount_list.append(self.amount)
         

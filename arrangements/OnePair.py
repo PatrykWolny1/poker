@@ -18,7 +18,6 @@ class OnePair(HelperArrangement):
         self.loading_bar_combs:LoadingBar = LoadingBar(1098240 - 1, 40, 40)          #Kombinacje: 1 098 240 2s -> 84480
 
         self.file = open("permutations_data/one_pair.txt", "w")
-        self.pickle_data = open("permutations_data/one_pair_data.pkl", "wb")
 
         self.perm:list = []                      # Lista na permutacje
         self.weight_arrangement_part:list  = []   # Lista na wagi pozostalych kart   
