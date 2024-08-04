@@ -228,9 +228,6 @@ class Croupier(object):
     
         self.deck = Deck()
         
-        with open("permutations_data/one_pair_combs_list.pkl", "rb") as fp:   
-            self.all_comb_perm = pickle.load(fp)
-        
         if len(self.all_comb_perm) != 0:
             self.cards = self.random_arrangement(self.all_comb_perm)
         
@@ -305,7 +302,7 @@ class Croupier(object):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        saved_model = tf.keras.models.load_model('models_prediction/model_new_data_Adam_00001_test_acc=0.663_test_loss=0.156.keras')
+        saved_model = tf.keras.models.load_model('models_prediction/model_new_data_win_Adam_00001_test_acc=0.669_test_loss=0.154.keras')
 
         if self.player.si_boolean == True:
             self.amount = np.random.choice([2, 3], size=1, 
@@ -314,9 +311,11 @@ class Croupier(object):
             self.amount = int(self.amount)
             
             cards_player_sorted = sorted(self.player.cards)
-
+            
             X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                'Exchange Amount' : [self.amount],
+                                '0' : [True if self.amount == 0 else False],
+                                '2' : [True if self.amount == 2 else False],
+                                '3' : [True if self.amount == 3 else False],
                                 'Card Before 1' : [cards_player_sorted[0].weight],
                                 'Card Before 2' : [cards_player_sorted[1].weight],
                                 'Card Before 3' : [cards_player_sorted[2].weight],
@@ -325,8 +324,8 @@ class Croupier(object):
                                 })
             
             X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
-            
+            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False     
+                        
             # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
             #                     axis=1, inplace=True)
             
@@ -339,7 +338,7 @@ class Croupier(object):
 
         else:
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-            saved_model = tf.keras.models.load_model('models_prediction/model_new_data_Adam_00001_test_acc=0.663_test_loss=0.156.keras')
+            saved_model = tf.keras.models.load_model('models_prediction/model_new_data__win_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
             
             cards_player_sorted = sorted(self.player.cards)
 

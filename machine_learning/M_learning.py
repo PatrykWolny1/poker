@@ -40,7 +40,10 @@ class M_learning(object):
                     axis=1, inplace=True)
         
         # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
-        #self.df.drop(columns=['Win'], axis=1, inplace=True)
+        # self.df.drop(columns=['Win'], axis=1, inplace=True)
+        # self.df = self.df[self.df['Win'] == True]
+
+
 
         # self.df = pd.get_dummies(self.df, drop_first=False, 
         #                 columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
@@ -69,11 +72,14 @@ class M_learning(object):
         self.y = self.df["Win"]
         
         # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
-        
         # self.X = self.df.drop(columns=["Exchange Amount"], axis=1)
         # self.y = self.df["Exchange Amount"]
-       
+        # ----------------------------------------------------------------------------------------------------------
+
+        # print(self.X)
+        
         self.X = pd.get_dummies(self.X, columns=["Exchange Amount"], drop_first=False)
+        
         self.X = self.X.astype(np.int64)
         self.y = self.y.astype(np.int64)
 
@@ -123,14 +129,14 @@ class M_learning(object):
         
         model.compile(optimizer=optimizer(
                     learning_rate=learning_rate),
-                    loss=["binary_focal_crossentropy"],                
+                    loss=["binary_focal_crossentropy",],                
                     metrics=["accuracy"])
         
         model.summary()
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
                 
-        history = model.fit(X_train, y_train, batch_size=512, epochs = 200, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(X_train, y_train, batch_size=32, epochs = 400, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(X_train, y_train)
 
