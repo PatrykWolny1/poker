@@ -1,3 +1,6 @@
+# import os
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+
 from classes.Player import Player
 from classes.Deck import Deck
 from classes.Card import Card
@@ -14,7 +17,7 @@ import random
 import pandas as pd
 import tensorflow as tf
 import pickle
-
+import logging
     
 class Croupier(object):
 
@@ -30,6 +33,7 @@ class Croupier(object):
         self.idx_players:int = 0
         
         self.exchange:str = ''
+        
         self.game_visible:bool = game_visible
         self.tree_visible:bool = tree_visible
         
@@ -40,8 +44,11 @@ class Croupier(object):
         
 
         #self.set_cards()
-        
-        self.set_players_nicknames()
+        try:
+            self.set_players_nicknames()
+        except IndexError:
+            print("Uzyc opcji (1) z wstepnego menu")
+            return
         
         # for self.player in self.players:
         #     self.player.arrangements.print()
@@ -231,11 +238,6 @@ class Croupier(object):
         if len(self.all_comb_perm) != 0:
             self.cards = self.random_arrangement(self.all_comb_perm)
         
-        #with open('permutations_data/one_pair_data.pkl', 'rb') as inp:
-     
-        
-        #cards, rand_int = Player().cards_permutations()
-
         for idx in range(int(self.idx_players)):
             #nick = str(input("Pseudonim gracza: "))
             if idx == 0:
@@ -302,66 +304,87 @@ class Croupier(object):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        saved_model = tf.keras.models.load_model('models_prediction/model_new_data_win_Adam_00001_test_acc=0.669_test_loss=0.154.keras')
+        with open('models_prediction/paths_to_models.txt', 'r') as file:
+            filename_updated = file.readline()
+            
+            if not filename_updated:
+                filename_updated = ''
+
+        if os.path.exists(filename_updated):
+            saved_model = tf.keras.models.load_model(filename_updated)
+        else:
+            saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
 
         if self.player.si_boolean == True:
+            cards_player_sorted = sorted(self.player.cards)
+            
+            #saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
+            
+            cards_player_sorted = sorted(self.player.cards)
+            
+            for amount in range(2, 3 + 1): 
+                X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+                                    'Card Before 1' : [cards_player_sorted[0].weight],
+                                    'Card Before 2' : [cards_player_sorted[1].weight],
+                                    'Card Before 3' : [cards_player_sorted[2].weight],
+                                    'Card Before 4' : [cards_player_sorted[3].weight],
+                                    'Card Before 5' : [cards_player_sorted[4].weight],
+                                    'Exchange Amount_0' : [True] if amount == 0 else [False],
+                                    'Exchange Amount_2' : [True] if amount == 2 else [False],
+                                    'Exchange Amount_3' : [True] if amount == 3 else [False],
+                                    })
+                
+                X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+                X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+
+                X_game = X_game.astype(np.int64)
+                
+                if self.game_visible == False:
+                    logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
+                
+                y_preds = saved_model.predict(X_game, verbose=0)
+                
+                if self.game_visible == True:
+                    print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
+            
             self.amount = np.random.choice([2, 3], size=1, 
                                     p=[float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[0]),
                                        float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])
             self.amount = int(self.amount)
-            
-            cards_player_sorted = sorted(self.player.cards)
-            
-            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                '0' : [True if self.amount == 0 else False],
-                                '2' : [True if self.amount == 2 else False],
-                                '3' : [True if self.amount == 3 else False],
-                                'Card Before 1' : [cards_player_sorted[0].weight],
-                                'Card Before 2' : [cards_player_sorted[1].weight],
-                                'Card Before 3' : [cards_player_sorted[2].weight],
-                                'Card Before 4' : [cards_player_sorted[3].weight],
-                                'Card Before 5' : [cards_player_sorted[4].weight]
-                                })
-            
-            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False     
-                        
-            # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
-            #                     axis=1, inplace=True)
-            
-            X_game = X_game.astype(np.int64)
-                        
-            y_preds = saved_model.predict(X_game).flatten()
-
-            print("Szansa na wygrana przy wymianie " + str(self.amount) + " kart: ", y_preds * 100)
-
 
         else:
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
-            saved_model = tf.keras.models.load_model('models_prediction/model_new_data__win_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
+            
+            #saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
             
             cards_player_sorted = sorted(self.player.cards)
 
-            X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                'Exchange Amount' : [self.amount],
-                                'Card Before 1' : [cards_player_sorted[0].weight],
-                                'Card Before 2' : [cards_player_sorted[1].weight],
-                                'Card Before 3' : [cards_player_sorted[2].weight],
-                                'Card Before 4' : [cards_player_sorted[3].weight],
-                                'Card Before 5' : [cards_player_sorted[4].weight]
-                                })
-            
-            X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-            X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
-            
-            # X_game.drop(columns=['Card Before 1', 'Card Before 2'], 
-            #                     axis=1, inplace=True)
+            for amount in range(2, 3 + 1): 
+                X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+                                    'Card Before 1' : [cards_player_sorted[0].weight],
+                                    'Card Before 2' : [cards_player_sorted[1].weight],
+                                    'Card Before 3' : [cards_player_sorted[2].weight],
+                                    'Card Before 4' : [cards_player_sorted[3].weight],
+                                    'Card Before 5' : [cards_player_sorted[4].weight],
+                                    'Exchange Amount_0' : [True] if amount == 0 else [False],
+                                    'Exchange Amount_2' : [True] if amount == 2 else [False],
+                                    'Exchange Amount_3' : [True] if amount == 3 else [False],
+                                    })
+                
+                X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+                X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
 
-            X_game = X_game.astype(np.int64)
+                X_game = X_game.astype(np.int64)
 
-            y_preds = saved_model.predict(X_game).flatten()
-
-            print("Szansa na wygrana przy wymianie " + str(self.amount) + " kart: ", y_preds * 100)
+                if self.game_visible == False:
+                    logging.getLogger("tensorflow").setLevel(logging.ERROR)
+                
+                y_preds = saved_model.predict(X_game, verbose=0)
+                
+                if self.game_visible == True:
+                    print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
+                
     
         self.amount_list.append(self.amount)
         
@@ -428,7 +451,7 @@ class Croupier(object):
             if self.tree_visible == True or self.game_visible == True:
                 #self.player.arrangements.get_data_frame_ml().print()
                 pass
-            self.player.arrangements.get_data_frame_ml().save_to_csv("poker_game.csv")
+            self.player.arrangements.get_data_frame_ml().save_to_csv("ml_data/poker_game_one_pair_combs_all_to_update.csv")
 
 
 

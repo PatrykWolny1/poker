@@ -1,4 +1,5 @@
 import csv
+import os
 import pandas as pd
 
 class DataFrameML(object):
@@ -29,7 +30,7 @@ class DataFrameML(object):
     
     def set_cards_exchanged(self, cards):
         self.idx_ex += 1
-        self.cards_exchanged.update({"Cards Exchanged " + str(self.idx_ex) : cards})
+        self.cards_exchanged.update({"Card Exchanged " + str(self.idx_ex) : cards})
     
     def set_cards_before(self, cards_before):
         self.idx_bef += 1
@@ -53,7 +54,10 @@ class DataFrameML(object):
                 # "Weight" : self.weight,
                 "Player ID" : self.nick,
                 "Exchange" : self.exchange,
-                "Exchange Amount" : self.exchange_amount, 
+                "Exchange Amount" : self.exchange_amount,
+                # "Exchange Amount_0" : [True] if self.exchange_amount == 0 else [False],
+                # "Exchange Amount_2" : [True] if self.exchange_amount == 2 else [False],
+                # "Exchange Amount_3" : [True] if self.exchange_amount == 3 else [False],
                 # "Arrangement ID (After)" : self.id_arr_after, 
                 # "Weight (After)" : self.weight_after_ex, 
                 "Win" : self.win_or_not
@@ -70,9 +74,10 @@ class DataFrameML(object):
 
         #print(df)
                 
-        csv_file_path = filename 
-    
-        df.to_csv(csv_file_path, mode = 'a', index=False, header = False)        
+        if os.path.exists(filename):
+            df.to_csv(filename, mode = 'a', index=False, header = False)         
+        else:
+            df.to_csv(filename, mode = 'w', index=False, header = True)        
                 
         
 

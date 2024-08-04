@@ -4,18 +4,21 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Input, LSTM
-from keras.models import Model
+from keras.models import Model, load_model
+from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
-from keras.utils import to_categorical
+from datetime import datetime
 
 class M_learning(object):
     
-    def __init__(self):
-        self.df = pd.read_csv('ml_data/poker_game_one_pair_combs_all.csv', on_bad_lines='skip', engine='python')
+    def __init__(self, win_or_not, exchange_or_not, file_path_csv):
+        self.df = pd.read_csv(file_path_csv, on_bad_lines='skip', engine='python')
+        
         pd.set_option('display.max_columns', 35)
         pd.options.display.float_format = '{:,.3f}'.format
+        
         self.X = None
         self.y = None
         self.X_train = None 
@@ -23,6 +26,13 @@ class M_learning(object):
         self.y_train = None 
         self.y_test = None
         self.y_preds = None
+        
+        self.opt = 'Adam'
+        self.l_r = '00001'
+        self.filename_updated = ''
+        
+        self.win_or_not = win_or_not
+        self.exchange_or_not = exchange_or_not
     
     def pre_processing(self):        
         self.df.loc[self.df['Exchange'] == '[\'t\']', 'Exchange'] = True
@@ -40,10 +50,9 @@ class M_learning(object):
                     axis=1, inplace=True)
         
         # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
-        # self.df.drop(columns=['Win'], axis=1, inplace=True)
-        # self.df = self.df[self.df['Win'] == True]
-
-
+        if self.exchange_or_not == True:
+            self.df = self.df.loc[self.df['Win'] == True]
+            print("Length of column 'Win': ", len(self.df['Win']))
 
         # self.df = pd.get_dummies(self.df, drop_first=False, 
         #                 columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
@@ -67,18 +76,38 @@ class M_learning(object):
         # bbox_to_anchor=(1.0, 0.5), ncol=1)
         # plt.show()
         # ----------------------------------------------------------------------
-        
-        self.X = self.df.drop(columns=["Win"], axis=1)
-        self.y = self.df["Win"]
+        if self.win_or_not == True:
+            self.X = self.df.drop(columns=["Win"], axis=1)
+            self.y = self.df["Win"]
         
         # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
-        # self.X = self.df.drop(columns=["Exchange Amount"], axis=1)
-        # self.y = self.df["Exchange Amount"]
+        if self.exchange_or_not == True: 
+            self.X = self.df.drop(columns=["Exchange Amount"], axis=1)
+            self.y = self.df["Exchange Amount"]
         # ----------------------------------------------------------------------------------------------------------
 
         # print(self.X)
+        if self.win_or_not == True:
+            self.X = pd.get_dummies(self.X, columns=["Exchange Amount"], drop_first=False)
+            
+            if 'Exchange Amount_0' not in self.X.columns:
+                self.X['Exchange Amount_0'] = 0
+            if 'Exchange Amount_2' not in self.X.columns:
+                self.X['Exchange Amount_2'] = 0
+            if 'Exchange Amount_3' not in self.X.columns:
+                self.X['Exchange Amount_3'] = 0 
         
-        self.X = pd.get_dummies(self.X, columns=["Exchange Amount"], drop_first=False)
+        if self.exchange_or_not == True:
+            self.y = pd.get_dummies(self.y, columns=["Exchange Amount"], drop_first=False)
+            
+            self.y.columns = ['Exchange Amount_0', 'Exchange Amount_2', 'Exchange Amount_3']
+            
+            if 'Exchange Amount_0' not in self.y.columns:
+                self.y['Exchange Amount_0'] = 0
+            if 'Exchange Amount_2' not in self.y.columns:
+                self.y['Exchange Amount_2'] = 0
+            if 'Exchange Amount_3' not in self.y.columns:
+                self.y['Exchange Amount_3'] = 0 
         
         self.X = self.X.astype(np.int64)
         self.y = self.y.astype(np.int64)
@@ -123,10 +152,15 @@ class M_learning(object):
                     Dense(units=512, activation='relu', name='layer1'),
                     tf.keras.layers.Dropout(0.2),               
                     Dense(units=256, activation='relu', name='layer2'),
-                    Dense(units=1, activation='sigmoid', name='binary_output'),
                 ]
             )
         
+        if self.win_or_not == True:
+            model.add(Dense(units=1, activation='sigmoid', name='binary_output'))
+            
+        if self.exchange_or_not == True:
+            model.add(Dense(units=3, activation='sigmoid', name='binary_output'))
+
         model.compile(optimizer=optimizer(
                     learning_rate=learning_rate),
                     loss=["binary_focal_crossentropy",],                
@@ -136,7 +170,7 @@ class M_learning(object):
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
                 
-        history = model.fit(X_train, y_train, batch_size=32, epochs = 400, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(X_train, y_train, batch_size=32, epochs = 2, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(X_train, y_train)
 
@@ -174,50 +208,86 @@ class M_learning(object):
             losses.append(test_loss)
             self.visualize_model(history)
             self.plot_loss_accuracy(history)
-            model.save('models_prediction/model_new_data' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '.keras')
+            
+            date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+            if self.win_or_not == True:
+                model.save('models_prediction/model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras')
+            if self.exchange_or_not == True:
+                model.save('models_prediction/model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras')
+
             idx += 1
 
         print(accuracies)
         print(losses)
         
-        self.y_preds = model.predict(self.X_test).flatten()
+        if self.win_or_not == True:
+            self.y_preds = model.predict(self.X_test).flatten()
+            
+            #self.y_preds = (self.y_preds > 0.5).astype(int)        
+            
+            df_predictions = pd.DataFrame({'Ground_Truth (Win)': self.y_test, 'Model_prediction (Win)': self.y_preds}, 
+                                        columns=['Ground_Truth (Win)', 'Model_prediction (Win)'])
 
-        # y1 = pd.DataFrame()
-        # y1 = self.y_test[0].transpose()
-        # y2 = pd.DataFrame()
-        # y2 = self.y_test[2].transpose()  
-        
-        #self.y_preds = (self.y_preds > 0.5).astype(int)        
-        
-        df_predictions = pd.DataFrame({'Ground_Truth (Win)': self.y_test, 'Model_prediction (Win)': self.y_preds}, 
-                                       columns=['Ground_Truth (Win)', 'Model_prediction (Win)'])
-        
+            date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+            df_predictions.to_excel("models_prediction/preds_win_or_not_" + date_now + '.xlsx')
+            
         # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------     
-        
-        # self.y_preds = model.predict(self.X_test)
+        if self.exchange_or_not == True:     
+            self.y_preds = model.predict(self.X_test)
 
-        # y1 = pd.DataFrame()
-        # y1 = self.y_test[0].transpose()
-        # y2 = pd.DataFrame()
-        # y2 = self.y_test[2].transpose()       
-        # y3 = pd.DataFrame()
-        # y3 = self.y_test[3].transpose()
-        
-        # df_predictions = pd.DataFrame({'Ground_Truth (0)': y1,
-        #                                'Ground_Truth (2)': y2,
-        #                                'Ground_Truth (3)': y3, 
-        #                                'Model_prediction (0)': [self.y_preds[idx][0] for idx in range(len(self.y_preds))],
-        #                                'Model_prediction (2)': [self.y_preds[idx][1] for idx in range(len(self.y_preds))],
-        #                                'Model_prediction (3)': [self.y_preds[idx][2] for idx in range(len(self.y_preds))]
-        #                                }, 
-        #                                columns=['Ground_Truth (0)', 'Ground_Truth (2)',
-        #                                         'Ground_Truth (3)',
-        #                                         'Model_prediction (0)', 'Model_prediction (2)',
-        #                                         'Model_prediction (3)'])
-        
+            y1 = pd.DataFrame()
+            y1 = self.y_test['Exchange Amount_0']
+            y2 = pd.DataFrame()
+            y2 = self.y_test['Exchange Amount_2']       
+            y3 = pd.DataFrame()
+            y3 = self.y_test['Exchange Amount_3']
+            
+            df_predictions = pd.DataFrame({'Ground_Truth (0)': y1,
+                                        'Ground_Truth (2)': y2,
+                                        'Ground_Truth (3)': y3, 
+                                        'Model_prediction (0)': [self.y_preds[idx][0] for idx in range(len(self.y_preds))],
+                                        'Model_prediction (2)': [self.y_preds[idx][1] for idx in range(len(self.y_preds))],
+                                        'Model_prediction (3)': [self.y_preds[idx][2] for idx in range(len(self.y_preds))]
+                                        }, 
+                                        columns=['Ground_Truth (0)', 'Ground_Truth (2)',
+                                                    'Ground_Truth (3)',
+                                                    'Model_prediction (0)', 'Model_prediction (2)',
+                                                    'Model_prediction (3)'])
+            
+            date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+            df_predictions.to_excel("models_prediction/preds_ex_amount_" + date_now + '.xlsx')
+
+        # ----------------------------------------------------------------------------------------------------------
+            
         print(df_predictions) 
+    
+    def update_model(self, base_model_path):
+        model = load_model(base_model_path)
+        
+        self.pre_processing()
+        
+        callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
                 
-        df_predictions.to_excel('models_prediction/predictions.xlsx')
+        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 222, callbacks=[callbacks], validation_split = 0.2)
+        
+        test_loss, test_acc = model.evaluate(self.X_train, self.y_train)
+        
+        model.summary()
+
+        print('Test Accuracy: ', test_acc)
+        print('Test Loss: ', test_loss)
+        
+        self.visualize_model(history)
+        self.plot_loss_accuracy(history)
+        
+        date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        self.filename_updated = 'models_prediction/model_updated_WIN' + '_' + self.opt + '_' + self.l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras'
+        
+        with open('models_prediction/paths_to_models.txt', 'w') as file:
+            file.write(self.filename_updated)
+        
+        model.save(self.filename_updated)
+        
         
     def plot_loss_accuracy(self, history_1):
         # Extract the loss and accuracy history for both training and validation data
