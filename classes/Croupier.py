@@ -21,13 +21,14 @@ import logging
     
 class Croupier(object):
 
-    def __init__(self, all_comb_perm = [], game_visible = True, tree_visible = False):
+    def __init__(self, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False):
         self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
         self.weights:list = []
         self.all_comb_perm:list = all_comb_perm
-                
+        
+        self.rand_int:int = rand_int
         self.weight:int = 0
         self.amount:int = 0
         self.idx_players:int = 0
@@ -44,11 +45,9 @@ class Croupier(object):
         
 
         #self.set_cards()
-        try:
-            self.set_players_nicknames()
-        except IndexError:
-            print("Uzyc opcji (1) z wstepnego menu")
-            return
+        
+        self.set_players_nicknames()
+
         
         # for self.player in self.players:
         #     self.player.arrangements.print()
@@ -175,11 +174,56 @@ class Croupier(object):
                       Card("9", "Tr"),
                       Card("10", "Tr"),
                       Card("6", "Ki")]]
-        
-    def random_arrangement(self, all_comb_perm):
-        #Zerowanie pustych wierszy
 
+    def remove_all_but_one(self, lst, value):
+        count = 0
+        result = []
+        for item in lst:
+            if item == value:
+                count += 1
+                if count == 1:
+                    result.append(item)
+            else:
+                result.append(item)
+        return result
+    
+    def random_arrangement(self, all_comb_perm):
+        # if os.path.exists("all_comb_perm_rand_int.txt") == False or os.path.getsize("all_comb_perm_rand_int.txt") == 0:
+        #     rand_int = random.sample(range(0, len(all_comb_perm)-1), 2)
+        #     with open("all_comb_perm_rand_int.txt", 'w') as file:
+        #         file.write(str(rand_int[0]) + '\n')
+        #         file.write(str(rand_int[1]) + '\n')
+        #     print("Dodano dane losowe do pliku w celu wylosowania ukladow ", "all_comb_perm_rand_int.txt")                    
+        # else:
+        #     pass
+                
         rand_int = random.sample(range(0, len(all_comb_perm)-1), 2)
+
+        # with open("all_comb_perm_rand_int.txt", "r") as f:
+        #     lines = f.readlines()
+        # for line in lines:
+        #     lines = self.remove_all_but_one(lines, line)
+            
+        # if (str(rand_int[0]) + '\n') in lines:
+        #     print("Powtorzenie: \n")
+        #     print(rand_int[0])
+        #     value = ''.join([str(rand_int[0]),'\n'])
+        #     lines = self.remove_all_but_one(lines, value)
+        #     rand_int[0] = random.randint(0, len(all_comb_perm) - 1)
+            
+        # if (str(rand_int[1]) + '\n') in lines:
+        #     print("Powtorzenie: \n")
+        #     print(rand_int[1])
+        #     value = ''.join([str(rand_int[1]),'\n'])
+        #     lines = self.remove_all_but_one(lines, value)
+        #     rand_int[1] = random.randint(0, len(all_comb_perm) - 1)
+        
+        # with open("all_comb_perm_rand_int.txt", "w") as file:
+        #     file.writelines(lines)
+            
+        # with open("all_comb_perm_rand_int.txt", "a") as file:
+        #     file.write(str(rand_int[0]) + '\n')
+        #     file.write(str(rand_int[1]) + '\n')
         
         cards = [all_comb_perm[rand_int[0]],  
                 all_comb_perm[rand_int[1]]]
@@ -304,7 +348,7 @@ class Croupier(object):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        with open('models_prediction/paths_to_models.txt', 'r') as file:
+        with open('models_prediction/path_to_model_WIN.txt', 'r') as file:
             filename_updated = file.readline()
             
             if not filename_updated:
@@ -313,7 +357,7 @@ class Croupier(object):
         if os.path.exists(filename_updated):
             saved_model = tf.keras.models.load_model(filename_updated)
         else:
-            saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
+            saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.658_test_loss=0.157_2024-08-07_17-20-51.keras')
 
         if self.player.si_boolean == True:
             cards_player_sorted = sorted(self.player.cards)
@@ -451,7 +495,7 @@ class Croupier(object):
             if self.tree_visible == True or self.game_visible == True:
                 #self.player.arrangements.get_data_frame_ml().print()
                 pass
-            self.player.arrangements.get_data_frame_ml().save_to_csv("ml_data/poker_game_one_pair_combs_all_to_update.csv")
+            self.player.arrangements.get_data_frame_ml().save_to_csv("ml_data/poker_game_one_pair_combs_all_to_update_duplicates.csv")
 
 
 
