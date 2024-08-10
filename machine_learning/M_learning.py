@@ -1,23 +1,31 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+import logging
+import sys
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Input, LSTM
 from keras.models import Model, load_model
 from keras.utils import to_categorical
+from tensorflow.keras.regularizers import l2
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
 from datetime import datetime
 import os
+import re
 
 class M_learning(object):
     
     def __init__(self, win_or_not = None, exchange_or_not = None, file_path_csv = ''):
         self.df = pd.read_csv(file_path_csv, on_bad_lines='skip', engine='python')
                     
-        pd.set_option('display.max_columns', 35)
+        pd.set_option('display.max_columns', 100)
         pd.options.display.float_format = '{:,.3f}'.format
         
         self.X = None
@@ -31,6 +39,7 @@ class M_learning(object):
         self.opt = 'Adam'
         self.l_r = '00001'
         self.filename_updated = ''
+        filename_weights_updated = ''
         
         self.win_or_not = win_or_not
         self.exchange_or_not = exchange_or_not
@@ -91,16 +100,30 @@ class M_learning(object):
 
         # print(self.X)
         if self.win_or_not == True:
-            self.X = pd.get_dummies(self.X, columns=["Exchange Amount"], drop_first=False)
+            self.X = pd.get_dummies(self.X, columns=["Exchange Amount", "Cards Before 1", "Cards Before 2", "Cards Before 3"
+                                                     , "Cards Before 4", "Cards Before 5"], drop_first=False)
             
+            for idx1 in range(0, 5):
+                for idx2 in range(0, 13):
+                    if ('Cards Before '+ str(idx1+1) + '_' + str(idx2+1)) not in self.X.columns:
+                        self.X['Cards Before '+ str(idx1+1) + '_' + str(idx2+1)] = 0
+
             if 'Exchange Amount_0' not in self.X.columns:
                 self.X['Exchange Amount_0'] = 0
             if 'Exchange Amount_2' not in self.X.columns:
                 self.X['Exchange Amount_2'] = 0
             if 'Exchange Amount_3' not in self.X.columns:
                 self.X['Exchange Amount_3'] = 0 
-        
+
         if self.exchange_or_not == True:
+            self.X = pd.get_dummies(self.X, columns=["Cards Before 1", "Cards Before 2", "Cards Before 3"
+                                                     , "Cards Before 4", "Cards Before 5"], drop_first=False)
+            
+            for idx1 in range(0, 5):
+                for idx2 in range(0, 13):
+                    if ('Cards Before '+ str(idx1+1) + '_' + str(idx2+1)) not in self.X.columns:
+                        self.X['Cards Before '+ str(idx1+1) + '_' + str(idx2+1)] = 0
+                        
             self.y = pd.get_dummies(self.y, columns=["Exchange Amount"], drop_first=False)
 
             if 0 not in self.y.columns:
@@ -123,15 +146,20 @@ class M_learning(object):
 
         print(self.X)
         print(self.y)
-
-        # scaler = MinMaxScaler()
-        # X_norm = pd.DataFrame(scaler.fit_transform(self.X), columns=self.X.columns)
         
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, 
                                                                                 self.y, 
                                                                                 test_size=0.2, 
                                                                                 random_state=10)
 
+        scaler = MinMaxScaler()
+                
+        self.X_train = scaler.fit_transform(self.X_train)
+        self.X_test = scaler.transform(self.X_test)
+        
+        print(self.X_train)
+        print(len(self.X_train[0]))
+        
 # def learning_rate_test(learning_rate, X_train, y_train):
 #     #Step 1: Model configuration
 #     model=Sequential(
@@ -157,10 +185,13 @@ class M_learning(object):
     def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):     
         model=Sequential(
                 [
-                    Input(shape=[len(X_train.columns),], name = 'input_layer'),
+                    Input(shape=[len(X_train[0]),], name = 'input_layer'),
                     Dense(units=512, activation='relu', name='layer1'),
-                    tf.keras.layers.Dropout(0.2),               
-                    Dense(units=256, activation='relu', name='layer2'),
+                    tf.keras.layers.Dropout(0.5),               
+                    Dense(units=256, activation='relu', name='layer2', kernel_regularizer=l2(0.01)),
+                    ######################################################
+                    tf.keras.layers.Dropout(0.2),  
+                    Dense(units=128, activation='relu', name='layer3'),
                 ]
             )
         
@@ -170,8 +201,7 @@ class M_learning(object):
         if self.exchange_or_not == True:
             model.add(Dense(units=3, activation='sigmoid', name='binary_output'))
 
-        model.compile(optimizer=optimizer(
-                    learning_rate=learning_rate),
+        model.compile(optimizer=optimizer(learning_rate=learning_rate),
                     loss=["binary_focal_crossentropy",],                
                     metrics=["accuracy"])
         
@@ -179,7 +209,7 @@ class M_learning(object):
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
                 
-        history = model.fit(X_train, y_train, batch_size=32, epochs = 222, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(X_train, y_train, batch_size=128, epochs = 250, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(X_train, y_train)
 
@@ -199,12 +229,12 @@ class M_learning(object):
                     tf.keras.optimizers.Adadelta]
         
         # Try out different learning rates
-        learning_rates = [0.00001]
+        learning_rates = [0.0001]
         
         optimizer = tf.keras.optimizers.Adam
         
         opt = 'Adam'
-        l_r = '00001'
+        l_r = '0001'
         
         idx = 2
         # Loop through the different optimizers
@@ -220,9 +250,11 @@ class M_learning(object):
             
             date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
             if self.win_or_not == True:
-                model.save('models_prediction/model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras')
+                model.save('models_prediction/model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.hdf5')
+                model.save_weights('models_prediction/weights_model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.weights.h5')
             if self.exchange_or_not == True:
-                model.save('models_prediction/model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras')
+                model.save('models_prediction/model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.hdf5')
+                model.save_weights('models_prediction/weights_model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.weights.h5')
 
             idx += 1
 
@@ -270,10 +302,14 @@ class M_learning(object):
             
         print(df_predictions) 
     
-    def update_model(self, base_model_path):
+    def update_model(self, base_model_path, weights_model_path):
         
         if os.path.exists(base_model_path):
             model = load_model(base_model_path)
+            
+            # print("Pasujace wzorce (regexp):", matching_file)
+            
+            model.load_weights(weights_model_path)
         else:
             print("Plik z modelem aktualizacja/baza nie istnieje.")
             return
@@ -283,8 +319,13 @@ class M_learning(object):
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
         
         model.summary()
+        
+        model.compile(optimizer=tf.keras.optimizers.Adam
+                      (learning_rate=0.00001), 
+                      loss=["binary_focal_crossentropy",],                
+                      metrics=["accuracy"])
        
-        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 222, callbacks=[callbacks], validation_split = 0.1)
+        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 222, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(self.X_train, self.y_train)
         
@@ -298,20 +339,28 @@ class M_learning(object):
         date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
         
         if self.win_or_not == True:
-            self.filename_updated = 'models_prediction/model_updated_WIN' + '_' + self.opt + '_' + self.l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras'
+            self.filename_updated = 'models_prediction/model_updated_WIN' + '_' + self.opt + '_' + self.l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.hdf5'
+            self.filename_weights_updated = 'models_prediction/weights_model_updated_WIN_' + date_now + '.weights.h5'
             
-            with open('models_prediction/path_to_model_WIN.txt', 'w') as file:
-                file.write(self.filename_updated)
-            
+            with open('models_prediction/path_to_model_WIN.txt', 'w') as outfile:
+                outfile.write(self.filename_updated)
+                outfile.write('\n')
+                outfile.write(self.filename_weights_updated)
+                
             model.save(self.filename_updated)
+            model.save_weights(self.filename_weights_updated)
             
         if self.exchange_or_not == True:
-            self.filename_updated = 'models_prediction/model_updated_EX_AMOUNT' + '_' + self.opt + '_' + self.l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras'
-            
-            with open('models_prediction/path_to_model_EX_AMOUNT.txt', 'w') as file:
-                file.write(self.filename_updated)
+            self.filename_updated = 'models_prediction/model_updated_EX_AMOUNT' + '_' + self.opt + '_' + self.l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.hdf5'
+            self.filename_weights_updated = 'models_prediction/weights_model_updated_EX_AMOUNT_' + date_now + '.weights.h5'
+
+            with open('models_prediction/path_to_model_EX_AMOUNT.txt', 'w') as outfile:
+                outfile.write(self.filename_updated)
+                outfile.write('\n')
+                outfile.write(self.filename_weights_updated)
             
             model.save(self.filename_updated)
+            model.save_weights(self.filename_weights_updated)
             
         # --------------------------------------- WIN OR NOT PREDICTION ---------------------------------------     
         if self.win_or_not == True:

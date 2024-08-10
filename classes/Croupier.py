@@ -1,5 +1,5 @@
-# import os
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 from classes.Player import Player
 from classes.Deck import Deck
@@ -16,7 +16,7 @@ import os
 import random
 import pandas as pd
 import tensorflow as tf
-import pickle
+import re
 import logging
     
 class Croupier(object):
@@ -281,19 +281,28 @@ class Croupier(object):
         
         if len(self.all_comb_perm) != 0:
             self.cards = self.random_arrangement(self.all_comb_perm)
-        
-        for idx in range(int(self.idx_players)):
-            #nick = str(input("Pseudonim gracza: "))
-            if idx == 0:
-                nick = 'Nick'
-                self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
-                                        if_deck=False, if_show_perm=False, si_boolean=True))
-        
-            if idx == 1:                                           
-                nick = 'Adam'
-                self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
-                                        if_deck=False, if_show_perm=False, si_boolean=True))
             
+        for idx in range(int(self.idx_players)):
+            if idx == 0:
+                if len(self.all_comb_perm) != 0:
+                    nick = 'Nick'
+                    self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
+                                            if_deck=False, if_show_perm=False, si_boolean=True))
+                else:
+                    print("Dlugosc listy 'all_comb_perm' wynosi: ", len(self.all_comb_perm))
+                    nick = str(input("Pseudonim gracza: "))
+                    self.players.append(Player(deck=self.deck, perm=False, nick=nick, index=idx, cards=self.cards[idx],
+                                            if_deck=True, if_show_perm=False, si_boolean=False))
+            if idx == 1:                                           
+                if len(self.all_comb_perm) != 0:
+                    nick = 'Adam'
+                    self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
+                                            if_deck=False, if_show_perm=False, si_boolean=True))
+                else:
+                    print("Dlugosc listy 'all_comb_perm' wynosi: ", len(self.all_comb_perm))
+                    nick = str(input("Pseudonim gracza: "))
+                    self.players.append(Player(deck=self.deck, perm=False, nick=nick, index=idx, cards=self.cards[idx],
+                                            if_deck=True, if_show_perm=False, si_boolean=False))
             #self.deck.print()
 
     def cards_check_exchange_add_weights(self):
@@ -357,7 +366,15 @@ class Croupier(object):
         if os.path.exists(filename_updated):
             saved_model = tf.keras.models.load_model(filename_updated)
         else:
-            saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.658_test_loss=0.157_2024-08-07_17-20-51.keras')
+            directory = "models_prediction"
+            prefix = "model_base_WIN"
+            extension = "hdf5"
+            pattern = rf"^{prefix}.*\.{extension}$"
+            matching_file = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
+
+            # print("Pasujace wzorce (regexp):", matching_file)
+
+            saved_model = tf.keras.models.load_model(directory + '/' + matching_file[0])
 
         if self.player.si_boolean == True:
             cards_player_sorted = sorted(self.player.cards)
