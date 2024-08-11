@@ -29,14 +29,14 @@ class Game(object):
         
     def __init__(self):
         self.Game()
+        
+        self.all_combs_with_duplicates = 'ml_data/poker_game_one_pair_combs_all_duplicates.csv'
+        self.all_combs_update_with_duplicates = 'ml_data/poker_game_one_pair_combs_all_to_update_duplicates.csv' 
+        
+        self.file_all_to_update = 'ml_data/poker_game_one_pair_combs_all_to_update.csv'
+        self.file_one_pair_combs_all = 'ml_data/poker_game_one_pair_combs_all.csv'  
     
     def Game(self): 
-        all_combs_with_duplicates = 'ml_data/poker_game_one_pair_combs_all_duplicates.csv'
-        all_combs_update_with_duplicates = 'ml_data/poker_game_one_pair_combs_all_to_update_duplicates.csv' 
-        
-        file_all_to_update = 'ml_data/poker_game_one_pair_combs_all_to_update.csv'
-        file_one_pair_combs_all = 'ml_data/poker_game_one_pair_combs_all.csv'  
-               
         while(choice_1 := input("\n" + 
                 "(1)\n" +
                 "- Zbieranie rozgrywek do pliku\n" +
@@ -89,100 +89,7 @@ class Game(object):
                         except KeyboardInterrupt:
                             print("Przerwany program. Powrot do menu.")
                             print(i)
-                            break
-                    
-                    try:
-                        header = "Player ID,Exchange,Exchange Amount,Cards Before 1,Cards Before 2,Cards Before 3,Cards Before 4,Cards Before 5,Card Exchanged 1,Card Exchanged 2,Card Exchanged 3,Win"
-
-                        if os.path.getsize(file_all_to_update) == 0:
-                            with open(file_all_to_update, 'w') as outfile:
-                                outfile.write(header + "\n")
-                            print("Dodano naglowek do pliku ", file_all_to_update)                    
-                        else:
-                            print("Plik nie jest pusty")                   
-                                    
-                    except FileNotFoundError:
-                        print("Plik ", all_combs_update_with_duplicates, " nie istnieje.")  
-                    
-                    # try:
-                        # Usuwane sa powtarzajace sie linie
-                        
-                        # with open(all_combs_update_with_duplicates, 'r') as infile, open(file_all_to_update, 'a') as outfile:
-                        #     # Create a set to store unique lines
-                        #     seen_lines = set()
-                        #     for line in infile:
-                        #         # If the line is not in the set, write it to the output file and add it to the set
-                        #         if line not in seen_lines:
-                        #             outfile.write(line)
-                        #             seen_lines.add(line)
-                        # print("Plik ", all_combs_update_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
-                        #       file_all_to_update)   
-                                                
-                                    
-                    # except FileNotFoundError:
-                    #     print("Plik ", all_combs_update_with_duplicates, " nie istnieje.")                    
-          
-                    try:
-                        with open(all_combs_update_with_duplicates, 'r') as infile:
-                            lines = infile.readlines()
-                            
-                        # Write the remaining lines back to the file
-                        with open(all_combs_with_duplicates, 'a') as outfile:
-                            outfile.writelines(lines)
-                            
-                        unique_pairs = set()
-                        for i in range(0, len(lines), 2):
-                            if i+1 < len(lines):
-                                pair = (lines[i].strip(), lines[i+1].strip())
-                                unique_pairs.add(pair) 
-
-                        with open(file_all_to_update, 'a') as outfile:
-                            for pair_w in unique_pairs:
-                                outfile.write(pair_w[0] + '\n')
-                                outfile.write(pair_w[1] + '\n')
-                                
-                            
-                        print("Plik ", all_combs_update_with_duplicates, " zostal skopiowany do pliku ",
-                            all_combs_with_duplicates)
-                        print("Plik ", all_combs_update_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
-                              file_all_to_update)
-                    
-                    except FileNotFoundError:   
-                        print("Plik ", all_combs_update_with_duplicates, " nie istnieje.")                           
-
-                    try:
-                        with open(all_combs_with_duplicates, 'r') as infile, open(file_one_pair_combs_all, 'w') as outfile:
-                            # Usuwane sa powtarzajace sie pary 
-                            with open(all_combs_with_duplicates, 'r') as infile:
-                                lines = infile.readlines()
-
-                            unique_pairs = set()
-                            for i in range(0, len(lines), 2):
-                                if i+1 < len(lines):
-                                    pair = (lines[i].strip(), lines[i+1].strip())
-                                    unique_pairs.add(pair) 
-
-                            with open(file_one_pair_combs_all, 'r') as infile, open(file_one_pair_combs_all, 'a') as outfile:
-                                for pair_w in unique_pairs:
-                                    outfile.write(pair_w[0] + '\n')
-                                    outfile.write(pair_w[1] + '\n')
-                            
-                                if os.path.getsize(file_one_pair_combs_all) == 0:
-                                    outfile.write(header + "\n")
-                                    print("Dodano naglowek do pliku ", file_one_pair_combs_all)                    
-                                        
-                        print("Plik ", all_combs_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
-                              file_one_pair_combs_all)                    
-                                    
-                    except FileNotFoundError:
-                        print("Plik ", all_combs_update_with_duplicates, " nie istnieje.")      
-              
-                    try:
-                        with open(all_combs_update_with_duplicates, 'r+') as file:
-                            file.truncate(0)
-                        print("Plik ", all_combs_update_with_duplicates, " zostal wyczyszczony")
-                    except FileNotFoundError:   
-                        print("Plik ", all_combs_update_with_duplicates, " nie istnieje.")    
+                            break   
 
                 if choice == '5':
                     while(choice_2 := input("\n(1) - Wygrane/Przegrane\n" + 
@@ -225,13 +132,13 @@ class Game(object):
                                 
                             else:
                                 directory = "models_prediction"
-                                prefix = "model_base_WIN"
+                                prefix = "model_base_WIN_Adam_0001"
                                 extension = "hdf5"
                                 pattern = rf"^{prefix}.*\.{extension}$"
                                 matching_file1 = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
                                 
                                 directory = "models_prediction"
-                                prefix = "weights_model_base_WIN"
+                                prefix = "weights_model_base_WIN_Adam_0001"
                                 extension = "weights.h5"
                                 pattern = rf"^{prefix}.*\.{extension}$"
                                 matching_file2 = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
@@ -284,10 +191,86 @@ class Game(object):
                         infile.truncate(0)     
                     with open(file_one_pair_combs_all, 'r+') as infile:
                         infile.truncate(0)  
-                    print("Usunieto!")
+                    print("Usunieto...")
 
                 if choice == '8':
                     break
                     
                 if choice == '9':
                     exit()
+
+    def file_manipulation_after_gathering(self):
+        try:
+            header = "Player ID,Exchange,Exchange Amount,Cards Before 1,Cards Before 2,Cards Before 3,Cards Before 4,Cards Before 5,Card Exchanged 1,Card Exchanged 2,Card Exchanged 3,Win"
+
+            if os.path.getsize(self.file_all_to_update) == 0:
+                with open(self.file_all_to_update, 'w') as outfile:
+                    outfile.write(header + "\n")
+                print("Dodano naglowek do pliku ", self.file_all_to_update)                    
+            else:
+                print("Plik nie jest pusty")                   
+                        
+        except FileNotFoundError:
+            print("Plik ", self.file_all_to_update, " nie istnieje.")                   
+
+        try:
+            with open(self.all_combs_update_with_duplicates, 'r') as infile:
+                lines = infile.readlines()
+                
+            # Write the remaining lines back to the file
+            with open(self.all_combs_with_duplicates, 'a') as outfile:
+                outfile.writelines(lines)
+                
+            unique_pairs = set()
+            for i in range(0, len(lines), 2):
+                if i+1 < len(lines):
+                    pair = (lines[i].strip(), lines[i+1].strip())
+                    unique_pairs.add(pair) 
+
+            with open(self.file_all_to_update, 'a') as outfile:
+                for pair_w in unique_pairs:
+                    outfile.write(pair_w[0] + '\n')
+                    outfile.write(pair_w[1] + '\n')
+                    
+                
+            print("Plik ", self.all_combs_update_with_duplicates, " zostal skopiowany do pliku ",
+                self.all_combs_with_duplicates)
+            print("Plik ", self.all_combs_update_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
+                    self.file_all_to_update)
+        
+        except FileNotFoundError:   
+            print("Plik ", self.all_combs_update_with_duplicates, " nie istnieje.")                           
+
+        try:
+            with open(self.all_combs_with_duplicates, 'r') as infile, open(self.file_one_pair_combs_all, 'w') as outfile:
+                # Usuwane sa powtarzajace sie pary 
+                with open(self.all_combs_with_duplicates, 'r') as infile:
+                    lines = infile.readlines()
+
+                unique_pairs = set()
+                for i in range(0, len(lines), 2):
+                    if i+1 < len(lines):
+                        pair = (lines[i].strip(), lines[i+1].strip())
+                        unique_pairs.add(pair) 
+
+                with open(self.file_one_pair_combs_all, 'r') as infile, open(self.file_one_pair_combs_all, 'a') as outfile:
+                    for pair_w in unique_pairs:
+                        outfile.write(pair_w[0] + '\n')
+                        outfile.write(pair_w[1] + '\n')
+                
+                    if os.path.getsize(self.file_one_pair_combs_all) == 0:
+                        outfile.write(header + "\n")
+                        print("Dodano naglowek do pliku ", self.file_one_pair_combs_all)                    
+                            
+            print("Plik ", self.all_combs_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
+                    self.file_one_pair_combs_all)                    
+                        
+        except FileNotFoundError:
+            print("Plik ", self.all_combs_update_with_duplicates, " nie istnieje.")      
+    
+        try:
+            with open(self.all_combs_update_with_duplicates, 'r+') as file:
+                file.truncate(0)
+            print("Plik ", self.all_combs_update_with_duplicates, " zostal wyczyszczony")
+        except FileNotFoundError:   
+            print("Plik ", self.all_combs_update_with_duplicates, " nie istnieje.") 

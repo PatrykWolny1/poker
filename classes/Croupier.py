@@ -90,6 +90,8 @@ class Croupier(object):
         self.amount_list = []
         self.exchange_list = []
         
+        # Inicjalizacja wag danego ukladu z wylosowanymi kartami, ramek dla danych, pojedynczych wag kart 
+        # oprocz tych ktore definuja uklad ([2 2] 3 4 5) dla wybranej strategii, strategii
         for self.player in self.players:
             if self.game_visible == True:
                 self.player.print(False) 
@@ -108,6 +110,7 @@ class Croupier(object):
         
         self.num = 0
         
+        # Wyswietlenie drzewa decyzyjnego danej strategii kazdego gracza
         for strategy in self.one_pair_strategy:
             strategy.set_root(visited=False)
             strategy.build_tree()
@@ -115,7 +118,7 @@ class Croupier(object):
             if self.game_visible == True:
                 print(str(strategy.root))
 
-        
+        # Wymiana kart graczy na inne
         self.cards_check_exchange_add_weights()
         
         if self.game_visible == True:
@@ -124,6 +127,7 @@ class Croupier(object):
             print("------------------------------------------------------------")
             print()
         
+        # Inicjalizacja wag, ramki danych po wymianie kart
         for self.player in self.players:
             if self.game_visible == True:
                 self.player.print(False)
@@ -134,13 +138,15 @@ class Croupier(object):
         
         if self.game_visible == True:
             print("Wagi ukladow graczy: ", self.weights)
-            
+        
+        # Podsumowanie wynikow
         self.compare_players_weights()
         
         # self.one_pair_strategy[self.num].set_root(visited=True, amount=self.amount, exchange=self.exchange)
         # self.one_pair_strategy.build_tree()
         # print(str(self.one_pair_strategy.root))
         
+        # Wyswietlenie drzewa decyzyjnego po zakonczeniu gry
         num_1 = 0
 
         if self.tree_visible == True:
@@ -187,43 +193,10 @@ class Croupier(object):
                 result.append(item)
         return result
     
-    def random_arrangement(self, all_comb_perm):
-        # if os.path.exists("all_comb_perm_rand_int.txt") == False or os.path.getsize("all_comb_perm_rand_int.txt") == 0:
-        #     rand_int = random.sample(range(0, len(all_comb_perm)-1), 2)
-        #     with open("all_comb_perm_rand_int.txt", 'w') as file:
-        #         file.write(str(rand_int[0]) + '\n')
-        #         file.write(str(rand_int[1]) + '\n')
-        #     print("Dodano dane losowe do pliku w celu wylosowania ukladow ", "all_comb_perm_rand_int.txt")                    
-        # else:
-        #     pass
-                
+    # Losowanie ukladow z puli wygenerowanych kombinacji (Jedna Para) przed poczatkiem gry
+    def random_arrangement(self, all_comb_perm):       
         rand_int = random.sample(range(0, len(all_comb_perm)-1), 2)
 
-        # with open("all_comb_perm_rand_int.txt", "r") as f:
-        #     lines = f.readlines()
-        # for line in lines:
-        #     lines = self.remove_all_but_one(lines, line)
-            
-        # if (str(rand_int[0]) + '\n') in lines:
-        #     print("Powtorzenie: \n")
-        #     print(rand_int[0])
-        #     value = ''.join([str(rand_int[0]),'\n'])
-        #     lines = self.remove_all_but_one(lines, value)
-        #     rand_int[0] = random.randint(0, len(all_comb_perm) - 1)
-            
-        # if (str(rand_int[1]) + '\n') in lines:
-        #     print("Powtorzenie: \n")
-        #     print(rand_int[1])
-        #     value = ''.join([str(rand_int[1]),'\n'])
-        #     lines = self.remove_all_but_one(lines, value)
-        #     rand_int[1] = random.randint(0, len(all_comb_perm) - 1)
-        
-        # with open("all_comb_perm_rand_int.txt", "w") as file:
-        #     file.writelines(lines)
-            
-        # with open("all_comb_perm_rand_int.txt", "a") as file:
-        #     file.write(str(rand_int[0]) + '\n')
-        #     file.write(str(rand_int[1]) + '\n')
         
         cards = [all_comb_perm[rand_int[0]],  
                 all_comb_perm[rand_int[1]]]
@@ -235,6 +208,7 @@ class Croupier(object):
         if_not_the_same = True
         repeat = 0
         
+        # Jesli wylosowany uklad jest taki sam jak uklad drugiego gracza, to nastepuje zmiana
         while(if_not_the_same):
             idx1 = 0
             
@@ -279,6 +253,7 @@ class Croupier(object):
     
         self.deck = Deck()
         
+        # Jesli wybrano opcje zbierania rozgrywek to lista all_comb_perm nie jest pusta
         if len(self.all_comb_perm) != 0:
             self.cards = self.random_arrangement(self.all_comb_perm)
             
@@ -309,7 +284,8 @@ class Croupier(object):
         for self.player in self.players:
             if self.game_visible == True:
                 self.player.print(False)
-                
+            
+            # Ustawienie wag oraz wyswietlenie rodzaju ukladu 
             self.player.arrangements.check_arrangement(game_visible=self.game_visible)
             self.player.arrangements.set_weights()
            
@@ -317,6 +293,9 @@ class Croupier(object):
                 print()
 
             #print(self.player.arrangements.get_weight())
+            
+            # Jesli gra SI to do zmiennej exchange przypisywany jest losowy wynik 
+            # zgodnie z drzewem decyzyjnym
             
             if self.player.si_boolean == True:
                 self.exchange = np.random.choice(['n', 't'], size=1, 
@@ -331,7 +310,7 @@ class Croupier(object):
                 print(self.exchange)
                 print("Wymiana kart: ", self.exchange)  
             
-
+            # Wymiana kart lub nie
             if self.exchange == 't':
                 self.cards_exchange()
             if self.exchange == 'n':
@@ -343,26 +322,34 @@ class Croupier(object):
 
             
             self.num += 1
+            
+            # Przypisanie do ramki danych liczby kart do wymiany dla danego gracza
             [self.player.arrangements.data_frame_ml.set_exchange_amount(self.amount_list[al_idx]) for al_idx in range(0, len(self.amount_list))]
 
+            # Dodanie do listy wagi ukladu danego gracza
             self.weights.append(self.player.arrangements.get_weight())
+            
+            # Przypisanie do ramki danych wymienionych kart dla danego gracza
             [self.player.arrangements.data_frame_ml.set_cards_exchanged(card.weight) for card in self.player.cards_exchanged]
             if self.game_visible == True:
                 print()
                 print("------------------------------------------------------------")
                 print()
 
+    # Rozdawanie kart do graczy
     def deal_cards(self):
         for idx in range(self.amount):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
+        # Otwarcie pliku z zaktualizowanymi modelami
         with open('models_prediction/path_to_model_WIN.txt', 'r') as file:
             filename_updated = file.readline()
             
             if not filename_updated:
                 filename_updated = ''
 
+        # Wczytanie modelu w zaleznosci od tego czy zaktualizowany model istnieje
         if os.path.exists(filename_updated):
             saved_model = tf.keras.models.load_model(filename_updated)
         else:
@@ -376,6 +363,7 @@ class Croupier(object):
 
             saved_model = tf.keras.models.load_model(directory + '/' + matching_file[0])
 
+        # Preprocessing danych do przewidywania prawdopodobienstwa wygranej gracza
         if self.player.si_boolean == True:
             cards_player_sorted = sorted(self.player.cards)
             
@@ -406,14 +394,17 @@ class Croupier(object):
                 
                 y_preds = saved_model.predict(X_game, verbose=0)
                 
+                # Prawdopodobienstwo wygranej z dwiena lub trzema kartami
                 if self.game_visible == True:
                     print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
             
+            # Wybieranie ilosci kart do wymiany zgodnie z prawdopodobienstwem
             self.amount = np.random.choice([2, 3], size=1, 
                                     p=[float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[0]),
                                        float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])
             self.amount = int(self.amount)
-
+        
+        # Gracz: Czlowiek
         else:
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
             
@@ -456,13 +447,17 @@ class Croupier(object):
         if self.amount == -1:
             return
 
+        # Zwracanie kart do krupiera w zaleznosci od tego czy to gracz SI czy Czlowiek
         self.amount = self.player.return_to_croupier(self.amount, 
                                                      self.player.arrangements.get_part_weight(), game_visible=False,
                                                      si_boolean=self.player.si_boolean)
         if self.game_visible == True:
             print(self.amount)
+            
+        # Rozdawanie kart przez krupiera
         self.deal_cards()
 
+        # Przypisanie nowych kart dla klasy Arrangements
         self.player.arrangements.set_cards(self.player.cards)
         
         if self.game_visible == True:
@@ -475,10 +470,12 @@ class Croupier(object):
         self.player.arrangements.check_arrangement(game_visible=self.game_visible)
         self.player.arrangements.set_weights()
         
+        # Inicjalizacja ramki danych 
         self.player.arrangements.data_frame_ml.exchange = self.exchange
         self.player.arrangements.init_data_frame_ml_after_ex()
 
     def compare_players_weights(self):
+        # Okreslenie maksymalnej wagi z danych wag kart
         max_weight = list(max(enumerate(self.weights), key = itemgetter(1)))
         
         if self.game_visible == True:
