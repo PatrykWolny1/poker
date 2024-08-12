@@ -28,14 +28,14 @@ atexit.register(cleanup)
 class Game(object):
         
     def __init__(self):
-        self.Game()
-        
         self.all_combs_with_duplicates = 'ml_data/poker_game_one_pair_combs_all_duplicates.csv'
         self.all_combs_update_with_duplicates = 'ml_data/poker_game_one_pair_combs_all_to_update_duplicates.csv' 
         
         self.file_all_to_update = 'ml_data/poker_game_one_pair_combs_all_to_update.csv'
         self.file_one_pair_combs_all = 'ml_data/poker_game_one_pair_combs_all.csv'  
-    
+        
+        self.Game()
+        
     def Game(self): 
         while(choice_1 := input("\n" + 
                 "(1)\n" +
@@ -55,11 +55,11 @@ class Game(object):
         
             while(choice := input("Wybierz opcje: \n" + 
                                 "(1) - Permutacje Kart\n" +
-                                "(2) - Gra (Ukladem Jedna Para)\n" +
-                                "(3) - Gra (Wszystkie uklady)\n" + 
+                                "(2) - Gra (Ukladem Jedna Para) (SI vs Czlowiek) (SI vs SI) (Czlowiek vs Czlowiek)\n" +
+                                "(3) - Gra (Wszystkie uklady) (Czlowiek vs Czlowiek)\n" + 
                                 "(4) - Zbieranie rozgrywek do pliku\n" + 
-                                "(5) - Uczenie Maszynowe\n" +
-                                "(6) - Aktualizacja modelu ML\n" +
+                                "(5) - Uczenie DNN\n" +
+                                "(6) - Aktualizacja modelu DNN\n" +
                                 "(7) - Usuwanie zawartosci plikow '... all_to_update.csv' oraz '... all.csv' po aktualizacjach\n" +
                                 "(8) - Wroc\n" +
                                 "(9) - Wyjscie\n")):
@@ -68,8 +68,21 @@ class Game(object):
                     Player().cards_permutations()
                 
                 if choice == '2':
-                    croupier = Croupier(all_comb_perm=all_comb_perm, game_visible=True, tree_visible=False)
-                    croupier.play()
+                    while(game_si_human := input("(1) - SI vs Czlowiek\n" +
+                                      "(2) - SI vs SI\n" + 
+                                      "(3) - Czlowiek vs Czlowiek\n" +
+                                      "(4) - Wroc\n")):
+                        
+                        if game_si_human == '1':
+                            croupier = Croupier(game_si_human=1, all_comb_perm=all_comb_perm, game_visible=True, tree_visible=False)
+                        if game_si_human == '2':
+                            croupier = Croupier(game_si_human=2, all_comb_perm=all_comb_perm, game_visible=True, tree_visible=False)
+                        if game_si_human == '3':
+                            croupier = Croupier(game_si_human=3, all_comb_perm=all_comb_perm, game_visible=True, tree_visible=False)
+                        if game_si_human == '4':
+                            break
+                        
+                        croupier.play()
                 
                 if choice == '3':
                     croupier = Croupier(game_visible=True, tree_visible=False)
@@ -94,18 +107,25 @@ class Game(object):
                 if choice == '5':
                     while(choice_2 := input("\n(1) - Wygrane/Przegrane\n" + 
                                             "(2) - Ilosc kart do wymiany zeby zwiekszyc szanse na wygrana\n" +
-                                            "(3) - Wroc:\n")):
+                                            "(3) - Kopiowanie unikalnych wartosci do pliku '... combs_all.csv':\n" +
+                                            "(4) - Wroc:\n")):
                         if choice_2 == '1':
                             model_ml = M_learning(win_or_not=True, exchange_or_not=False, file_path_csv='ml_data/poker_game_one_pair_combs_all.csv')
+                            model_ml.pre_processing()
+                            model_ml.ml_learning_and_prediction()
                         
                         if choice_2 == '2':
                             model_ml = M_learning(win_or_not=False, exchange_or_not=True, file_path_csv='ml_data/poker_game_one_pair_combs_all.csv')            
-
+                            model_ml.pre_processing()
+                            model_ml.ml_learning_and_prediction()
+                            
                         if choice_2 == '3':
+                            self.copy_unique_duplicates_all()
+                        
+                        if choice_2 == '4':
                             break
                         
-                        model_ml.pre_processing()
-                        model_ml.ml_learning_and_prediction()
+
 
                 if choice == '6':
                     while(choice_3 := input("\n(1) - Wygrane/Przegrane\n" + 
@@ -187,9 +207,9 @@ class Game(object):
                                 break
                 
                 if choice == '7':
-                    with open(file_all_to_update, 'r+') as infile:
+                    with open(self.file_all_to_update, 'r+') as infile:
                         infile.truncate(0)     
-                    with open(file_one_pair_combs_all, 'r+') as infile:
+                    with open(self.file_one_pair_combs_all, 'r+') as infile:
                         infile.truncate(0)  
                     print("Usunieto...")
 
@@ -198,6 +218,36 @@ class Game(object):
                     
                 if choice == '9':
                     exit()
+                    
+    def copy_unique_duplicates_all(self):
+        try:
+            header = "Player ID,Exchange,Exchange Amount,Cards Before 1,Cards Before 2,Cards Before 3,Cards Before 4,Cards Before 5,Card Exchanged 1,Card Exchanged 2,Card Exchanged 3,Win"
+                        
+            with open(self.all_combs_with_duplicates, 'r') as infile, open(self.file_one_pair_combs_all, 'w') as outfile:
+                # Usuwane sa powtarzajace sie pary 
+                with open(self.all_combs_with_duplicates, 'r') as infile:
+                    lines = infile.readlines()
+
+                unique_pairs = set()
+                for i in range(0, len(lines), 2):
+                    if i+1 < len(lines):
+                        pair = (lines[i].strip(), lines[i+1].strip())
+                        unique_pairs.add(pair) 
+
+                with open(self.file_one_pair_combs_all, 'r') as infile, open(self.file_one_pair_combs_all, 'a') as outfile:
+                    if os.path.getsize(self.file_one_pair_combs_all) == 0:
+                        outfile.write(header + "\n")
+                        print("Dodano naglowek do pliku ", self.file_one_pair_combs_all) 
+                                          
+                    for pair_w in unique_pairs:
+                        outfile.write(pair_w[0] + '\n')
+                        outfile.write(pair_w[1] + '\n')                   
+                            
+            print("Plik ", self.all_combs_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
+                    self.file_one_pair_combs_all)                    
+                        
+        except FileNotFoundError:
+            print("Plik ", self.all_combs_update_with_duplicates, " nie istnieje.") 
 
     def file_manipulation_after_gathering(self):
         try:
@@ -252,15 +302,15 @@ class Game(object):
                     if i+1 < len(lines):
                         pair = (lines[i].strip(), lines[i+1].strip())
                         unique_pairs.add(pair) 
-
+                
+                if os.path.getsize(self.file_one_pair_combs_all) == 0:
+                    outfile.write(header + "\n")
+                    print("Dodano naglowek do pliku ", self.file_one_pair_combs_all) 
+                    
                 with open(self.file_one_pair_combs_all, 'r') as infile, open(self.file_one_pair_combs_all, 'a') as outfile:
                     for pair_w in unique_pairs:
                         outfile.write(pair_w[0] + '\n')
-                        outfile.write(pair_w[1] + '\n')
-                
-                    if os.path.getsize(self.file_one_pair_combs_all) == 0:
-                        outfile.write(header + "\n")
-                        print("Dodano naglowek do pliku ", self.file_one_pair_combs_all)                    
+                        outfile.write(pair_w[1] + '\n')                   
                             
             print("Plik ", self.all_combs_with_duplicates, " i jego unikalne wartosci zostaly skopiowane do pliku ",
                     self.file_one_pair_combs_all)                    

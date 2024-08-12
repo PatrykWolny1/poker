@@ -13,6 +13,7 @@ from tensorflow.keras.layers import Dense, Input, LSTM
 from keras.models import Model, load_model
 from keras.utils import to_categorical
 from tensorflow.keras.regularizers import l2
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
@@ -39,7 +40,7 @@ class M_learning(object):
         self.opt = 'Adam'
         self.l_r = '00001'
         self.filename_updated = ''
-        filename_weights_updated = ''
+        self.filename_weights_updated = ''
         
         self.win_or_not = win_or_not
         self.exchange_or_not = exchange_or_not
@@ -100,8 +101,8 @@ class M_learning(object):
 
         # print(self.X)
         if self.win_or_not == True:
-            self.X = pd.get_dummies(self.X, columns=["Exchange Amount", "Cards Before 1", "Cards Before 2", "Cards Before 3"
-                                                     , "Cards Before 4", "Cards Before 5"], drop_first=False)
+            self.X = pd.get_dummies(self.X, columns=["Exchange Amount", "Cards Before 1", "Cards Before 2", 
+                                                     "Cards Before 3", "Cards Before 4", "Cards Before 5"], drop_first=False)
             
             for idx1 in range(0, 5):
                 for idx2 in range(0, 13):
@@ -114,10 +115,10 @@ class M_learning(object):
                 self.X['Exchange Amount_2'] = 0
             if 'Exchange Amount_3' not in self.X.columns:
                 self.X['Exchange Amount_3'] = 0 
-
+            
         if self.exchange_or_not == True:
-            self.X = pd.get_dummies(self.X, columns=["Cards Before 1", "Cards Before 2", "Cards Before 3"
-                                                     , "Cards Before 4", "Cards Before 5"], drop_first=False)
+            self.X = pd.get_dummies(self.X, columns=["Cards Before 1", "Cards Before 2", "Cards Before 3", 
+                                                     "Cards Before 4", "Cards Before 5"], drop_first=False)
             
             for idx1 in range(0, 5):
                 for idx2 in range(0, 13):
@@ -151,14 +152,8 @@ class M_learning(object):
                                                                                 self.y, 
                                                                                 test_size=0.2, 
                                                                                 random_state=10)
-
-        scaler = MinMaxScaler()
-                
-        self.X_train = scaler.fit_transform(self.X_train)
-        self.X_test = scaler.transform(self.X_test)
         
         print(self.X_train)
-        print(len(self.X_train[0]))
         
 # def learning_rate_test(learning_rate, X_train, y_train):
 #     #Step 1: Model configuration
@@ -182,16 +177,15 @@ class M_learning(object):
     
 #     return score[1]
 
-    def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):     
+    def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):  
+           
         model=Sequential(
                 [
-                    Input(shape=[len(X_train[0]),], name = 'input_layer'),
-                    Dense(units=512, activation='relu', name='layer1'),
+                    Input(shape=[len(X_train.columns)], name = 'input_layer'),
+                    Dense(units=128, activation='relu', name='layer1'),
                     tf.keras.layers.Dropout(0.5),               
-                    Dense(units=256, activation='relu', name='layer2', kernel_regularizer=l2(0.01)),
-                    ######################################################
-                    tf.keras.layers.Dropout(0.2),  
-                    Dense(units=128, activation='relu', name='layer3'),
+                    Dense(units=64, activation='relu', name='layer2'),
+                    Dense(units=32, activation='relu', name='layer3'),
                 ]
             )
         
@@ -209,7 +203,7 @@ class M_learning(object):
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
                 
-        history = model.fit(X_train, y_train, batch_size=128, epochs = 250, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(X_train, y_train, batch_size=32, epochs = 250, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(X_train, y_train)
 
@@ -250,10 +244,10 @@ class M_learning(object):
             
             date_now = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
             if self.win_or_not == True:
-                model.save('models_prediction/model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.hdf5')
+                model.save('models_prediction/model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras')
                 model.save_weights('models_prediction/weights_model_base_WIN' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.weights.h5')
             if self.exchange_or_not == True:
-                model.save('models_prediction/model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.hdf5')
+                model.save('models_prediction/model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.keras')
                 model.save_weights('models_prediction/weights_model_base_EX_AMOUNT' + '_' + opt + '_' + l_r + '_test_acc=' + str("{:.3f}".format(test_acc)) + '_test_loss=' + str("{:.3f}".format(test_loss)) + '_' + date_now + '.weights.h5')
 
             idx += 1
@@ -325,7 +319,7 @@ class M_learning(object):
                       loss=["binary_focal_crossentropy",],                
                       metrics=["accuracy"])
        
-        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 222, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 250, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(self.X_train, self.y_train)
         

@@ -8,6 +8,7 @@ from classes.DataFrameML import DataFrameML
 from decision_tree_structure.Node import Node
 from decision_tree_structure.OnePairStructureStrategy import OnePairStructureStrategy
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 from operator import itemgetter
 from random import choice
 import numpy as np
@@ -21,12 +22,15 @@ import logging
     
 class Croupier(object):
 
-    def __init__(self, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False):
+    def __init__(self, game_si_human = 1, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False):
         self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
         self.weights:list = []
         self.all_comb_perm:list = all_comb_perm
+        
+        self.player:Player = None
+        self.X_game:pd.DataFrame = None
         
         self.rand_int:int = rand_int
         self.weight:int = 0
@@ -37,7 +41,9 @@ class Croupier(object):
         
         self.game_visible:bool = game_visible
         self.tree_visible:bool = tree_visible
+        self.game_si_human:int = game_si_human
         
+        pd.set_option('display.max_columns', 100)
         
     
     def play(self):        
@@ -259,25 +265,35 @@ class Croupier(object):
             
         for idx in range(int(self.idx_players)):
             if idx == 0:
-                if len(self.all_comb_perm) != 0:
+                if self.game_si_human == 2:
                     nick = 'Nick'
                     self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
-                                            if_deck=False, if_show_perm=False, si_boolean=True))
-                else:
-                    print("Dlugosc listy 'all_comb_perm' wynosi: ", len(self.all_comb_perm))
+                                                        if_deck=False, if_show_perm=False, si_boolean=True))
+                elif self.game_si_human == 1 or self.game_si_human == 3:   
                     nick = str(input("Pseudonim gracza: "))
-                    self.players.append(Player(deck=self.deck, perm=False, nick=nick, index=idx, cards=self.cards[idx],
-                                            if_deck=True, if_show_perm=False, si_boolean=False))
-            if idx == 1:                                           
-                if len(self.all_comb_perm) != 0:
+                    self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
+                                if_deck=False, if_show_perm=False, si_boolean=False))
+                else:
+                    nick = str(input("Pseudonim gracza: "))
+                    print("Dlugosc listy 'all_comb_perm' wynosi: ", len(self.all_comb_perm))
+                    self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx,
+                                if_deck=False, if_show_perm=False, si_boolean=False))
+                
+            if idx == 1:
+                if self.game_si_human == 1 or self.game_si_human == 2:
                     nick = 'Adam'
                     self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
-                                            if_deck=False, if_show_perm=False, si_boolean=True))
-                else:
-                    print("Dlugosc listy 'all_comb_perm' wynosi: ", len(self.all_comb_perm))
+                                                        if_deck=False, if_show_perm=False, si_boolean=True))
+                elif self.game_si_human == 3:
                     nick = str(input("Pseudonim gracza: "))
-                    self.players.append(Player(deck=self.deck, perm=False, nick=nick, index=idx, cards=self.cards[idx],
-                                            if_deck=True, if_show_perm=False, si_boolean=False))
+                    self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx, cards=self.cards[idx],
+                                if_deck=False, if_show_perm=False, si_boolean=False))
+                else:
+                    nick = str(input("Pseudonim gracza: "))
+                    print("Dlugosc listy 'all_comb_perm' wynosi: ", len(self.all_comb_perm))
+                    self.players.append(Player(deck=self.deck, perm=True, nick=nick, index=idx,
+                                if_deck=False, if_show_perm=False, si_boolean=False))
+
             #self.deck.print()
 
     def cards_check_exchange_add_weights(self):
@@ -355,45 +371,53 @@ class Croupier(object):
         else:
             directory = "models_prediction"
             prefix = "model_base_WIN"
-            extension = "hdf5"
+            extension = "keras"
             pattern = rf"^{prefix}.*\.{extension}$"
             matching_file = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
 
-            # print("Pasujace wzorce (regexp):", matching_file)
+            print("Pasujace wzorce (regexp):", matching_file)
 
             saved_model = tf.keras.models.load_model(directory + '/' + matching_file[0])
 
+            saved_model.load_weights('models_prediction/weights_model_base_WIN_Adam_0001_test_acc=0.668_test_loss=0.154_2024-08-12_22-35-02.weights.h5')
+                            
         # Preprocessing danych do przewidywania prawdopodobienstwa wygranej gracza
-        if self.player.si_boolean == True:
-            cards_player_sorted = sorted(self.player.cards)
-            
-            #saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
-            
-            cards_player_sorted = sorted(self.player.cards)
-            
-            for amount in range(2, 3 + 1): 
-                X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                    'Card Before 1' : [cards_player_sorted[0].weight],
-                                    'Card Before 2' : [cards_player_sorted[1].weight],
-                                    'Card Before 3' : [cards_player_sorted[2].weight],
-                                    'Card Before 4' : [cards_player_sorted[3].weight],
-                                    'Card Before 5' : [cards_player_sorted[4].weight],
-                                    'Exchange Amount_0' : [True] if amount == 0 else [False],
-                                    'Exchange Amount_2' : [True] if amount == 2 else [False],
-                                    'Exchange Amount_3' : [True] if amount == 3 else [False],
-                                    })
-                
-                X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-                X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+        if self.player.si_boolean == True:   
+            cards_player_sorted = sorted(self.player.cards) 
 
-                X_game = X_game.astype(np.int64)
+            for amount in range(2, 3 + 1):   
+                self.X_game = pd.DataFrame({'Exchange' : self.exchange, 
+                                'Exchange Amount_0' : [True] if amount == 0 else [False],
+                                'Exchange Amount_2' : [True] if amount == 2 else [False],
+                                'Exchange Amount_3' : [True] if amount == 3 else [False],
+                                })
+            
+                self.X_game.loc[self.X_game['Exchange'] == ['t'], 'Exchange'] = True
+                self.X_game.loc[self.X_game['Exchange'] == ['n'], 'Exchange'] = False  
+              
+                self.X_game['Exchange Amount' + '_' + str(amount)] = 1  
+
+                for idx1 in range(0, 5):
+                    for idx2 in range(1, 14):
+                        if idx2 != cards_player_sorted[idx1].weight:
+                            self.X_game['Cards Before '+ str(idx1+1) + '_' + str(idx2)] = 0
+                        else:
+                            self.X_game['Cards Before '+ str(idx1+1) + '_' + str(idx2)] = 1
+
+                if 'Exchange Amount_0' not in self.X_game.columns:
+                    self.X_game['Exchange Amount_0'] = 0
+                if 'Exchange Amount_2' not in self.X_game.columns:
+                    self.X_game['Exchange Amount_2'] = 0
+                if 'Exchange Amount_3' not in self.X_game.columns:
+                    self.X_game['Exchange Amount_3'] = 0 
                 
-                if self.game_visible == False:
+                self.X_game = self.X_game.astype(np.int64)
+
+                y_preds = saved_model.predict(self.X_game).flatten()
+
+                if self.game_visible == True:
                     logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
-                
-                y_preds = saved_model.predict(X_game, verbose=0)
-                
                 # Prawdopodobienstwo wygranej z dwiena lub trzema kartami
                 if self.game_visible == True:
                     print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
@@ -402,6 +426,7 @@ class Croupier(object):
             self.amount = np.random.choice([2, 3], size=1, 
                                     p=[float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[0]),
                                        float(self.one_pair_strategy[self.num].root.internal_nodes[1][0].branches[1])])
+            
             self.amount = int(self.amount)
         
         # Gracz: Czlowiek
@@ -409,33 +434,33 @@ class Croupier(object):
             self.amount = int(input("Ile kart do wymiany [0-5][-1 COFNIJ]: "))
             
             #saved_model = tf.keras.models.load_model('models_prediction/model_base_WIN_Adam_00001_test_acc=0.666_test_loss=0.155.keras')
-            
-            cards_player_sorted = sorted(self.player.cards)
+            # if self.all_comb_perm == 0:
+            #     cards_player_sorted = sorted(self.player.cards)
 
-            for amount in range(2, 3 + 1): 
-                X_game = pd.DataFrame({'Exchange' : [self.exchange], 
-                                    'Card Before 1' : [cards_player_sorted[0].weight],
-                                    'Card Before 2' : [cards_player_sorted[1].weight],
-                                    'Card Before 3' : [cards_player_sorted[2].weight],
-                                    'Card Before 4' : [cards_player_sorted[3].weight],
-                                    'Card Before 5' : [cards_player_sorted[4].weight],
-                                    'Exchange Amount_0' : [True] if amount == 0 else [False],
-                                    'Exchange Amount_2' : [True] if amount == 2 else [False],
-                                    'Exchange Amount_3' : [True] if amount == 3 else [False],
-                                    })
-                
-                X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
-                X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
+            #     for amount in range(2, 3 + 1): 
+            #         X_game = pd.DataFrame({'Exchange' : [self.exchange], 
+            #                             'Card Before 1' : [cards_player_sorted[0].weight],
+            #                             'Card Before 2' : [cards_player_sorted[1].weight],
+            #                             'Card Before 3' : [cards_player_sorted[2].weight],
+            #                             'Card Before 4' : [cards_player_sorted[3].weight],
+            #                             'Card Before 5' : [cards_player_sorted[4].weight],
+            #                             'Exchange Amount_0' : [True] if amount == 0 else [False],
+            #                             'Exchange Amount_2' : [True] if amount == 2 else [False],
+            #                             'Exchange Amount_3' : [True] if amount == 3 else [False],
+            #                             })
+                    
+            #         X_game.loc[X_game['Exchange'] == ['t'], 'Exchange'] = True
+            #         X_game.loc[X_game['Exchange'] == ['n'], 'Exchange'] = False        
 
-                X_game = X_game.astype(np.int64)
+            #         X_game = X_game.astype(np.int64)
 
-                if self.game_visible == False:
-                    logging.getLogger("tensorflow").setLevel(logging.ERROR)
-                
-                y_preds = saved_model.predict(X_game, verbose=0)
-                
-                if self.game_visible == True:
-                    print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
+            #         if self.game_visible == False:
+            #             logging.getLogger("tensorflow").setLevel(logging.ERROR)
+                    
+            #         y_preds = saved_model.predict(X_game, verbose=0)
+                    
+            #         if self.game_visible == True:
+            #             print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
                 
     
         self.amount_list.append(self.amount)
