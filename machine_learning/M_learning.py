@@ -1,4 +1,5 @@
 import os
+import time
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import logging
 import sys
@@ -49,43 +50,60 @@ class M_learning(object):
         self.df.loc[self.df['Exchange'] == '[\'t\']', 'Exchange'] = True
         self.df.loc[self.df['Exchange'] == '[\'n\']', 'Exchange'] = False
         
-        self.df.loc[self.df['Win'] == True, 'Win'] = True
-        self.df.loc[self.df['Win'] == False, 'Win'] = False
-
-        self.df.drop(columns=['Player ID'], axis=1, inplace=True)
+        self.df.loc[self.df['Win'] == True, 'Win'] = 1
+        self.df.loc[self.df['Win'] == False, 'Win'] = 0
+        
+        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
+        axs[0].hist(self.df.where(self.df['Player ID'] == 'Nick')['Win'])
+        axs[0].set_title('Distribution of wins for Nick')
+        axs[1].hist(self.df.where(self.df['Player ID'] == 'Adam')['Win'])
+        axs[1].set_title('Distribution of wins for Adam')
+        plt.show()
+        
+        fig, axs = plt.subplots(3, 2, figsize=(17, 5))
+        axs[0,0].hist(self.df['Cards Before 1'], bins='auto', label='Cards Before 1')
+        axs[0,0].set_title('Card Before 1 distribution')
+        axs[0,1].hist(self.df['Cards Before 2'], bins='auto', label='Cards Before 2')
+        axs[0,1].set_title('Card Before 2 distribution')
+        axs[1,0].hist(self.df['Cards Before 3'], bins='auto', label='Cards Before 3')
+        axs[1,0].set_title('Card Before 3 distribution')
+        axs[1,1].hist(self.df['Cards Before 4'], bins='auto', label='Cards Before 4')
+        axs[1,1].set_title('Card Before 4 distribution')
+        axs[2,0].hist(self.df['Cards Before 5'], bins='auto', label='Cards Before 5')
+        axs[2,0].set_title('Card Before 5 distribution')
+        axs[2,1].axis('off')
+        
+        plt.show()
         
         # self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
         #             axis=1, inplace=True)
         
         self.df.drop(columns=['Card Exchanged 1', 'Card Exchanged 2', 'Card Exchanged 3'], 
                     axis=1, inplace=True)
+       
+        # print("Liczba wygranych dla danego gracza, Adam:")
+        # filtered = self.df.where((self.df['Player ID'] == 'Adam') & (self.df['Win'] == True))
+        # filtered.dropna(axis=0, how='all', inplace=True)
+        # print(len(filtered))
         
+        # print("Liczba wygranych dla danego gracza, Nick:")
+        # filtered = self.df.where((self.df['Player ID'] == 'Nick') & (self.df['Win'] == True))
+        # filtered.dropna(axis=0, how='all', inplace=True)
+        # print(len(filtered))
+        # time.sleep(1000) 
+       
+        self.df.drop(columns=['Player ID'], axis=1, inplace=True)
+
+    
+
         # --------------------------------------- EXCHANGE AMOUNT PREDICTION ---------------------------------------
         if self.exchange_or_not == True:
             self.df = self.df.loc[self.df['Win'] == True]
             print("Length of column 'Win': ", len(self.df['Win']))
 
         # self.df = pd.get_dummies(self.df, drop_first=False, 
-        #                 columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5'])
-    
-        #fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(17, 5))
-        # ax1.hist(self.df['Card Before 3'], label='Card Before 3')
-        # ax2.hist(self.df['Card Before 4'], label='Card Before 4')
-        # ax3.hist(self.df['Card Before 5'], label='Card Before 5')
-        # ax4.hist(self.df['Win'], label='Win')
-        #plt.show()
+        #                 columns=['Exchange', 'Exchange Amount', 'Card Before 3', 'Card Before 4', 'Card Before 5']
         
-        # print(self.df)
-        # fig, (ax1) = plt.subplots(1, 1, figsize=(17, 5))
-        # ax1.hist(self.df['Exchange_False'], label='Exchange')
-        # plt.show()
-
-        # sns.set_theme(style="darkgrid")
-        # tdc =sns.scatterplot(x = 'Exchange_False', y = self.df.index[:500], 
-        # data = self.df[:500], hue = 'Win')
-        # tdc.legend(loc='center left',
-        # bbox_to_anchor=(1.0, 0.5), ncol=1)
-        # plt.show()
         # ----------------------------------------------------------------------
         if self.win_or_not == True:
             self.X = self.df.drop(columns=["Win"], axis=1)
@@ -141,19 +159,20 @@ class M_learning(object):
                 self.y['Exchange Amount_3'] = 0
             else:
                 self.y.rename(columns={ 3 : 'Exchange Amount_3'}, inplace=True)
-        
+
         self.X = self.X.astype(np.int64)
         self.y = self.y.astype(np.int64)
-
+        
         print(self.X)
-        print(self.y)
+        print(self.y)    
+
         
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, 
                                                                                 self.y, 
                                                                                 test_size=0.2, 
                                                                                 random_state=10)
         
-        print(self.X_train)
+        #print(self.X_train)
         
 # def learning_rate_test(learning_rate, X_train, y_train):
 #     #Step 1: Model configuration
@@ -179,16 +198,27 @@ class M_learning(object):
 
     def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):  
            
-        model=Sequential(
-                [
-                    Input(shape=[len(X_train.columns)], name = 'input_layer'),
-                    Dense(units=128, activation='relu', name='layer1'),
-                    tf.keras.layers.Dropout(0.5),               
-                    Dense(units=64, activation='relu', name='layer2'),
-                    Dense(units=32, activation='relu', name='layer3'),
-                ]
-            )
-        
+        # model=Sequential(
+        #         [
+        #             Input(shape=[len(X_train.columns)], name = 'input_layer'),
+        #             Dense(units=256, activation='relu', name='layer1'),
+        #             tf.keras.layers.Dropout(0.5),               
+        #             Dense(units=512, activation='relu', name='layer2'),
+        #             tf.keras.layers.Dropout(0.5),               
+        #             Dense(units=64, activation='relu', name='layer3'),
+        #         ]
+        #     )
+        model = Sequential(
+            [
+                Conv1D(64, 3, activation='relu', input_shape=(len(X_train.columns), 1)),
+                MaxPooling1D(2),
+                Conv1D(256, 3, activation='relu'),
+                MaxPooling1D(2),
+                Flatten(),
+                Dense(64, activation='relu'),
+                #Dense(1, activation='sigmoid')
+            ]
+        )
         if self.win_or_not == True:
             model.add(Dense(units=1, activation='sigmoid', name='binary_output'))
             
@@ -203,7 +233,7 @@ class M_learning(object):
 
         callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=10)
                 
-        history = model.fit(X_train, y_train, batch_size=32, epochs = 250, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(X_train, y_train, batch_size=256, epochs = 1000, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(X_train, y_train)
 
@@ -223,12 +253,12 @@ class M_learning(object):
                     tf.keras.optimizers.Adadelta]
         
         # Try out different learning rates
-        learning_rates = [0.0001]
+        learning_rates = [0.00001]
         
         optimizer = tf.keras.optimizers.Adam
         
         opt = 'Adam'
-        l_r = '0001'
+        l_r = '00001'
         
         idx = 2
         # Loop through the different optimizers
@@ -319,7 +349,7 @@ class M_learning(object):
                       loss=["binary_focal_crossentropy",],                
                       metrics=["accuracy"])
        
-        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 250, callbacks=[callbacks], validation_split = 0.2)
+        history = model.fit(self.X_train, self.y_train, batch_size=32, epochs = 200, callbacks=[callbacks], validation_split = 0.2)
         
         test_loss, test_acc = model.evaluate(self.X_train, self.y_train)
         

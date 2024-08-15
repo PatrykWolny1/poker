@@ -22,7 +22,7 @@ import logging
     
 class Croupier(object):
 
-    def __init__(self, game_si_human = 1, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False):
+    def __init__(self, game_si_human = 1, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False, prediction_mode = True):
         self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
@@ -33,6 +33,8 @@ class Croupier(object):
         self.X_game:pd.DataFrame = None
         
         self.rand_int:int = rand_int
+        self.game_si_human:int = game_si_human
+
         self.weight:int = 0
         self.amount:int = 0
         self.idx_players:int = 0
@@ -41,7 +43,7 @@ class Croupier(object):
         
         self.game_visible:bool = game_visible
         self.tree_visible:bool = tree_visible
-        self.game_si_human:int = game_si_human
+        self.prediction_mode:bool = prediction_mode
         
         pd.set_option('display.max_columns', 100)
         
@@ -358,69 +360,72 @@ class Croupier(object):
             self.player.take_cards(self.deck)
 
     def cards_exchange(self):
-        # Otwarcie pliku z zaktualizowanymi modelami
-        with open('models_prediction/path_to_model_WIN.txt', 'r') as file:
-            filename_updated = file.readline()
-            
-            if not filename_updated:
-                filename_updated = ''
-
-        # Wczytanie modelu w zaleznosci od tego czy zaktualizowany model istnieje
-        if os.path.exists(filename_updated):
-            saved_model = tf.keras.models.load_model(filename_updated)
-        else:
-            directory = "models_prediction"
-            prefix = "model_base_WIN"
-            extension = "keras"
-            pattern = rf"^{prefix}.*\.{extension}$"
-            matching_file = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
-
-            print("Pasujace wzorce (regexp):", matching_file)
-
-            saved_model = tf.keras.models.load_model(directory + '/' + matching_file[0])
-
-            saved_model.load_weights('models_prediction/weights_model_base_WIN_Adam_0001_test_acc=0.668_test_loss=0.154_2024-08-12_22-35-02.weights.h5')
-                            
+       
         # Preprocessing danych do przewidywania prawdopodobienstwa wygranej gracza
-        if self.player.si_boolean == True:   
-            cards_player_sorted = sorted(self.player.cards) 
-
-            for amount in range(2, 3 + 1):   
-                self.X_game = pd.DataFrame({'Exchange' : self.exchange, 
-                                'Exchange Amount_0' : [True] if amount == 0 else [False],
-                                'Exchange Amount_2' : [True] if amount == 2 else [False],
-                                'Exchange Amount_3' : [True] if amount == 3 else [False],
-                                })
+        if self.player.si_boolean == True:
             
-                self.X_game.loc[self.X_game['Exchange'] == ['t'], 'Exchange'] = True
-                self.X_game.loc[self.X_game['Exchange'] == ['n'], 'Exchange'] = False  
-              
-                self.X_game['Exchange Amount' + '_' + str(amount)] = 1  
+            if self.prediction_mode == True:
+                # Otwarcie pliku z zaktualizowanymi modelami
+                with open('models_prediction/path_to_model_WIN.txt', 'r') as file:
+                    filename_updated = file.readline()
+                    
+                    if not filename_updated:
+                        filename_updated = ''
 
-                for idx1 in range(0, 5):
-                    for idx2 in range(1, 14):
-                        if idx2 != cards_player_sorted[idx1].weight:
-                            self.X_game['Cards Before '+ str(idx1+1) + '_' + str(idx2)] = 0
-                        else:
-                            self.X_game['Cards Before '+ str(idx1+1) + '_' + str(idx2)] = 1
+                # Wczytanie modelu w zaleznosci od tego czy zaktualizowany model istnieje
+                if os.path.exists(filename_updated):
+                    saved_model = tf.keras.models.load_model(filename_updated)
+                else:
+                    directory = "models_prediction"
+                    prefix = "model_base_WIN"
+                    extension = "keras"
+                    pattern = rf"^{prefix}.*\.{extension}$"
+                    matching_file = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
 
-                if 'Exchange Amount_0' not in self.X_game.columns:
-                    self.X_game['Exchange Amount_0'] = 0
-                if 'Exchange Amount_2' not in self.X_game.columns:
-                    self.X_game['Exchange Amount_2'] = 0
-                if 'Exchange Amount_3' not in self.X_game.columns:
-                    self.X_game['Exchange Amount_3'] = 0 
+                    print("Pasujace wzorce (regexp):", matching_file)
+
+                    saved_model = tf.keras.models.load_model(directory + '/' + matching_file[0])
+
+                    saved_model.load_weights('models_prediction/weights_model_base_WIN_Adam_0001_test_acc=0.668_test_loss=0.154_2024-08-12_22-35-02.weights.h5')
+                                    
+                cards_player_sorted = sorted(self.player.cards) 
+
+                for amount in range(2, 3 + 1):   
+                    self.X_game = pd.DataFrame({'Exchange' : self.exchange, 
+                                    'Exchange Amount_0' : [True] if amount == 0 else [False],
+                                    'Exchange Amount_2' : [True] if amount == 2 else [False],
+                                    'Exchange Amount_3' : [True] if amount == 3 else [False],
+                                    })
                 
-                self.X_game = self.X_game.astype(np.int64)
+                    self.X_game.loc[self.X_game['Exchange'] == ['t'], 'Exchange'] = True
+                    self.X_game.loc[self.X_game['Exchange'] == ['n'], 'Exchange'] = False  
+                
+                    self.X_game['Exchange Amount' + '_' + str(amount)] = 1  
 
-                y_preds = saved_model.predict(self.X_game).flatten()
+                    for idx1 in range(0, 5):
+                        for idx2 in range(1, 14):
+                            if idx2 != cards_player_sorted[idx1].weight:
+                                self.X_game['Cards Before '+ str(idx1+1) + '_' + str(idx2)] = 0
+                            else:
+                                self.X_game['Cards Before '+ str(idx1+1) + '_' + str(idx2)] = 1
 
-                if self.game_visible == True:
-                    logging.getLogger("tensorflow").setLevel(logging.ERROR)
+                    if 'Exchange Amount_0' not in self.X_game.columns:
+                        self.X_game['Exchange Amount_0'] = 0
+                    if 'Exchange Amount_2' not in self.X_game.columns:
+                        self.X_game['Exchange Amount_2'] = 0
+                    if 'Exchange Amount_3' not in self.X_game.columns:
+                        self.X_game['Exchange Amount_3'] = 0 
+                    
+                    self.X_game = self.X_game.astype(np.int64)
 
-                # Prawdopodobienstwo wygranej z dwiena lub trzema kartami
-                if self.game_visible == True:
-                    print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
+                    y_preds = saved_model.predict(self.X_game).flatten()
+
+                    if self.game_visible == True:
+                        logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
+                    # Prawdopodobienstwo wygranej z dwiena lub trzema kartami
+                    if self.game_visible == True:
+                        print("Szansa na wygrana przy wymianie " + str(amount) + " kart: ", y_preds * 100)
             
             # Wybieranie ilosci kart do wymiany zgodnie z prawdopodobienstwem
             self.amount = np.random.choice([2, 3], size=1, 

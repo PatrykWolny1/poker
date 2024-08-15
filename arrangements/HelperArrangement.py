@@ -140,9 +140,6 @@ class HelperArrangement(object):
         print("Ilosc ukladow: ", len(self.cards_all_permutations))
         print()
         
-        with open("permutations_data/one_pair_combs_list.pkl", "wb") as fp:
-            pickle.dump(self.cards_all_permutations, fp)
-        
         HelperArrangement.weight_gen.clear()
         HelperArrangement.cards_all_permutations.clear()
 

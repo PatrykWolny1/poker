@@ -33,7 +33,8 @@ class Game(object):
         
         self.file_all_to_update = 'ml_data/poker_game_one_pair_combs_all_to_update.csv'
         self.file_one_pair_combs_all = 'ml_data/poker_game_one_pair_combs_all.csv'  
-        
+        model_ml = M_learning(win_or_not=True, exchange_or_not=False, file_path_csv='ml_data/poker_game_one_pair_combs_all.csv')
+        model_ml.pre_processing()
         self.Game()
         
     def Game(self): 
@@ -61,8 +62,10 @@ class Game(object):
                                 "(5) - Uczenie DNN\n" +
                                 "(6) - Aktualizacja modelu DNN\n" +
                                 "(7) - Usuwanie zawartosci plikow '... all_to_update.csv' oraz '... all.csv' po aktualizacjach\n" +
-                                "(8) - Wroc\n" +
-                                "(9) - Wyjscie\n")):
+                                "(8) - Kopiowanie unikalnych wartosci do pliku '... combs_all.csv':\n" +
+                                "(9) - Kopiowanie wartosci do pliku '... combs_all_duplicates.csv' oraz unikalnych wartosci do pliku '... combs_all_to_update.csv':\n" +
+                                "(10) - Wroc\n" +
+                                "(11) - Wyjscie\n")):
                 
                 if choice == '1':
                     Player().cards_permutations()
@@ -91,7 +94,7 @@ class Game(object):
                 if choice == '4':
                     n = int(input("Podaj ilosc rozgrywek do zapisania: "))
                     for i in range(0, n):
-                        croupier = Croupier(all_comb_perm=all_comb_perm, game_visible=False, tree_visible=False)
+                        croupier = Croupier(game_si_human=2, all_comb_perm=all_comb_perm, game_visible=False, tree_visible=False, prediction_mode=False)
                         # print(i)
         
                         try:
@@ -107,8 +110,7 @@ class Game(object):
                 if choice == '5':
                     while(choice_2 := input("\n(1) - Wygrane/Przegrane\n" + 
                                             "(2) - Ilosc kart do wymiany zeby zwiekszyc szanse na wygrana\n" +
-                                            "(3) - Kopiowanie unikalnych wartosci do pliku '... combs_all.csv':\n" +
-                                            "(4) - Wroc:\n")):
+                                            "(3) - Wroc:\n")):
                         if choice_2 == '1':
                             model_ml = M_learning(win_or_not=True, exchange_or_not=False, file_path_csv='ml_data/poker_game_one_pair_combs_all.csv')
                             model_ml.pre_processing()
@@ -118,11 +120,8 @@ class Game(object):
                             model_ml = M_learning(win_or_not=False, exchange_or_not=True, file_path_csv='ml_data/poker_game_one_pair_combs_all.csv')            
                             model_ml.pre_processing()
                             model_ml.ml_learning_and_prediction()
-                            
-                        if choice_2 == '3':
-                            self.copy_unique_duplicates_all()
                         
-                        if choice_2 == '4':
+                        if choice_2 == '3':
                             break
                         
 
@@ -152,13 +151,13 @@ class Game(object):
                                 
                             else:
                                 directory = "models_prediction"
-                                prefix = "model_base_WIN_Adam_0001"
-                                extension = "hdf5"
+                                prefix = "model_base_WIN_Adam"
+                                extension = "keras"
                                 pattern = rf"^{prefix}.*\.{extension}$"
                                 matching_file1 = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
                                 
                                 directory = "models_prediction"
-                                prefix = "weights_model_base_WIN_Adam_0001"
+                                prefix = "weights_model_base_WIN"
                                 extension = "weights.h5"
                                 pattern = rf"^{prefix}.*\.{extension}$"
                                 matching_file2 = [filename for filename in os.listdir(directory) if re.match(pattern, filename)]
@@ -203,8 +202,8 @@ class Game(object):
                                 model_ml_up.update_model(base_model_path=base_model_path, weights_model_path=weight_model_path)
                                 print("Wykorzystano BASE MODEL")
                                 
-                            if choice_3 == '3':
-                                break
+                        if choice_3 == '3':
+                            break
                 
                 if choice == '7':
                     with open(self.file_all_to_update, 'r+') as infile:
@@ -212,11 +211,17 @@ class Game(object):
                     with open(self.file_one_pair_combs_all, 'r+') as infile:
                         infile.truncate(0)  
                     print("Usunieto...")
+                
+                if choice == '8':    
+                    self.copy_unique_duplicates_all()
+                
+                if choice == '9':
+                    self.file_manipulation_after_gathering()
 
-                if choice == '8':
+                if choice == '10':
                     break
                     
-                if choice == '9':
+                if choice == '11':
                     exit()
                     
     def copy_unique_duplicates_all(self):
