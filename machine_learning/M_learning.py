@@ -72,7 +72,6 @@ class M_learning(object):
         axs[2,0].hist(self.df['Cards Before 5'], bins='auto', label='Cards Before 5')
         axs[2,0].set_title('Card Before 5 distribution')
         axs[2,1].axis('off')
-        
         plt.show()
         
         # self.df.drop(columns=['Card Before 1', 'Card Before 2'], 
@@ -198,27 +197,27 @@ class M_learning(object):
 
     def train_with_optimizer(self, X_train, y_train, optimizer, learning_rate):  
            
-        # model=Sequential(
-        #         [
-        #             Input(shape=[len(X_train.columns)], name = 'input_layer'),
-        #             Dense(units=256, activation='relu', name='layer1'),
-        #             tf.keras.layers.Dropout(0.5),               
-        #             Dense(units=512, activation='relu', name='layer2'),
-        #             tf.keras.layers.Dropout(0.5),               
-        #             Dense(units=64, activation='relu', name='layer3'),
-        #         ]
-        #     )
-        model = Sequential(
-            [
-                Conv1D(64, 3, activation='relu', input_shape=(len(X_train.columns), 1)),
-                MaxPooling1D(2),
-                Conv1D(256, 3, activation='relu'),
-                MaxPooling1D(2),
-                Flatten(),
-                Dense(64, activation='relu'),
-                #Dense(1, activation='sigmoid')
-            ]
-        )
+        model=Sequential(
+                [
+                    Input(shape=[len(X_train.columns)], name = 'input_layer'),
+                    Dense(units=256, activation='relu', name='layer1'),
+                    tf.keras.layers.Dropout(0.5),               
+                    Dense(units=512, activation='relu', name='layer2'),
+                    tf.keras.layers.Dropout(0.5),               
+                    Dense(units=64, activation='relu', name='layer3'),
+                ]
+            )
+        # model = Sequential(
+        #     [
+        #         Conv1D(64, 3, activation='relu', input_shape=(len(X_train.columns), 1)),
+        #         MaxPooling1D(2),
+        #         Conv1D(256, 3, activation='relu'),
+        #         MaxPooling1D(2),
+        #         Flatten(),
+        #         Dense(64, activation='relu'),
+        #         #Dense(1, activation='sigmoid')
+        #     ]
+        # )
         if self.win_or_not == True:
             model.add(Dense(units=1, activation='sigmoid', name='binary_output'))
             
@@ -253,12 +252,12 @@ class M_learning(object):
                     tf.keras.optimizers.Adadelta]
         
         # Try out different learning rates
-        learning_rates = [0.00001]
+        learning_rates = [0.0001]
         
         optimizer = tf.keras.optimizers.Adam
         
         opt = 'Adam'
-        l_r = '00001'
+        l_r = '0001'
         
         idx = 2
         # Loop through the different optimizers

@@ -33,8 +33,7 @@ class Game(object):
         
         self.file_all_to_update = 'ml_data/poker_game_one_pair_combs_all_to_update.csv'
         self.file_one_pair_combs_all = 'ml_data/poker_game_one_pair_combs_all.csv'  
-        model_ml = M_learning(win_or_not=True, exchange_or_not=False, file_path_csv='ml_data/poker_game_one_pair_combs_all.csv')
-        model_ml.pre_processing()
+
         self.Game()
         
     def Game(self): 
@@ -93,19 +92,21 @@ class Game(object):
                 
                 if choice == '4':
                     n = int(input("Podaj ilosc rozgrywek do zapisania: "))
-                    for i in range(0, n):
-                        croupier = Croupier(game_si_human=2, all_comb_perm=all_comb_perm, game_visible=False, tree_visible=False, prediction_mode=False)
-                        # print(i)
+                    croupier = Croupier(game_si_human=2, all_comb_perm=all_comb_perm, game_visible=False, tree_visible=False, prediction_mode=False, n=n)
+                    croupier.gather_data()
+                    
+                    # for i in range(0, n):
+                    #     # print(i)
         
-                        try:
-                            croupier.play()
-                        except IndexError:
-                            print("Uzyc opcji (1) z wstepnego menu")
-                            break
-                        except KeyboardInterrupt:
-                            print("Przerwany program. Powrot do menu.")
-                            print(i)
-                            break   
+                    #     try:
+                    #         croupier.play()
+                    #     except IndexError:
+                    #         print("Uzyc opcji (1) z wstepnego menu")
+                    #         break
+                    #     except KeyboardInterrupt:
+                    #         print("Przerwany program. Powrot do menu.")
+                    #         print(i)
+                    #         break   
 
                 if choice == '5':
                     while(choice_2 := input("\n(1) - Wygrane/Przegrane\n" + 

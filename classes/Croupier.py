@@ -22,8 +22,8 @@ import logging
     
 class Croupier(object):
 
-    def __init__(self, game_si_human = 1, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False, prediction_mode = True):
-        self.deck:Deck = Deck()
+    def __init__(self, game_si_human = 1, all_comb_perm = [], rand_int = 0, game_visible = True, tree_visible = False, prediction_mode = True, n = 1):
+        #self.deck:Deck = Deck()
         self.cards:list = []
         self.players:list = []
         self.weights:list = []
@@ -32,13 +32,15 @@ class Croupier(object):
         self.player:Player = None
         self.X_game:pd.DataFrame = None
         
-        self.rand_int:int = rand_int
+        #self.rand_int:int = rand_int
         self.game_si_human:int = game_si_human
-
         self.weight:int = 0
         self.amount:int = 0
         self.idx_players:int = 0
-        
+        self.rand_i:int = 0
+        self.rand_j:int = 0
+        self.n:int = n
+
         self.exchange:str = ''
         
         self.game_visible:bool = game_visible
@@ -47,11 +49,43 @@ class Croupier(object):
         
         pd.set_option('display.max_columns', 100)
         
+    def clear_data(self):
+        self.players.clear()
+        self.cards.clear()
+        self.weights.clear()
+        
+        self.weight:int = 0
+        self.amount:int = 0
+        self.idx_players:int = 0
+        self.rand_i:int = 0
+        self.rand_j:int = 0
+        
+    def gather_data(self):
+        i = 1
+        j = 0
+        self.rand_int = random.sample(range(0, len(self.all_comb_perm) - 1), self.n * 2)
+        for game in range(0, self.n):
+            if game == 0:
+                self.rand_i = self.rand_int[game]
+                self.rand_j = self.rand_int[game + 1]
+            else:
+                self.rand_i = self.rand_int[game + j]
+                self.rand_j = self.rand_int[game + i]
+            
+            i += 1
+            j += 1
+            
+            # print(self.rand_int)
+            # print(self.rand_i, self.rand_j)
+            
+            self.random_arrangement()
+            self.play()
+            self.clear_data()
+
     
     def play(self):        
         # print()
-        
-
+    
         #self.set_cards()
         
         self.set_players_nicknames()
@@ -202,12 +236,9 @@ class Croupier(object):
         return result
     
     # Losowanie ukladow z puli wygenerowanych kombinacji (Jedna Para) przed poczatkiem gry
-    def random_arrangement(self, all_comb_perm):       
-        rand_int = random.sample(range(0, len(all_comb_perm)-1), 2)
-
-        
-        cards = [all_comb_perm[rand_int[0]],  
-                all_comb_perm[rand_int[1]]]
+    def random_arrangement(self):  
+        self.cards = [self.all_comb_perm[self.rand_i],  
+                self.all_comb_perm[self.rand_j]]
 
         idx1 = 0
         idx2 = 0
@@ -220,14 +251,14 @@ class Croupier(object):
         while(if_not_the_same):
             idx1 = 0
             
-            while idx1 < len(cards[0]):
+            while idx1 < len(self.cards[0]):
                 idx2 = 0
                 repeat = 0
-                while idx2 < len(cards[1]):
-                    if cards[0][idx1] == cards[1][idx2]:
+                while idx2 < len(self.cards[1]):
+                    if self.cards[0][idx1] == self.cards[1][idx2]:
                         repeat += 1
-                        cards[1] = []
-                        cards[1] = all_comb_perm[random.sample(range(0, len(all_comb_perm)-1), 1)[0]]
+                        self.cards[1] = []
+                        self.cards[1] = self.all_comb_perm[random.sample(range(0, len(self.all_comb_perm)-1), 1)[0]]
                         
                         iter_idx=0
                         idx1 = 0
@@ -253,18 +284,17 @@ class Croupier(object):
         # print()
         # print()
         
-        return cards
+        return self.cards
                 
     def set_players_nicknames(self):
         #self.idx_players = int(input("Ilu graczy: "))
         self.idx_players = 2
     
         self.deck = Deck()
-        
         # Jesli wybrano opcje zbierania rozgrywek to lista all_comb_perm nie jest pusta
         if len(self.all_comb_perm) != 0:
-            self.cards = self.random_arrangement(self.all_comb_perm)
-            
+            self.cards = self.random_arrangement()
+
         for idx in range(int(self.idx_players)):
             if idx == 0:
                 if self.game_si_human == 2:
@@ -386,7 +416,7 @@ class Croupier(object):
 
                     saved_model = tf.keras.models.load_model(directory + '/' + matching_file[0])
 
-                    saved_model.load_weights('models_prediction/weights_model_base_WIN_Adam_0001_test_acc=0.668_test_loss=0.154_2024-08-12_22-35-02.weights.h5')
+                    saved_model.load_weights('models_prediction/weights_model_base_WIN_Adam_0001_test_acc=0.667_test_loss=0.155_2024-08-14_08-52-13.weights.h5')
                                     
                 cards_player_sorted = sorted(self.player.cards) 
 
