@@ -1,6 +1,8 @@
 import random
 from itertools import chain
 import pickle
+import numpy as np
+import secrets
 
 class HelperArrangement(object):
     indices_2d:list = []                     #Indeksy ukladow kart figury
@@ -89,18 +91,40 @@ class HelperArrangement(object):
                     if idx1 == 4:
                         print(indices[idx])
                 print()
+    
+    # def random_with_key_numpy(self):
+    #     current_time = time.time()
 
+    #     # Convert the key to an integer seed
+    #     seed = int(current_time * 1_000_000) & 0xFFFFFFFF  # Ensure seed fits into 32-bit range
+    #     rng = np.random.default_rng(seed)
+
+    #     return rng.integers(0, len(self.weight_gen) - 1, size=2)  # Generate 5 integers in [0, max_value)
+    
     def random_arrangement(self, if_combs=True):
         #Zerowanie pustych wierszy
         self.cards_all_permutations = [ele for ele in self.cards_all_permutations if ele != []]
 
-        self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
+        # self.rand_int = random.sample(range(0, len(self.weight_gen) - 1), 2)
      
         #if if_combs == True:
-        cards = [self.cards_all_permutations[self.rand_int[0]],  
-                self.cards_all_permutations[self.rand_int[1]]]
+        # cards = [self.cards_all_permutations[self.rand_int[0]],  
+        #         self.cards_all_permutations[self.rand_int[1]]]
         #else:
          #   cards = self.cards_all_permutations[self.rand_int[0]]
+        try:
+            if len(self.cards_all_permutations) == 1:
+                self.rand_int = [0]
+                cards = [self.cards_all_permutations[self.rand_int[0]],  
+                        self.cards_all_permutations[self.rand_int[0]]]
+            else:
+                # self.rand_int = random.sample(range(0, len(self.weight_gen)), 2)
+                self.rand_int = [secrets.randbelow(len(self.cards_all_permutations)) for _ in range(2)]
+                # print(self.rand_int)
+                cards = [self.cards_all_permutations[self.rand_int[0]],  
+                        self.cards_all_permutations[self.rand_int[1]]]
+        except IndexError:
+                print("INDEX ERROR: ", self.rand_int[0], self.rand_int[1], len(self.weight_gen), len(self.cards_all_permutations))
         
         idx1 = 0
         idx2 = 0

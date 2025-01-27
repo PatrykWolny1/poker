@@ -1,6 +1,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-
+import matplotlib.pyplot as plt
 from classes.Player import Player
 from classes.Deck import Deck
 from classes.Card import Card
@@ -19,6 +19,8 @@ import pandas as pd
 import tensorflow as tf
 import re
 import logging
+import secrets
+
     
 class Croupier(object):
 
@@ -63,30 +65,69 @@ class Croupier(object):
     def gather_data(self):
         i = 1
         j = 0
-        self.rand_int = random.sample(range(0, len(self.all_comb_perm) - 1), self.n * 2)
+        random.shuffle(self.all_comb_perm)
+        # self.rand_int = random.sample(range(0, len(self.all_comb_perm) - 1), self.n * 2)
+        # for cards in self.all_comb_perm:
+        #     for i in range(0, len(cards)):
+        #         with open("permutations_data/one_pair.txt", "a") as file:
+        #             file.write(cards[i].print_str())
+        #     with open("permutations_data/one_pair.txt", "a") as file:
+        #         file.write("\n")
+        # self.test_distribution(1098240, 10000)
+        indices = self.get_random_combinations(self.all_comb_perm)
+
         for game in range(0, self.n):
-            if game == 0:
-                self.rand_i = self.rand_int[game]
-                self.rand_j = self.rand_int[game + 1]
-            else:
-                self.rand_i = self.rand_int[game + j]
-                self.rand_j = self.rand_int[game + i]
             
+            self.rand_i = indices[game + j]
+            self.rand_j = indices[game + i]
+            print(self.rand_i, self.rand_j)
             i += 1
             j += 1
+        #     # print(self.rand_int)
+        #     # print(self.rand_i, self.rand_j)
             
-            # print(self.rand_int)
-            # print(self.rand_i, self.rand_j)
-            
-            self.random_arrangement()
+            self.randomize_cards()
             self.play()
             self.clear_data()
+    
+    # def random_with_key_numpy(self):
+    #     current_time = time.time()
 
+    #     # Convert the key to an integer seed
+    #     seed = int(current_time * 1_000_000) & 0xFFFFFFFF  # Ensure seed fits into 32-bit range
+    #     rng = np.random.default_rng(seed)
+
+    #     return rng.integers(0, len(self.all_comb_perm) - 1, size=2)  # Generate 5 integers in [0, max_value)
+    def get_random_combinations(self, combinations):
+        indices = list(range(len(combinations)))
+        secrets.SystemRandom().shuffle(indices)  # Cryptographically secure shuffle
+        return indices
+    def test_distribution(self, size, trials=10000):
+        counts = [0] * size
+        for _ in range(trials):
+            index = secrets.randbelow(size)
+            counts[index] += 1
+
+        plt.bar(range(size), counts)
+        plt.show()
+
+        # Example usage
+    def randomize_cards(self):
+        try:
+            self.cards = [self.all_comb_perm[self.rand_i], self.all_comb_perm[self.rand_j]]
+            # self.rand_int_cards = [secrets.randbelow(len(self.all_comb_perm)) for _ in range(2)]
+            # # print(self.rand_int_cards)
+            # self.cards = [self.all_comb_perm[self.rand_int_cards[0]],  
+            #         self.all_comb_perm[self.rand_int_cards[1]]]
+            # print(self.cards[4])
+            # print(self.cards[3])
+        except IndexError:
+            print("Index error in randomize_cards (Croupier.py): ", self.rand_int[0], self.rand_int[1], len(self.weight_gen), len(self.cards_all_permutations))
     
     def play(self):        
         # print()
     
-        #self.set_cards()
+        # self.set_cards()
         
         self.set_players_nicknames()
 
@@ -292,8 +333,8 @@ class Croupier(object):
     
         self.deck = Deck()
         # Jesli wybrano opcje zbierania rozgrywek to lista all_comb_perm nie jest pusta
-        if len(self.all_comb_perm) != 0:
-            self.cards = self.random_arrangement()
+        # if len(self.all_comb_perm) != 0:
+        #     self.randomize_cards()
 
         for idx in range(int(self.idx_players)):
             if idx == 0:

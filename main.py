@@ -5,7 +5,7 @@ import pstats
 
 def main():
     start_time = time.time()
-    
+
     Game()
         
     end_time = time.time() - start_time

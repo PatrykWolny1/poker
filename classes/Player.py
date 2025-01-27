@@ -17,7 +17,7 @@ class Player(object):
     
     def __init__(self, deck = Deck(), nick = "Nick", index = None, perm = None, if_deck = None, 
                  cards = [], if_show_perm = None, si_boolean = None):
-        deck.shuffling()
+        # deck.shuffling()
         self.cards_exchanged:list = []
         self.nick:str = nick
         self.index:int = index
@@ -26,24 +26,26 @@ class Player(object):
         self.all_comb_perm:list = []
         self.si_boolean:bool = si_boolean
         
-        if if_deck == True and if_show_perm == False:
+        # if if_deck == True and if_show_perm == False:
 
-            for idx in range(5):
-                self.cards.append(deck.deal())
+        #     for idx in range(5):
+        #         self.cards.append(deck.deal())
 
-            self.arrangements.set_cards(self.cards)
-        elif if_show_perm == False and perm == False:
-            self.cards = cards
-            deck.pop_from_deck(self.cards)
-            self.arrangements.set_cards(self.cards)
-        elif if_show_perm == False and perm == True:
-            #deck.print()
-            self.cards = cards
-            self.arrangements.set_cards(self.cards)
-            #self.print()
-            deck.pop_from_deck(self.cards)
-            #deck.print()
-        
+        #     self.arrangements.set_cards(self.cards)
+        # elif if_show_perm == False and perm == False:
+        #     self.cards = cards
+        #     deck.pop_from_deck(self.cards)
+        #     self.arrangements.set_cards(self.cards)
+        # elif if_show_perm == False and perm == True:
+        #     #deck.print()
+        #     self.cards = cards
+        #     self.arrangements.set_cards(self.cards)
+        #     #self.print()
+        #     deck.pop_from_deck(self.cards)
+        #     #deck.print()
+        self.cards = cards
+        self.arrangements.set_cards(self.cards)
+
         
     def return_to_croupier(self, amount = 0, cards_to_exchange = [], game_visible = True, si_boolean = None):
         self.amount = amount
